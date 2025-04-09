@@ -1,7 +1,7 @@
 '''Example of evaluator usage'''
 
-from Sperimentazione.Sperimentazione_ChatGPT.LLM_definition import get_response_to_evaluate
-from Sperimentazione.Sperimentazione_ChatGPT.evaluator import get_evaluator, eval_code
+from LLM_definition import get_response_to_evaluate
+from evaluator import get_evaluator, eval_code
 
 
 eval = get_evaluator("codellama-7b-instruct")

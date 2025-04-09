@@ -5,7 +5,7 @@ MAXROUNDS_NO = 5
 
 from LLM_definition import getCloneAgent, get_first_response, get_response, getDiscussionPrompt, get_agreement, \
     getDiscussionFeedbackPrompt, get_response_to_evaluate
-from Sperimentazione.Sperimentazione_ChatGPT.evaluator import eval_code, get_evaluator
+from evaluator import eval_code, get_evaluator
 
 
 def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
