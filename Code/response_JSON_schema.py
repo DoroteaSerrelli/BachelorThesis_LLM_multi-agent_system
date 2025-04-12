@@ -21,6 +21,46 @@ schema = {
     "required": ["documentation", "imports", "code"]
 }
 
+"""Schema for code solutions to to_do about code generation, including example input tests."""
+
+schema_inputs = {
+    "type": "object",
+    "properties": {
+        "documentation": {
+            "type": "string",
+            "description": "Description of the problem and approach"
+        },
+        "imports": {
+            "type": "string",
+            "description": "Code block import statements"
+        },
+        "code": {
+            "type": "string",
+            "description": "Code block not including import statements"
+        },
+        "test_inputs": {
+            "type": "array",
+            "description": "List of input examples to test the code with",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "args": {
+                        "type": "array",
+                        "description": "Positional arguments to pass to the function"
+                    },
+                    "kwargs": {
+                        "type": "object",
+                        "description": "Keyword arguments to pass to the function (optional)"
+                    }
+                },
+                "required": ["args"],
+                "additionalProperties": False
+            }
+        }
+    },
+    "required": ["documentation", "imports", "code", "test_inputs"]
+}
+
 
 """Schema for evaluation task about AI-generated code."""
 
