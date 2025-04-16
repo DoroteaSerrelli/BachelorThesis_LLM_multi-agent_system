@@ -15,6 +15,10 @@ def extract_input_values(response_json):
     print(n_values)
     return n_values
 
+def extract_time_complexity(response_json):
+    time_compl = response_json["time_complexity"]
+
+    return time_compl
 
 
 '''

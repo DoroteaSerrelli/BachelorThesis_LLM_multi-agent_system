@@ -21,6 +21,31 @@ schema = {
     "required": ["documentation", "imports", "code"]
 }
 
+"""Schema for code solutions to to_do about code generation within Big-O complexity."""
+
+schema_complexity = {
+    "type": "object",
+    "properties": {
+        "documentation": {
+            "type": "string",
+            "description": "Description of the problem and approach"
+        },
+        "imports": {
+            "type": "string",
+            "description": "Code block import statements"
+        },
+        "code": {
+            "type": "string",
+            "description": "Code block not including import statements"
+        },
+        "time_complexity": {
+            "type": "string",
+            "description": "Time complexity of the code block not including import statements, expressed in Big-O notation"
+        }
+    },
+    "required": ["documentation", "imports", "code", "time_complexity"]
+}
+
 """Schema for code solutions to to_do about code generation, including example input tests."""
 
 schema_inputs = {

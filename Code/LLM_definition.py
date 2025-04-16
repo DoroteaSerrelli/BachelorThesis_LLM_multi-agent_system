@@ -3,7 +3,11 @@
 '''
 
 import lmstudio as lms
+
+from Code.metrics import extract_time_complexity
+from Code.response_JSON_schema import schema_complexity
 from response_JSON_schema import schema
+AGENTS_NO = 2
 
 
 # Inizializzare il modello (copie di una tipologia di modello)
@@ -16,19 +20,50 @@ def getCloneAgent(typeModel):
 # Costruzione del prompt per il dibattito tra modelli
 # other_answers = list
 
-def getDiscussionFeedbackPrompt(pers_response, other_answers):
+def getDiscussionFeedbackPrompt(pers_response, pers_cognitive, other_answers, readability_complexity):
     deb_prompt = (
         'These are the solutions to the code generation problem from other agents, which are included in ---: ')
 
-    for i in other_answers:
-        deb_prompt += ('\n ONE AGENT SOLUTION: \n --- ' + i + '\n --- ')
+    for i in range(0, AGENTS_NO-1):
+        deb_prompt += ('\n ONE AGENT SOLUTION: \n --- ' + other_answers[i] + '\n --- ' +
+                       'This solution has time complexity = ' + extract_time_complexity(other_answers[i]) +
+                       ' and cognitive_complexity = ' + str(readability_complexity[i]) +
+                       '--- '
+                       )
 
     deb_prompt += ("""\nUsing the solutions from other agents as additional advice, examine your answer, which is delimited by ---.
-                        Can you improve your answer, which is included in ---, in terms of time complexity, functional correctness, or readability?
-                        Make sure to state your answer in the form **Yes** or **No**, at the start of your response."""
-                       '--- YOUR ANSWER:' + pers_response + ' ---')
+                            If you can improve your answer, which is included in ---, in terms of time complexity or cognitive complexity,
+                            state your new answer at the start of your new response in the form **Yes**; otherwise, 
+                            answers in the form **No**."""
+                   '--- YOUR ANSWER:' + pers_response + ' '
+                   ' Your answer has time_complexity= ' + extract_time_complexity(pers_response) +
+                   ' and cognitive_complexity = ' + str(pers_cognitive) + '---')
 
     return deb_prompt
+
+
+def getDiscussionGivenAnswersFeedbackPrompt(placeholder, pers_response, pers_cognitive, other_answers, readability_complexity):
+    deb_prompt = (
+        'These are the solutions to the code generation problem from other agents, which are included in ---: ')
+
+    for i in range(0, AGENTS_NO - 1):
+        deb_prompt += ('\n AGENT SOLUTION **'+str(placeholder)+'** : \n --- ' + other_answers[i] + '\n --- ' +
+                       'This solution has time complexity = ' + extract_time_complexity(other_answers[i]) +
+                       ' and cognitive_complexity = ' + str(readability_complexity[i]) +
+                       '--- '
+                       )
+
+    deb_prompt += (f"""\nUsing the solutions from other agents as additional advice, examine your answer, which is delimited by ---.
+                                In terms of time complexity and cognitive complexity,
+                                answers with {placeholder} if your answers is better than the responses of the other agents.
+                                Otherwise, if the solution of another agent is better than yours, 
+                                answers with the number of the solution. """
+                   '--- YOUR ANSWER:' + pers_response + ' '
+                   ' Your answer has time_complexity= ' + extract_time_complexity(pers_response) +
+                   ' and cognitive_complexity = ' + str(pers_cognitive) + '---')
+
+    return deb_prompt
+
 
 def getDiscussionPrompt(pers_response, other_answers):
     deb_prompt = ('These are the solutions to the code generation problem from other agents, which are included in ---: ')
@@ -54,7 +89,7 @@ def get_first_response(model, few_shot_prompt, user_prompt):
     messages = [{"role": "user", "content": user_prompt},
                 {"role": "system", "content": system_prompt+few_shot_prompt}
                 ]
-    response = model.respond({"messages": messages}, response_format=schema)
+    response = model.respond({"messages": messages}, response_format=schema_complexity)
     return response.content
 
 def get_agreement(model, user_prompt, deb_prompt):
@@ -68,7 +103,7 @@ def get_agreement(model, user_prompt, deb_prompt):
 def get_response(model, user_prompt, debate_response):
     messages = [{"role": "user", "content": "User asks: " + user_prompt + "\n" + debate_response}
                 ]
-    response = model.respond({"messages": messages}, response_format=schema)
+    response = model.respond({"messages": messages}, response_format=schema_complexity)
     return response.content
 
 
