@@ -1,7 +1,7 @@
 ''' This file contains functions related to metrics about code:
     - time complexity
     - readability
-    used in main.py file during debate.
+    used in main_test_inputs.py file during debate.
 '''
 
 def extract_input_values(response_json):

@@ -5,7 +5,7 @@
 import lmstudio as lms
 
 from Code.metrics import extract_time_complexity
-from Code.response_JSON_schema import schema_complexity
+from Code.response_JSON_schema import schema_complexity, schema_inputs
 from response_JSON_schema import schema
 AGENTS_NO = 2
 
@@ -15,6 +15,27 @@ def getCloneAgent(typeModel):
     model = lms.llm(typeModel, config={"temperature": 0.3})
 
     return model
+
+
+def getDiscussionFeedbackPrompt_Test_Inputs(pers_response, pers_time, pers_cognitive, other_answers, readability_complexity,time_complexity):
+    deb_prompt = (
+        'These are the solutions to the code generation problem from other agents, which are included in ---: ')
+
+    for i in range(0, AGENTS_NO-1):
+        deb_prompt += ('\n ONE AGENT SOLUTION: \n --- ' + other_answers[i] + '\n '
+                            ' This solution has time complexity = ' + str(time_complexity[i]) +
+                            ' and cognitive_complexity = ' + str(readability_complexity[i]) +
+                            '--- ')
+
+    deb_prompt += ("""\nUsing the solutions from other agents as additional advice, examine your answer, which is delimited by ---.
+                        If you can improve your answer, which is included in ---, in terms of time complexity or cognitive complexity,
+                        state your new answer at the start of your new response in the form **Yes**; otherwise, 
+                        answers in the form **No**."""
+                       '--- YOUR ANSWER:' + pers_response + ' '
+                       ' Your answer has time_complexity= ' + str(pers_time) +
+                       ' and cognitive_complexity = ' + str(pers_cognitive) +'---')
+
+    return deb_prompt
 
 
 # Costruzione del prompt per il dibattito tra modelli
@@ -92,6 +113,21 @@ def get_first_response(model, few_shot_prompt, user_prompt):
     response = model.respond({"messages": messages}, response_format=schema_complexity)
     return response.content
 
+# Funzione per ottenere la risposta del modello
+def get_first_response_Test_Inputs(model, few_shot_prompt, user_prompt):
+    # Definire il prompt di sistema
+    system_prompt = (
+        "You are an AI expert programmer that writes code "
+        "or helps to review code for bugs, "
+        "based on the user request. "
+    )
+
+    messages = [{"role": "user", "content": user_prompt},
+                {"role": "system", "content": system_prompt+few_shot_prompt}
+                ]
+    response = model.respond({"messages": messages}, response_format=schema_complexity)
+    return response.content
+
 def get_agreement(model, user_prompt, deb_prompt):
 
     messages = [{"role": "user", "content": "User has asked: " + user_prompt + "\n"+deb_prompt}]
@@ -104,6 +140,13 @@ def get_response(model, user_prompt, debate_response):
     messages = [{"role": "user", "content": "User asks: " + user_prompt + "\n" + debate_response}
                 ]
     response = model.respond({"messages": messages}, response_format=schema_complexity)
+    return response.content
+
+# Funzione per fornire una risposta del modello durante una discussione
+def get_response_Test_Inputs(model, user_prompt, debate_response):
+    messages = [{"role": "user", "content": "User asks: " + user_prompt + "\n" + debate_response}
+                ]
+    response = model.respond({"messages": messages}, response_format=schema_inputs)
     return response.content
 
 
