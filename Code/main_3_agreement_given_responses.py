@@ -82,14 +82,50 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
                 print(solution)
             return solution
 
+        for var in feedback:
+            print("Soluzione candidata: " + str(var))
+
         # C'è più di una soluzione candidata
-        # THINKING OF ----
-        #--------------------------
+
+        # 1° strategia
+        # Ogni modello è stimolato a generare una nuova risposta al problema
+
+        for i in range(0, AGENTS_NO):
+            other_responses = [r for j, r in enumerate(response) if
+                               j != i]  # rimuove dalle risposte quella del modello i
+            debate_prompts[i] = getDiscussionPrompt(response[i], other_responses)
+            response[i] = get_response(agents[i], user_prompt, debate_prompts[i])
+            print(f"Improved model {i} response: {response[i]}")
 
         round += 1
 
-    # Se il numero di round è superato, ....
-    # THINKING OF ----
+
+    # Se il numero di round è superato, si procede per il voto a maggioranza
+    schedule = list()
+    i = 0
+    for i in range(0, AGENTS_NO):
+        for var in feedback:
+            if int(var) == i:
+                schedule[i] += 1
+
+    max_votes = max(schedule)
+    # Controllo che non ci sia un pareggio
+    equal_votes = 0
+    for var in schedule:
+        if(var == max_votes):
+            equal_votes += 1
+
+    if(equal_votes != 1):   # Esiste almeno un pareggio
+        return -1
+    else:
+        i = 0
+        for var in schedule:
+            if (var == max_votes):
+                return i
+            i+=1
+
+
+
 
 
 # MAIN
@@ -141,7 +177,7 @@ JSON RESPONSE:
 """
 user_prompt = input()
 # Initialize agents
-typeModel = 'codellama-7b-instruct'
+typeModel = 'qwen2.5-coder-3b-instruct' # 'codellama-7b-instruct'
 agents = []
 
 for i in range(0, AGENTS_NO):
@@ -149,6 +185,7 @@ for i in range(0, AGENTS_NO):
 
 # Round
 debate_response = str(simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
+'''
 if("-1" in debate_response):
     print("End debate with failure!")
 else:
@@ -157,3 +194,4 @@ else:
     ai_response = get_response_to_evaluate({debate_response})
     evaluator = get_evaluator(typeModel)
     eval_code(str(user_prompt), str(ai_response), evaluator)
+'''
