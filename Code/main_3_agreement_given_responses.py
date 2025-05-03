@@ -1,135 +1,15 @@
-'''Complete Python code'''
+'''MAIN'''
 
-AGENTS_NO = 2
-MAXROUNDS_NO = 5
+# Import core modules used for debate simulation, agent creation, and code evaluation
 
-from LLM_definition import getCloneAgent, get_first_response, get_response, getDiscussionPrompt, get_agreement, \
-    getDiscussionFeedbackPrompt, get_response_to_evaluate, getDiscussionGivenAnswersFeedbackPrompt
-from evaluator import eval_code, get_evaluator
-from metrics import get_cognitive_complexity
-from tabulate import tabulate
+from Debate_strategies import simulate_round, AGENTS_NO, MAXROUNDS_NO
+from LLM_definition import getCloneAgent, get_response_to_evaluate
+from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code
 
 
-def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
-    # Iniziamo il round
-    print(f"User prompt: {user_prompt}\n")
+# Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
+# It includes multiple examples of correct outputs for different types of coding tasks
 
-    # Fase 1: Tutti i modelli rispondono al prompt autonomamente
-
-    response = [] #array che contiene le risposte degli agenti
-    for i in range(0, AGENTS_NO):
-        response.append(get_first_response(agents[i], few_shot_prompt, user_prompt))
-
-    # Print responses
-    for i in range(0, AGENTS_NO):
-        print(f"Response model {i}: {response[i]}")
-
-    # Fase 2: Dibattito tra i modelli
-    round = 1
-    while round <= max_rounds:
-
-        # Calcolo metrica di leggibilità
-
-        readability_complexity = []  # keeps cognitive metric for each response
-        details_readability_complexity = []
-        import json
-
-        for i in range(0, AGENTS_NO):
-            response_json = json.loads(response[i])  # 🔁 parsing della stringa JSON
-            total, details = get_cognitive_complexity(response_json["code"])
-            print(tabulate(details, headers=["Complexity", "Node"], tablefmt="fancy_grid"))
-            readability_complexity.append(total)
-            details_readability_complexity.append(details)
-
-        for i in range(0, AGENTS_NO):
-            # Stampa in formato tabellare
-            print("\nDettagli della complessità:")
-            print(tabulate(details_readability_complexity[i], headers=["Complexity", "Code"], tablefmt="grid"))
-
-
-        # Costruzione del prompt per la discussione
-
-        debate_prompts = []
-
-        for i in range(0, AGENTS_NO):
-            other_responses = [r for j, r in enumerate(response) if j != i]
-            other_readability_compl = [r for j, r in enumerate(readability_complexity) if j != i]
-            debate_prompts.append(getDiscussionGivenAnswersFeedbackPrompt(i, response[i], readability_complexity[i], other_responses, other_readability_compl))
-
-
-
-        # Risposte di entrambi i modelli riguardo ai miglioramenti
-        feedback = []
-
-        for i in range(0, AGENTS_NO):
-            feedback.append(get_agreement(agents[i], user_prompt, debate_prompts[i]))
-
-        print(f"\nRound {round} - Feedback:")
-        # Print feedbacks
-        for i in range(0, AGENTS_NO):
-            print(f"Feedback model {i}: {feedback[i]}\n")
-
-        # Si verifica se tutti i modelli concordanno con la stessa soluzione
-        possible_solutions = set(feedback) #set di numeri, dove ogni numero i corrisponde alla soluzione dell'i-esimo agente
-
-        # Accordo sulla stessa soluzione
-        if len(possible_solutions) == 1:
-            print("Agreement")
-            print("\nFinal answer:")
-            solution = str()
-            for var in possible_solutions:
-                solution = response[int(var)]
-                print(solution)
-            return solution
-
-        for var in feedback:
-            print("Soluzione candidata: " + str(var))
-
-        # C'è più di una soluzione candidata
-
-        # 1° strategia
-        # Ogni modello è stimolato a generare una nuova risposta al problema
-
-        for i in range(0, AGENTS_NO):
-            other_responses = [r for j, r in enumerate(response) if
-                               j != i]  # rimuove dalle risposte quella del modello i
-            debate_prompts[i] = getDiscussionPrompt(response[i], other_responses)
-            response[i] = get_response(agents[i], user_prompt, debate_prompts[i])
-            print(f"Improved model {i} response: {response[i]}")
-
-        round += 1
-
-
-    # Se il numero di round è superato, si procede per il voto a maggioranza
-    schedule = list()
-    i = 0
-    for i in range(0, AGENTS_NO):
-        for var in feedback:
-            if int(var) == i:
-                schedule[i] += 1
-
-    max_votes = max(schedule)
-    # Controllo che non ci sia un pareggio
-    equal_votes = 0
-    for var in schedule:
-        if(var == max_votes):
-            equal_votes += 1
-
-    if(equal_votes != 1):   # Esiste almeno un pareggio
-        return -1
-    else:
-        i = 0
-        for var in schedule:
-            if (var == max_votes):
-                return i
-            i+=1
-
-
-
-
-
-# MAIN
-# Esegui la simulazione con un limite di round
 few_shot_prompt = """Provide a response structured in the following JSON format, which includes:
 - The code block import statements 
 - The code
@@ -176,22 +56,48 @@ JSON RESPONSE:
 
 """
 user_prompt = input()
-# Initialize agents
-typeModel = 'qwen2.5-coder-3b-instruct' # 'codellama-7b-instruct'
+print(f"User prompt: {user_prompt}\n")
+
+# Initialize the list of agents using the selected model
+typeModel = 'qwen2.5-coder-3b-instruct' # You can switch to a different model, e.g., 'codellama-7b-instruct'
 agents = []
+
+# Clone agents based on the configured number of agents (AGENTS_NO)
 
 for i in range(0, AGENTS_NO):
     agents.append(getCloneAgent(typeModel))
 
-# Round
+# Simulate a multi-agent debate round with the user prompt and the few-shot examples
 debate_response = str(simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
-'''
-if("-1" in debate_response):
+
+# If no consensus is reached during the debate, end the process with a failure message
+if "-1" == debate_response:
     print("End debate with failure!")
 else:
-    print("Evaluation")
-    # Evaluation
-    ai_response = get_response_to_evaluate({debate_response})
-    evaluator = get_evaluator(typeModel)
-    eval_code(str(user_prompt), str(ai_response), evaluator)
-'''
+
+    # Evaluate the final proposed solution from the agents
+    for i in range(1, MAXROUNDS_NO):
+        print("Evaluation")
+
+        # Extract the candidate response (code+imports) to evaluate
+        ai_response = get_response_to_evaluate({debate_response})
+        evaluator = get_evaluator(typeModel)
+        evaluation = eval_code(str(user_prompt), str(ai_response), evaluator)
+
+        print(evaluation)
+
+        # Extract individual evaluation scores from the evaluation output and
+        # calculate the final aggregate score for the generated code
+        evaluation_scores = extract_criteria_scores(evaluation)
+        final_score = calculate_score_code(evaluation_scores)
+
+        print(f"Final code quality score: {final_score:.2f}")
+
+        # If the score is below the acceptable threshold (e.g., 80), trigger another debate round
+        if final_score < 80:
+            debate_response = str(simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
+        else:
+            print(ai_response)  # print the accepted final response
+            break
+
+
