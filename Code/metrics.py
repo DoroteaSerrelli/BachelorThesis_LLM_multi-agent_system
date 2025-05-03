@@ -3,6 +3,10 @@
     - readability
     used in main_test_inputs.py file during debate.
 '''
+from tabulate import tabulate
+
+from Debate_strategies import AGENTS_NO
+
 
 def extract_input_values(response_json):
     test_inputs = response_json["test_inputs"]
@@ -109,7 +113,7 @@ def get_cognitive_complexity(func):
             tuple:
                 - complexity (int): The total cognitive complexity score.
                 - details (list): A list of [node_complexity, node_code] pairs for each top-level statement.
-        """
+
 
     func = func if isinstance(func, str) else getsource(func)
     funcdef = ast.parse(func).body[0]
@@ -128,3 +132,46 @@ def get_cognitive_complexity(func):
         details.append([node_complexity, node_code])
     details.append([complexity, "Total"])
     return complexity, details
+    """
+
+    """
+    Calculates the cognitive complexity of a Python function, including per-node details.
+    Returns (-1, []) in case of syntax or parsing errors.
+    """
+
+    func = func if isinstance(func, str) else getsource(func)
+
+    try:
+        tree = ast.parse(func)
+    except (SyntaxError, IndentationError) as e:
+        return -1, [[-1, f"Syntax error: {e}"]]
+
+    funcdef = next((node for node in tree.body if isinstance(node, ast.FunctionDef)), None)
+    if funcdef is None:
+        return -1, [[-1, "No function definition found"]]
+
+    if is_decorator(funcdef):
+        return get_cognitive_complexity(funcdef.body[0])
+
+    details = []
+    complexity = 0
+    for node in funcdef.body:
+        node_complexity = get_cognitive_complexity_for_node(node)
+        complexity += node_complexity
+        node_code = astunparse.unparse(node)
+        if f"{funcdef.name}(" in node_code:
+            node_complexity += 1
+            complexity += 1
+        details.append([node_complexity, node_code])
+
+    details.append([complexity, "Total"])
+    return complexity, details
+
+
+''' Funzione per stampare i dettagli del calcolo della cognitive complexity '''
+
+def print_cognitive_complexity_details(details_readability_complexity):
+    for i in range(0, AGENTS_NO):
+        # Stampa in formato tabellare
+        print("\nDettagli della complessità:")
+        print(tabulate(details_readability_complexity[i], headers=["Complexity", "Code"], tablefmt="grid"))
