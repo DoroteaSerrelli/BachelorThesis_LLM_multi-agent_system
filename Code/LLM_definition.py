@@ -4,10 +4,10 @@
 
 import lmstudio as lms
 
-from Code.metrics import extract_time_complexity
-from Code.response_JSON_schema import schema_complexity, schema_inputs
-from response_JSON_schema import schema
-AGENTS_NO = 2
+from Debate_strategies import AGENTS_NO
+from metrics import extract_time_complexity
+from response_JSON_schema import schema_complexity, schema_inputs
+
 
 
 # Inizializzare il modello (copie di una tipologia di modello)
@@ -62,35 +62,92 @@ def getDiscussionFeedbackPrompt(pers_response, pers_cognitive, other_answers, re
 
     return deb_prompt
 
-
+'''
 def getDiscussionGivenAnswersFeedbackPrompt(placeholder, pers_response, pers_cognitive, other_answers, readability_complexity):
     deb_prompt = (
         'These are the solutions to the code generation problem from other agents, which are included in ---: ')
 
     for i in range(0, AGENTS_NO - 1):
-        deb_prompt += ('\n AGENT SOLUTION **'+str(placeholder)+'** : \n --- ' + other_answers[i] + '\n --- ' +
+        deb_prompt += ('\n AGENT SOLUTION NUMBER ##'+str(i)+' : \n --- ' + other_answers[i] + '\n --- ' +
                        'This solution has time complexity = ' + extract_time_complexity(other_answers[i]) +
                        ' and cognitive_complexity = ' + str(readability_complexity[i]) +
                        '--- '
                        )
 
-    deb_prompt += (f"""\nUsing the solutions from other agents as additional advice, examine your answer, which is delimited by ---.
-                                In terms of time complexity and cognitive complexity,
-                                answers with {placeholder} if your answers is better than the responses of the other agents.
-                                Otherwise, if the solution of another agent is better than yours, 
-                                answers with the number of the solution. """
+    deb_prompt += (f"""\nUsing the solutions from other agents as additional advice, examine your answer, which is defined after '--- YOUR ANSWER'.
+                                Now, your task is to evaluate your solution in terms of both time and cognitive complexity.
+                                Answers with **only** the number {placeholder} if your answers is better than the responses of the other agents.
+                                Otherwise, respond with **only** the number corresponding to the agent 
+                                solution (after string 'AGENT SOLUTION NUMBER ##') that is better than yours.
+                                Your response must be a **single integer** with **no explanation**, **no text**, and **no punctuation**.
+                                Responding with anything other than a number will be considered an error."""
+                   '--- YOUR ANSWER NUMBER ##' + str(placeholder) + ' : \n ---' + pers_response + '\n --- '+
+                   ' Your answer has time_complexity= ' + extract_time_complexity(pers_response) +
+                   ' and cognitive_complexity = ' + str(pers_cognitive) + '---')
+
+
+    return deb_prompt
+'''
+
+def getDiscussionGivenAnswersFeedbackPrompt(placeholder, pers_response, pers_cognitive, other_answers, readability_complexity):
+    deb_prompt = (
+        'Here are some solutions to the code generation problem given by other agents, which are included in ---.'
+        'Each solution has:'
+        '* an unique number between 0 and ' + str(AGENTS_NO-1) + ';'
+        '* a time complexity defined in Big-O notation;'
+        '* a cognitive complexity.' +
+        'Your solution is defined inside the section YOUR ANSWER. '
+    )
+
+    for i in range(0, AGENTS_NO - 1):
+        deb_prompt += ('\n SOLUTION NUMBER '+str(i)+' : \n --- ' + other_answers[i] + '\n ' +
+                       '* Time complexity = ' + extract_time_complexity(other_answers[i]) +
+                       '* Cognitive complexity = ' + str(readability_complexity[i]) +
+                       '--- '
+                       )
+
+    deb_prompt += (f'--- YOUR ANSWER NUMBER ' + str(placeholder) + ' : \n ---' + pers_response + '\n '+
+                   '* Time complexity= ' + extract_time_complexity(pers_response) +
+                   '* Cognitive complexity = ' + str(pers_cognitive) + '---')
+
+    deb_prompt += (f"""\nUsing the solutions from other agents as additional advice, examine your answer, which is defined after '--- YOUR ANSWER'.
+                        Now, your task is to choose the best solution in terms of both time and cognitive complexity.
+                        Your response must be one of the following ways:
+                        - respond with **only** the number corresponding to the agent solution choosen if that answer is better than yours.
+                        - answers with **only** the number {placeholder} if your answer is better than the responses of the other agents.
+        
+                        Your response must be a **single integer** with **no explanation**, **no text**, and **no punctuation**.
+                        Responding with anything other than a number will be considered an error."""
+                   )
+
+
+    return deb_prompt
+
+
+def getDiscussionPromptKSolutions(pers_response, pers_cognitive, other_answers, readability_complexity):
+    deb_prompt = (
+        'These are the solutions to the code generation problem from other agents, which are included in ---: ')
+
+    for i in range(0, AGENTS_NO-1):
+        deb_prompt += ('\n ONE AGENT SOLUTION: \n --- ' + other_answers[i] + '\n --- ' +
+                       'This solution has time complexity = ' + extract_time_complexity(other_answers[i]) +
+                       ' and cognitive_complexity = ' + str(readability_complexity[i]) +
+                       '--- '
+                       )
+
+    deb_prompt += ("""\nUsing the solutions from other agents as additional advice, improve your answer, which is defined after '--- YOUR ANSWER:'.
+                       in terms of time complexity or cognitive complexity"""
                    '--- YOUR ANSWER:' + pers_response + ' '
                    ' Your answer has time_complexity= ' + extract_time_complexity(pers_response) +
                    ' and cognitive_complexity = ' + str(pers_cognitive) + '---')
 
     return deb_prompt
 
-
 def getDiscussionPrompt(pers_response, other_answers):
     deb_prompt = ('These are the solutions to the code generation problem from other agents, which are included in ---: ')
 
     for i in other_answers:
-        deb_prompt += ('\n ONE AGENT SOLUTION: \n --- ' + i + '\n --- ')
+        deb_prompt += ('\n ONE AGENT SOLUTION \n --- ' + i + '\n --- :')
 
     deb_prompt += ('\nUsing the solutions from other agents as additional advice, improve your answer, which is separated by --- .'
                    '--- YOUR ANSWER:' + pers_response + ' ---')
