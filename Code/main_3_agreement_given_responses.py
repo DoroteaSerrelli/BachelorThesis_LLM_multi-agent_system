@@ -74,13 +74,14 @@ debate_response = str(simulate_round(user_prompt, few_shot_prompt, agents, max_r
 if "-1" == debate_response:
     print("End debate with failure!")
 else:
-
+    i = 1
+    final_score = 0
     # Evaluate the final proposed solution from the agents
     for i in range(1, MAXROUNDS_NO):
         print("Evaluation")
 
         # Extract the candidate response (code+imports) to evaluate
-        ai_response = get_response_to_evaluate({debate_response})
+        ai_response = get_response_to_evaluate(debate_response)
         evaluator = get_evaluator(typeModel)
         evaluation = eval_code(str(user_prompt), str(ai_response), evaluator)
 
@@ -100,4 +101,6 @@ else:
             print(ai_response)  # print the accepted final response
             break
 
-
+    if i == MAXROUNDS_NO:   # solution provided has a score lower than 80
+        print(f"End debate with a solution with overall score: {final_score}")
+        print(ai_response)
