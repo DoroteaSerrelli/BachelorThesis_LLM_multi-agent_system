@@ -93,36 +93,40 @@ evaluation_schema = {
     "type": "object",
     "properties": {
         "Correctness": {
-            "type": "int",
-            "description": "The score from 0 to 100 about the correctness of the ai-generated code."
+            "type": "integer",
+            "description": "The score from 0 to 100 about the correctness of the AI-generated code."
         },
         "Security": {
-            "type": "int",
-            "description": "The score from 0 to 100 about the security of the ai-generated code."
+            "type": "integer",
+            "description": "The score from 0 to 100 about the security of the AI-generated code."
         },
         "Maintainability": {
-            "type": "int",
-            "description": "The score from 0 to 100 about the maintainability of the ai-generated code."
+            "type": "integer",
+            "description": "The score from 0 to 100 about the maintainability of the AI-generated code."
         },
         "Reliability": {
-            "type": "int",
-            "description": "The score from 0 to 100 about the reliability of the ai-generated code."
+            "type": "integer",
+            "description": "The score from 0 to 100 about the reliability of the AI-generated code."
         },
         "Compilation Errors": {
-            "type": "int",
-            "description": "The number of compilation errors affected by the ai-generated code."
+            "type": "integer",
+            "description": "The number of compilation errors affected by the AI-generated code."
         },
         "Execution Errors": {
-            "type": "int",
-            "description": "The number of execution errors affected by the ai-generated code."
+            "type": "integer",
+            "description": "The number of execution errors affected by the AI-generated code."
         },
         "Explanation": {
             "type": "string",
-            "description": "A detailed explanations for your assessment, including specific examples of issues and the error counts."
+            "description": "A detailed explanation for your assessment, including specific examples of issues and the error counts."
         }
     },
-    "required": ["Correctness", "Security", "Maintainability", "Reliability", "Compilation Errors", "Execution Errors", "Explanation"]
+    "required": [
+        "Correctness", "Security", "Maintainability", "Reliability",
+        "Compilation Errors", "Execution Errors", "Explanation"
+    ]
 }
+
 
 evaluation_schema2 = {
     "type": "object",
