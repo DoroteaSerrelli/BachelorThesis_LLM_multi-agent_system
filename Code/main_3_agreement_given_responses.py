@@ -1,11 +1,12 @@
 '''MAIN'''
+import sys
 
 # Import core modules used for debate simulation, agent creation, and code evaluation
 
-from Debate_strategies import simulate_round, AGENTS_NO, MAXROUNDS_NO
+from Debate_strategies import simulate_round, AGENTS_NO, MAXROUNDS_NO, simulate_round_k_solutions, \
+    simulate_complete_round, after_evaluation_debate
 from LLM_definition import getCloneAgent, get_response_to_evaluate
-from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code
-
+from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
 
 # Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
 # It includes multiple examples of correct outputs for different types of coding tasks
@@ -55,11 +56,14 @@ JSON RESPONSE:
 ```
 
 """
+strategy_debate = input()
+sys.stdin.buffer.flush() # flush buffer stdin
 user_prompt = input()
 print(f"User prompt: {user_prompt}\n")
 
 # Initialize the list of agents using the selected model
-typeModel = 'qwen2.5-coder-3b-instruct' # You can switch to a different model, e.g., 'codellama-7b-instruct'
+typeModel = 'llama-3.2-3b-instruct' # You can switch to a different model, e.g., 'codellama-7b-instruct', 'qwen2.5-coder-3b-instruct'
+typeEvalModel = 'llama-3.2-3b-instruct'
 agents = []
 
 # Clone agents based on the configured number of agents (AGENTS_NO)
@@ -67,22 +71,31 @@ agents = []
 for i in range(0, AGENTS_NO):
     agents.append(getCloneAgent(typeModel))
 
-# Simulate a multi-agent debate round with the user prompt and the few-shot examples
-debate_response = str(simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
+debate_response = ""
 
+# Simulate a multi-agent debate round with the user prompt and the few-shot examples
+if strategy_debate == "0":
+    debate_response = str(simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
+elif strategy_debate == '1':
+    debate_response = str(simulate_round_k_solutions(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
+elif strategy_debate == '2':
+    debate_response = str(simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
+else:
+    exit(-1)  # input error
 # If no consensus is reached during the debate, end the process with a failure message
 if "-1" == debate_response:
     print("End debate with failure!")
 else:
     i = 1
     final_score = 0
+    ai_response = ""
     # Evaluate the final proposed solution from the agents
     for i in range(1, MAXROUNDS_NO):
         print("Evaluation")
 
         # Extract the candidate response (code+imports) to evaluate
         ai_response = get_response_to_evaluate(debate_response)
-        evaluator = get_evaluator(typeModel)
+        evaluator = get_evaluator(typeEvalModel)
         evaluation = eval_code(str(user_prompt), str(ai_response), evaluator)
 
         print(evaluation)
@@ -90,17 +103,18 @@ else:
         # Extract individual evaluation scores from the evaluation output and
         # calculate the final aggregate score for the generated code
         evaluation_scores = extract_criteria_scores(evaluation)
+        evaluation_feedback = extract_explanation(evaluation)
         final_score = calculate_score_code(evaluation_scores)
 
         print(f"Final code quality score: {final_score:.2f}")
 
-        # If the score is below the acceptable threshold (e.g., 80), trigger another debate round
-        if final_score < 80:
-            debate_response = str(simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
+        # If the score is below the acceptable threshold (e.g., 90), trigger another debate round
+        if final_score < 90:
+            debate_response = str(after_evaluation_debate(user_prompt, few_shot_prompt, evaluation_feedback, ai_response, agents, strategy_debate, max_rounds=MAXROUNDS_NO)) #vedi s emettere few_shot_prompt per il formato
         else:
             print(ai_response)  # print the accepted final response
             break
 
-    if i == MAXROUNDS_NO:   # solution provided has a score lower than 80
+    if i == MAXROUNDS_NO:   # solution provided has a score lower than 90
         print(f"End debate with a solution with overall score: {final_score}")
         print(ai_response)

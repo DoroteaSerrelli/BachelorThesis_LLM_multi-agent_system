@@ -4,7 +4,7 @@
 
 import lmstudio as lms
 
-from Debate_strategies import AGENTS_NO
+from utility_function import get_set_number_solutions
 from metrics import extract_time_complexity
 from response_JSON_schema import schema_complexity, schema_inputs
 
@@ -17,7 +17,7 @@ def getCloneAgent(typeModel):
 
 
 def getDiscussionFeedbackPrompt_Test_Inputs(pers_response, pers_time, pers_cognitive, other_answers,
-                                            readability_complexity, time_complexity):
+                                            readability_complexity, time_complexity, AGENTS_NO):
     deb_prompt = (
         'These are the solutions to the code generation problem from other agents, which are included in ---: ')
 
@@ -42,74 +42,24 @@ def getDiscussionFeedbackPrompt_Test_Inputs(pers_response, pers_time, pers_cogni
 # Costruzione del prompt per il dibattito tra modelli
 # other_answers = list
 
-def getDiscussionFeedbackPrompt(pers_response, pers_cognitive, other_answers, readability_complexity):
-    deb_prompt = (
-        'These are the solutions to the code generation problem from other agents, which are included in ---: ')
-
-    for i in range(0, AGENTS_NO - 1):
-        deb_prompt += ('\n ONE AGENT SOLUTION: \n --- ' + other_answers[i] + '\n --- ' +
-                       'This solution has time complexity = ' + extract_time_complexity(other_answers[i]) +
-                       ' and cognitive_complexity = ' + str(readability_complexity[i]) +
-                       '--- '
-                       )
-
-    deb_prompt += ("""\nUsing the solutions from other agents as additional advice, examine your answer, which is delimited by ---.
-                            If you can improve your answer, which is included in ---, in terms of time complexity or cognitive complexity,
-                            state your new answer at the start of your new response in the form **Yes**; otherwise, 
-                            answers in the form **No**."""
-                   '--- YOUR ANSWER:' + pers_response + ' '
-                                                        ' Your answer has time_complexity= ' + extract_time_complexity(
-        pers_response) +
-                   ' and cognitive_complexity = ' + str(pers_cognitive) + '---')
-
-    return deb_prompt
-
-
-'''
-def getDiscussionGivenAnswersFeedbackPrompt(placeholder, pers_response, pers_cognitive, other_answers, readability_complexity):
-    deb_prompt = (
-        'These are the solutions to the code generation problem from other agents, which are included in ---: ')
-
-    for i in range(0, AGENTS_NO - 1):
-        deb_prompt += ('\n AGENT SOLUTION NUMBER ##'+str(i)+' : \n --- ' + other_answers[i] + '\n --- ' +
-                       'This solution has time complexity = ' + extract_time_complexity(other_answers[i]) +
-                       ' and cognitive_complexity = ' + str(readability_complexity[i]) +
-                       '--- '
-                       )
-
-    deb_prompt += (f"""\nUsing the solutions from other agents as additional advice, examine your answer, which is defined after '--- YOUR ANSWER'.
-                                Now, your task is to evaluate your solution in terms of both time and cognitive complexity.
-                                Answers with **only** the number {placeholder} if your answers is better than the responses of the other agents.
-                                Otherwise, respond with **only** the number corresponding to the agent 
-                                solution (after string 'AGENT SOLUTION NUMBER ##') that is better than yours.
-                                Your response must be a **single integer** with **no explanation**, **no text**, and **no punctuation**.
-                                Responding with anything other than a number will be considered an error."""
-                   '--- YOUR ANSWER NUMBER ##' + str(placeholder) + ' : \n ---' + pers_response + '\n --- '+
-                   ' Your answer has time_complexity= ' + extract_time_complexity(pers_response) +
-                   ' and cognitive_complexity = ' + str(pers_cognitive) + '---')
-
-
-    return deb_prompt
-'''
-
-
 def getDiscussionGivenAnswersFeedbackPrompt(placeholder, pers_response, pers_cognitive, other_answers,
-                                            readability_complexity):
+                                            others_readability_complexity, AGENTS_NO):
     deb_prompt = (
             'Here are some solutions to the code generation problem given by other agents, which are included in ---.'
             'Each solution has:'
             '* an unique number between 0 and ' + str(AGENTS_NO - 1) + ';'
                                                                        '* a time complexity defined in Big-O notation;'
-                                                                       '* a cognitive complexity.' +
-            'Your solution is defined inside the section YOUR ANSWER. '
+                                                                       '* a cognitive complexity.'
     )
 
-    for i in range(0, AGENTS_NO - 1):
+    other_solutions_numbers = get_set_number_solutions(placeholder, AGENTS_NO-1)
 
-        if (other_answers[i] != ""):
-            deb_prompt += ('\n SOLUTION NUMBER ' + str(i) + ' : \n --- ' + other_answers[i] + '\n ' +
-                           '* Time complexity = ' + extract_time_complexity(other_answers[i]) +
-                           '* Cognitive complexity = ' + str(readability_complexity[i]) +
+    for i in other_solutions_numbers:
+        index = int(i)
+        if (other_answers[index] != ""):
+            deb_prompt += ('\n SOLUTION NUMBER ' + index + ' : \n --- ' + other_answers[index] + '\n ' +
+                           '* Time complexity = ' + extract_time_complexity(other_answers[index]) +
+                           '* Cognitive complexity = ' + str(others_readability_complexity[index]) +
                            '--- '
                            )
 
@@ -119,11 +69,11 @@ def getDiscussionGivenAnswersFeedbackPrompt(placeholder, pers_response, pers_cog
                        '* Time complexity= ' + extract_time_complexity(pers_response) +
                        '* Cognitive complexity = ' + str(pers_cognitive) + '---')
 
-        deb_prompt += (f"""\nUsing the solutions from other agents as additional advice, examine your answer, which is defined after '--- YOUR ANSWER'.
+        deb_prompt += (f"""\nUsing the solutions from other agents as additional advice, examine your answer, which is defined in the section '--- YOUR ANSWER NUMBER {placeholder}'.
                                 Now, your task is to choose the best solution in terms of both time and cognitive complexity.
                                 Your response must be one of the following ways:
-                                - respond with **only** the number corresponding to the agent solution choosen if that answer is better than yours.
-                                - answers with **only** the number {placeholder} if your answer is better than the responses of the other agents.
+                                - **only** the number corresponding to the agent solution choosen if that answer is better than yours.
+                                - **only** the number {placeholder} if your answer is better than the responses of the other agents.
 
                                 Your response must be a **single integer** with **no explanation**, **no text**, and **no punctuation**.
                                 Responding with anything other than a number will be considered an error."""
@@ -140,23 +90,30 @@ def getDiscussionGivenAnswersFeedbackPrompt(placeholder, pers_response, pers_cog
     return deb_prompt
 
 
-def getDiscussionPromptKSolutions(pers_response, pers_cognitive, other_answers, readability_complexity):
+def getDiscussionPromptKSolutions(responses, k_cognitive_complexity, AGENTS_NO):
+
     deb_prompt = (
-        'These are the solutions to the code generation problem from other agents, which are included in ---: ')
+            'Here are the solutions to the code generation problem chosen in the previous round by other agents, which are included in ---.'
+            'Each solution has:'
+            '* an unique number between 0 and ' + str(AGENTS_NO - 1) + ';'
+                                                                       '* a time complexity defined in Big-O notation;'
+                                                                       '* a cognitive complexity.'
+    )
 
-    for i in range(0, AGENTS_NO - 1):
-        deb_prompt += ('\n ONE AGENT SOLUTION: \n --- ' + other_answers[i] + '\n --- ' +
-                       'This solution has time complexity = ' + extract_time_complexity(other_answers[i]) +
-                       ' and cognitive_complexity = ' + str(readability_complexity[i]) +
-                       '--- '
-                       )
+    for i in range(0, AGENTS_NO):
 
-    deb_prompt += ("""\nUsing the solutions from other agents as additional advice, improve your answer, which is defined after '--- YOUR ANSWER:'.
-                       in terms of time complexity or cognitive complexity"""
-                   '--- YOUR ANSWER:' + pers_response + ' '
-                                                        ' Your answer has time_complexity= ' + extract_time_complexity(
-        pers_response) +
-                   ' and cognitive_complexity = ' + str(pers_cognitive) + '---')
+        if (responses[i] != ""):
+            deb_prompt += ('\n SOLUTION NUMBER ' + str(i) + ' : \n --- ' + responses[i] + '\n ' +
+                           '* Time complexity = ' + extract_time_complexity(responses[i]) +
+                           '* Cognitive complexity = ' + str(k_cognitive_complexity[i]) +
+                           '--- '
+                           )
+
+    deb_prompt += (f"""\nUsing the solutions from other agents as additional advice, choose the best solution in terms of both time and cognitive complexity.
+                            Your response must be **only** the number corresponding to the agent solution choosen.
+                            Your response must be a **single integer** with **no explanation**, **no text**, and **no punctuation**.
+                            Responding with anything other than a number will be considered an error."""
+                   )
 
     return deb_prompt
 
@@ -253,3 +210,34 @@ def get_response_to_evaluate(ai_response):
             return f"{code}"
     else:
         return None
+
+
+
+#------------------------
+
+def getDiscussionGivenAnswersFeedbackPrompt_NoComparing(answers, readability_complexity, AGENTS_NO):
+    deb_prompt = (
+            'Here are some solutions to the code generation problem given, which are included in ---.'
+            'Each solution has:'
+            '* an unique number between 0 and ' + str(AGENTS_NO - 1) + ';'
+                                                                       '* a time complexity defined in Big-O notation;'
+                                                                       '* a cognitive complexity.'
+    )
+
+
+    for i in range(0, AGENTS_NO):
+        if (answers[i] != ""):
+            deb_prompt += ('\n SOLUTION NUMBER ' + str(i) + ' : \n --- ' + answers[i] + '\n ' +
+                           '* Time complexity = ' + extract_time_complexity(answers[i]) +
+                           '* Cognitive complexity = ' + str(readability_complexity[i]) +
+                           '--- '
+                           )
+
+    deb_prompt += (f"""\nNow, your task is to choose the best solution in terms of both time and cognitive complexity.
+                            Your response must be **only** the number corresponding to the agent solution choosen.
+                            Your response must be a **single integer** with **no explanation**, **no text**, and **no punctuation**.
+                            Responding with anything other than a number will be considered an error."""
+                       )
+
+    return deb_prompt
+
