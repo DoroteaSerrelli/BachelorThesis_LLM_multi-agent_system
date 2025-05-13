@@ -1,11 +1,9 @@
-''' This file contains functions related to metrics about code:
+''' This file contains functions to calculate the following metrics about code:
     - time complexity
     - readability
-    used in main_test_inputs.py file during debate.
 '''
-from tabulate import tabulate
 
-from Debate_strategies import AGENTS_NO
+from tabulate import tabulate
 
 
 def extract_input_values(response_json):
@@ -23,13 +21,14 @@ import json
 
 def extract_time_complexity(response_json):
     str_json = json.loads(response_json)
+    print("In extract_time_complexity si è ricevuto un oggetto di tipo: " + str(type(str_json)))
     time_compl = str_json["time_complexity"]
 
     return time_compl
 
 
 '''
-    Time complexity
+    Time complexity (used in main_test_inputs.py)
     
     This script estimates the average time complexity of a Python function by measuring its execution 
     time over a range of input sizes, using the timeit module.
@@ -58,13 +57,11 @@ def calulate_time_complexity(code_response_json: str, n_values: list):
     # Replace the '\\n' sequences with real newlines '\n'
     code = code.replace("\\n", "\n")
 
-    print(f"Ecco cosa ho ottenuto: \n\n{imports}\n\n{code}")
-
-    codice = imports + "\n\n" + code
+    str_code = imports + "\n\n" + code # Code to execute
 
     # Dynamically execute the code string, defining the function and any required imports
     local_ns = {}
-    exec(codice, globals(), local_ns)
+    exec(str_code, globals(), local_ns)
 
     func_name = [name for name in local_ns if callable(local_ns[name])][0]
     func = local_ns[func_name]
@@ -99,7 +96,7 @@ import ast
 import astunparse
 from inspect import getsource
 from cognitive_complexity.api import get_cognitive_complexity_for_node
-from cognitive_complexity.utils.ast import has_recursive_calls, is_decorator, process_child_nodes, process_node_itself
+from cognitive_complexity.utils.ast import is_decorator
 
 
 def get_cognitive_complexity(func):
@@ -110,33 +107,17 @@ def get_cognitive_complexity(func):
             func (function or str): The function to analyze (can be a function object or a string of code).
 
         Returns:
+
             tuple:
                 - complexity (int): The total cognitive complexity score.
                 - details (list): A list of [node_complexity, node_code] pairs for each top-level statement.
 
-
-    func = func if isinstance(func, str) else getsource(func)
-    funcdef = ast.parse(func).body[0]
-    if is_decorator(funcdef):
-        return get_cognitive_complexity(funcdef.body[0])
-
-    details = []
-    complexity = 0
-    for node in funcdef.body:
-        node_complexity = get_cognitive_complexity_for_node(node)
-        complexity += node_complexity
-        node_code = astunparse.unparse(node)
-        if f"{funcdef.name}(" in node_code:  # +1 for recursion
-            node_complexity += 1
-            complexity += 1
-        details.append([node_complexity, node_code])
-    details.append([complexity, "Total"])
-    return complexity, details
+        Returns (-1, []) in case of syntax or parsing errors.
     """
 
     """
     Calculates the cognitive complexity of a Python function, including per-node details.
-    Returns (-1, []) in case of syntax or parsing errors.
+    
     """
 
     func = func if isinstance(func, str) else getsource(func)
@@ -168,9 +149,9 @@ def get_cognitive_complexity(func):
     return complexity, details
 
 
-''' Funzione per stampare i dettagli del calcolo della cognitive complexity '''
+''' Print details related to cognitive complexity per-node'''
 
-def print_cognitive_complexity_details(details_readability_complexity):
+def print_cognitive_complexity_details(details_readability_complexity, AGENTS_NO):
     for i in range(0, AGENTS_NO):
         # Stampa in formato tabellare
         print("\nDettagli della complessità:")
