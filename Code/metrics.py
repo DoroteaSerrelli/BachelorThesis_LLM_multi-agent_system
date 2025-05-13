@@ -22,6 +22,7 @@ import json
 def extract_time_complexity(response_json):
     str_json = json.loads(response_json)
     print("In extract_time_complexity si è ricevuto un oggetto di tipo: " + str(type(str_json)))
+    print("Risposta ricevuta: " + str_json)
     time_compl = str_json["time_complexity"]
 
     return time_compl
