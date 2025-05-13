@@ -101,11 +101,9 @@ def self_refinement_unique(user_prompt, feedback_evaluator, previous_code):
             Output ONLY the JSON object. Do not include any extra text outside the JSON block.'''
 
     # Fill in the placeholders in the instruction with actual input values
-    refinement_prompt = refinement_instruction_prompt.format(
-        user_prompt=user_prompt,
-        previous_code=previous_code,
-        evaluation_feedback=feedback_evaluator
-    )
+    refinement_prompt = refinement_instruction_prompt.replace("{user_prompt}", user_prompt)
+    refinement_prompt = refinement_instruction_prompt.replace("{previous_code}", previous_code)
+    refinement_prompt = refinement_instruction_prompt.replace("{evaluation_feedback}", feedback_evaluator)
 
     # Generate a refined solution using the model
     refined_solution = get_response_unique(agent, refinement_prompt)
@@ -172,6 +170,7 @@ agent = getCloneAgent(typeModel)
 
 # Get the initial code generation response from the agent
 response = get_first_response(agent, few_shot_prompt, user_prompt)
+print("Response\n\n" + response)
 
 # Terminate if the agent produced no response
 if "" == response:
@@ -185,7 +184,7 @@ else:
         print("Evaluation")
 
         # Prepare the agent's code response for evaluation
-        ai_response = get_response_to_evaluate(debate_response)
+        ai_response = get_response_to_evaluate(response)
         evaluator = get_evaluator(typeModel)
         evaluation = eval_code(str(user_prompt), str(ai_response), evaluator)
 
@@ -198,9 +197,9 @@ else:
 
         print(f"Final code quality score: {final_score:.2f}")
 
-        # If the score is too low, instruct the model to refine the code based on feedback
-        if final_score < 80:
-            debate_response = str(
+        # If the score is below 90%, instruct the model to refine the code based on feedback
+        if final_score < 90:
+            response = str(
                 self_refinement_unique(user_prompt, evaluation_feedback, ai_response)
             )
         else:
