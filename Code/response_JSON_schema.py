@@ -126,23 +126,3 @@ evaluation_schema = {
         "Compilation Errors", "Execution Errors", "Explanation"
     ]
 }
-
-
-evaluation_schema2 = {
-    "type": "object",
-    "properties": {
-        "score": {
-            "type": "string",
-            "description": "the score from 1 to 5 for each criteria related to the code: Correctness, Security, Maintainability, Reliability, Compilation Errors, Execution Errors."
-        },
-        "evaluation": {
-            "type": "string",
-            "description": "The overall evaluation of the code response according to the rating rubric: Very good, Good, Ok, Bad, Very bad."
-        },
-        "explanation": {
-            "type": "string",
-            "description": "A detailed explanations for your assessment, including specific examples of issues and the error counts."
-        }
-    },
-    "required": ["score", "evaluation", "explanation"]
-}
