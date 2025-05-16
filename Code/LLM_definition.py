@@ -57,7 +57,7 @@ def getDiscussionGivenAnswersFeedbackPrompt(placeholder, pers_response, pers_cog
     for i in other_solutions_numbers:
         index = int(i)
         if (other_answers[index] != ""):
-            deb_prompt += ('\n SOLUTION NUMBER ' + index + ' : \n --- ' + other_answers[index] + '\n ' +
+            deb_prompt += ('\n SOLUTION NUMBER ' + str(index) + ' : \n --- ' + other_answers[index] + '\n ' +
                            '* Time complexity = ' + extract_time_complexity(other_answers[index]) +
                            '* Cognitive complexity = ' + str(others_readability_complexity[index]) +
                            '--- '
