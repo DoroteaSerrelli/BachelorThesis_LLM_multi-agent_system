@@ -63,7 +63,7 @@ def self_refinement_unique(user_prompt, feedback_evaluator, previous_code):
             Based on the feedback, focus on the following aspects:
             -   *Correctness*: Ensure the refined code fully satisfies the requirements outlined in the original user prompt. Specifically address the reasoning behind the correctness score given in the feedback and make necessary modifications to ensure the code functions as intended.
             -   *Time Complexity*: The time complexity of the refined code, expressed in Big-O notation, must not be worse than the time complexity of the previous code. Strive to maintain or even improve the efficiency of the algorithm. Clearly state the time complexity of your refined code.
-            -   *Cognitive Complexity*: The cognitive complexity of the refined code must be between 0 and 10 (inclusive). Simplify the logic and structure of the code to enhance its readability and maintainability, without compromising correctness or time complexity.
+            -   *Cognitive Complexity*: The cognitive complexity of the refined code must equal or lower than the cognitive complexity of the previous code. Simplify the logic and structure of the code to enhance its readability and maintainability, without compromising correctness or time complexity.
 
             # Output Format
             Provide the refined source code in the following JSON format:
@@ -202,6 +202,7 @@ else:
             response = str(
                 self_refinement_unique(user_prompt, evaluation_feedback, ai_response)
             )
+            print("Response after evaluation" + "\n\n" + response)
         else:
             # Accept the final response if it meets the quality threshold
             print(ai_response)
