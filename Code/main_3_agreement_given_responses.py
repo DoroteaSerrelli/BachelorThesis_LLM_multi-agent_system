@@ -11,6 +11,17 @@ from evaluator import eval_code, get_evaluator, extract_criteria_scores, calcula
 # Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
 # It includes multiple examples of correct outputs for different types of coding tasks
 
+import lmstudio as lms
+SERVER_API_HOST = "localhost:2345"
+
+# This must be the *first* convenience API interaction (otherwise the SDK
+# implicitly creates a client that accesses the default server API host)
+lms.configure_default_client(SERVER_API_HOST)
+
+# Note: the dedicated configuration API was added in lmstudio-python 1.3.0
+# For compatibility with earlier SDK versions, it is still possible to use
+# lms.get_default_client(SERVER_API_HOST) to configure the default client
+
 few_shot_prompt = """Provide a response structured in the following JSON format, which includes:
 - The code block import statements 
 - The code
@@ -62,8 +73,8 @@ user_prompt = input()
 print(f"User prompt: {user_prompt}\n")
 
 # Initialize the list of agents using the selected model
-typeModel = 'llama-3.2-3b-instruct' # You can switch to a different model, e.g., 'codellama-7b-instruct', 'qwen2.5-coder-3b-instruct'
-typeEvalModel = 'llama-3.2-3b-instruct'
+typeModel = 'codellama-7b-instruct' #'llama-3.2-3b-instruct' # You can switch to a different model, e.g., 'codellama-7b-instruct', 'qwen2.5-coder-3b-instruct'
+typeEvalModel = 'codellama-7b-instruct'
 agents = []
 
 # Clone agents based on the configured number of agents (AGENTS_NO)
