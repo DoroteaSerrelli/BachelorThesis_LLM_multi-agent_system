@@ -81,6 +81,7 @@ elif strategy_debate == '1':
 elif strategy_debate == '2':
     debate_response = str(simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
 else:
+    print("ERRORE INPUT: 0, 1, 2 AMMESSI")
     exit(-1)  # input error
 # If no consensus is reached during the debate, end the process with a failure message
 if "-1" == debate_response:

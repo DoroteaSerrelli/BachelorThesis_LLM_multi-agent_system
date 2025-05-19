@@ -13,13 +13,14 @@ from LLM_definition import (
     get_response,
     getDiscussionPromptKSolutions,
     get_agreement,
-    getDiscussionGivenAnswersFeedbackPrompt_NoComparing
+    getDiscussionGivenAnswersFeedbackPrompt_NoComparing, get_MultipleChoiceNumbers_prompt, getCloneAgent,
+    get_model_info, extract_identifier
 )
 
 from metrics import get_cognitive_complexity
 from tabulate import tabulate
 from utility_function import remove_duplicates, equals_cognitive_complexity, equals_time_complexity, \
-    get_random_element
+    get_random_element, get_k_responses
 
 # Number of LLM agents participating in the debate
 AGENTS_NO = 3
@@ -72,10 +73,14 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
             other_responses = [r for j, r in enumerate(response) if j != i]
             other_readability_compl = [r for j, r in enumerate(readability_complexity) if j != i]
             # Build a custom prompt for that agent to evaluate others' responses
-            debate_prompts.append(
+            '''debate_prompts.append(
                 getDiscussionGivenAnswersFeedbackPrompt(
                     i, response[i], readability_complexity[i], other_responses, other_readability_compl, AGENTS_NO
                 )
+            )''' # quello usato
+            # quello da provare
+            debate_prompts.append(
+                get_MultipleChoiceNumbers_prompt(response, readability_complexity, AGENTS_NO)
             )
 
         # === Collect feedback from each agent (which solution they prefer) ===
@@ -154,10 +159,15 @@ def simulate_round_k_solutions(user_prompt, few_shot_prompt, agents, max_rounds)
             other_responses = [r for j, r in enumerate(response) if j != i]
             other_readability_compl = [r for j, r in enumerate(readability_complexity) if j != i]
             # Build a custom prompt for that agent to evaluate others' responses
-            debate_prompts.append(
+            '''debate_prompts.append(
                 getDiscussionGivenAnswersFeedbackPrompt(
                     i, response[i], readability_complexity[i], other_responses, other_readability_compl, AGENTS_NO
                 )
+            )'''  # quello usato
+            # quello da provare
+            debate_prompts.append(
+                get_MultipleChoiceNumbers_prompt(
+                    response, readability_complexity, AGENTS_NO)
             )
 
         # === Collect feedback from each agent (which solution they prefer) ===
@@ -223,9 +233,18 @@ def debate_self_refinement(agents, responses, user_prompt):
         # Provide each agent with all other responses except its own
         other_responses = [r for j, r in enumerate(responses) if j != i]
         # Construct the prompt to trigger self-refinement
-        debate_prompts[i] = getDiscussionPrompt(responses[i], other_responses)
+
+        if responses[i] != "":
+            debate_prompts[i] = getDiscussionPrompt(responses[i], other_responses)
+            responses[i] = get_response(agents[i], user_prompt, debate_prompts[i])
+        else:# se ha dato nessuna risposta
+            increase_temp = 0.5 #aumento la temperatura
+            info_model = get_model_info(agents[i])
+            typeModel = extract_identifier(info_model)
+            agents[i] = getCloneAgent(typeModel, increase_temp)
+            responses[i] = get_first_response(agents[i], "", user_prompt)
+
         # Generate improved response
-        responses[i] = get_response(agents[i], user_prompt, debate_prompts[i])
         print(f"Improved model {i} response: {responses[i]}")
 
     return responses
@@ -344,7 +363,10 @@ def simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds):
             details_readability_complexity.append(details)
 
         # === Construct the prompt for each agent to analyze others' responses ===
-        debate_prompt = getDiscussionGivenAnswersFeedbackPrompt_NoComparing(response, readability_complexity, AGENTS_NO) # prova per non comparazione
+        #quello usato debate_prompt = getDiscussionGivenAnswersFeedbackPrompt_NoComparing(response, readability_complexity, AGENTS_NO) # prova per non comparazione
+        #quello da provare
+
+        debate_prompt = get_MultipleChoiceNumbers_prompt(response, readability_complexity, AGENTS_NO)
 
         # === Collect feedback from each agent (which solution they prefer) ===
         feedback = []
@@ -372,10 +394,13 @@ def simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds):
         for var in feedback:
             print("Candidate solution: " + str(var))
 
+        k_responses = []
+
         if not_agreement_rounds >= 2:
             # Verifico se tutte le soluzioni hanno uguale complessità di tempo e uguale complessità di leggibilità
-            if equals_time_complexity(feedback) and equals_cognitive_complexity(readability_complexity):
-                solution = str(get_random_element(feedback))
+            k_responses = get_k_responses(response, feedback)
+            if equals_time_complexity(k_responses) and equals_cognitive_complexity(readability_complexity):
+                solution = str(get_random_element(k_responses))
                 print("Agreement between equivalent solution")
                 print("\nFinal answer:")
 
@@ -386,7 +411,7 @@ def simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds):
                 not_agreement_rounds = 0
 
 
-        k_response = debate_on_k_solutions(feedback, user_prompt, response, readability_complexity, agents)
+        k_response = debate_on_k_solutions(k_responses, user_prompt, response, readability_complexity, agents)
 
         if len(k_response) == 1:
             print("Agreement")

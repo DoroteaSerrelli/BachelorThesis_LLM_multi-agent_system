@@ -20,7 +20,7 @@ def get_set_number_solutions(placeholder, AGENTS_NO):
         list_local[i] = i
 
     for var in list_local:
-        if(var == int(placeholder)):
+        if var == int(placeholder):
             list_local.remove(var)
             break
 
@@ -107,3 +107,12 @@ def get_random_element(list_local):
     if not list_local:
         return None
     return random.choice(list_local)
+
+
+def get_k_responses(response, feedback):
+    k_responses = []
+
+    for i in feedback:
+        k_responses.append(response[int(i)])
+
+    return k_responses

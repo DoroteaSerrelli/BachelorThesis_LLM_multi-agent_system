@@ -1,6 +1,7 @@
 '''
     Utility functions to manage agents (initialization, response).
 '''
+from typing import Dict, Any
 
 import lmstudio as lms
 
@@ -10,10 +11,26 @@ from response_JSON_schema import schema_complexity, schema_inputs
 
 
 # Inizializzare il modello (copie di una tipologia di modello)
-def getCloneAgent(typeModel):
-    model = lms.llm(typeModel, config={"temperature": 0.3})
+def getCloneAgent(typeModel, temperature=0.3):
+    model = lms.llm(typeModel, config={"temperature": temperature})
 
     return model
+
+def get_model_info(model):
+    return model.get_info()
+
+
+def extract_identifier(data: Dict[str, Any]) -> str | None:
+    """
+    Estrae il valore della chiave "identifier" da un dizionario.
+
+    Args:
+        data: Il dizionario da cui estrarre il valore.
+
+    Returns:
+        Il valore della chiave "identifier" se presente, altrimenti None.
+    """
+    return data.get("identifier")
 
 
 def getDiscussionFeedbackPrompt_Test_Inputs(pers_response, pers_time, pers_cognitive, other_answers,
@@ -120,20 +137,29 @@ def getDiscussionPromptKSolutions(responses, k_cognitive_complexity, AGENTS_NO):
 
 def getDiscussionPrompt(pers_response, other_answers):
     deb_prompt = (
-        'These are the solutions to the code generation problem from other agents, which are included in ---: ')
+        'Here are the solutions to the code generation problem provided by other agents:\n'
+    )
 
-    for i in other_answers:
-        deb_prompt += ('\n ONE AGENT SOLUTION \n --- ' + i + '\n --- :')
+    for i, answer in enumerate(other_answers):
+        deb_prompt += (f"\n--- SOLUTION FROM AGENT {i + 1} ---\n{answer}\n--- END OF SOLUTION ---\n")
 
-    deb_prompt += (
-                '\nUsing the solutions from other agents as additional advice, improve your answer, which is separated by --- .'
-                '--- YOUR ANSWER:' + pers_response + ' ---')
+    if pers_response != "":
+        deb_prompt += (
+            "\n--- YOUR INITIAL ANSWER ---\n"
+            f"{pers_response}\n"
+            "--- END OF YOUR INITIAL ANSWER ---\n"
+            "\nConsidering the solutions from other agents, revise and improve your initial answer."
+        )
+    else:
+        deb_prompt += (
+            "\nConsidering the solutions from other agents, generate your best solution to the code generation problem."
+        )
 
     return deb_prompt
 
 
 # Funzione per ottenere la risposta del modello
-def get_first_response(model, few_shot_prompt, user_prompt):
+def get_first_response(model, few_shot_prompt, user_prompt, temperature=0.3):
     # Definire il prompt di sistema
     system_prompt = (
         "You are an AI expert programmer that writes code "
@@ -241,3 +267,26 @@ def getDiscussionGivenAnswersFeedbackPrompt_NoComparing(answers, readability_com
 
     return deb_prompt
 
+
+#-----------------------------
+
+def get_MultipleChoiceNumbers_prompt(answers, readability_complexity, AGENTS_NO):
+    deb_prompt = (
+            'Here are some proposed solutions (0, 1, 2, ...) for the code generation problem:\n'
+    )
+
+    for i in range(0, AGENTS_NO):
+        if (answers[i] != ""):
+            deb_prompt += (f"\n**{i}.**\n---\n{answers[i]}\n"
+                           f"* Time complexity: {extract_time_complexity(answers[i])}\n"
+                           f"* Cognitive complexity: {readability_complexity[i]}\n"
+                           f"---\n"
+                           )
+
+    deb_prompt += (f"""\nConsidering both time complexity and cognitive complexity, which of the proposed solutions is the best?
+                            Respond with **only** the corresponding number of the best solution.
+                            Your response must be a **single integer** between 0 and {AGENTS_NO - 1} with **no explanation**, **no text**, and **no punctuation**.
+                            Responding with anything other than a number will be considered an error."""
+                       )
+
+    return deb_prompt
