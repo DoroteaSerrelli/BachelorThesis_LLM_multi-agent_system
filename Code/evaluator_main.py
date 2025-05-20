@@ -1,6 +1,6 @@
 '''Example of evaluator usage'''
 
-from LLM_definition import get_response_to_evaluate
+from LLM_definition import get_formatted_code_solution
 from evaluator import get_evaluator, eval_code
 
 
@@ -12,4 +12,4 @@ schema = {
     "documentation": "The method returns the current date in the format yyyy-mm-dd.",
     "imports": "import java.text.SimpleDateFormat;"
 }
-print(get_response_to_evaluate(schema))
+print(get_formatted_code_solution(schema))

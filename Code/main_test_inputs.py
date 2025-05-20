@@ -6,9 +6,9 @@ from Code.metrics import extract_input_values, calulate_time_complexity, get_cog
 AGENTS_NO = 2
 MAXROUNDS_NO = 5
 
-from LLM_definition import getCloneAgent, get_first_response, get_response, getDiscussionPrompt, get_agreement, \
-    getDiscussionFeedbackPrompt, get_response_to_evaluate, get_first_response_Test_Inputs, \
-    getDiscussionFeedbackPrompt_Test_Inputs, get_response_Test_Inputs
+from LLM_definition import get_clone_agent, get_first_response, get_response, get_discussion_prompt, get_agreement, \
+    get_discussion_feedback_prompt, get_formatted_code_solution, get_first_response_test_inputs, \
+    get_discussion_feedback_prompt_test_inputs, get_response_test_inputs
 from evaluator import eval_code, get_evaluator
 
 
@@ -20,7 +20,7 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
 
     response = [] #array che contiene le risposte degli agenti
     for i in range(0, AGENTS_NO):
-        response.append(get_first_response_Test_Inputs(agents[i], few_shot_prompt, user_prompt))
+        response.append(get_first_response_test_inputs(agents[i], few_shot_prompt, user_prompt))
 
     # Print responses
     for i in range(0, AGENTS_NO):
@@ -70,7 +70,7 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
             other_time_compl = [r for j, r in enumerate(time_complexity) if j != i]
             other_readability_compl = [r for j, r in enumerate(readability_complexity) if j != i]
             debate_prompts.append(
-                getDiscussionFeedbackPrompt_Test_Inputs(response[i], time_complexity[i], readability_complexity[i], other_responses,
+                get_discussion_feedback_prompt_test_inputs(response[i], time_complexity[i], readability_complexity[i], other_responses,
                                             other_readability_compl, other_time_compl))
 
             # Risposte di entrambi i modelli riguardo ai miglioramenti
@@ -103,8 +103,8 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
             other_responses = [r for j, r in enumerate(response) if
                                j != i]  # rimuove dalle risposte quella del modello i
             # ---vedi per eventuale inserimento time complexity e cognitive
-            debate_prompts[i] = getDiscussionPrompt(response[i], other_responses)
-            response[i] = get_response_Test_Inputs(agents[i], user_prompt, debate_prompts[i])
+            debate_prompts[i] = get_discussion_prompt(response[i], other_responses)
+            response[i] = get_response_test_inputs(agents[i], user_prompt, debate_prompts[i])
             print(f"Improved model {i} response: {response[i]}")
 
         round += 1
@@ -204,7 +204,7 @@ typeModel = 'codellama-7b-instruct'
 agents = []
 
 for i in range(0, AGENTS_NO):
-    agents.append(getCloneAgent(typeModel))
+    agents.append(get_clone_agent(typeModel))
 
 # Round
 debate_response = str(simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
@@ -213,6 +213,6 @@ if("-1" in debate_response):
 else:
     print("Evaluation")
     # Evaluation
-    ai_response = get_response_to_evaluate({debate_response})
+    ai_response = get_formatted_code_solution({debate_response})
     evaluator = get_evaluator(typeModel)
     eval_code(str(user_prompt), str(ai_response), evaluator)

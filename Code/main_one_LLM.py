@@ -26,10 +26,13 @@ from Code.LLM_definition import get_first_response
 from Code.response_JSON_schema import schema_complexity
 
 # Import constants and utility functions for managing multi-round debates
-from Debate_strategies import MAXROUNDS_NO
-from LLM_definition import getCloneAgent, get_response_to_evaluate
+
+from LLM_definition import get_clone_agent, get_formatted_code_solution
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
 
+# Maximum number of refinement response rounds allowed based on evaluator feedback, before ending the debate
+# with a partial solution.
+MAX_EVAL_ROUNDS = 5
 
 # Generate a response according to the user prompt in schema_complexity JSON schema
 
@@ -165,8 +168,8 @@ user_prompt = input()
 print(f"User prompt: {user_prompt}\n")
 
 # Instantiate the LLM agent using a specified model type
-typeModel = 'llama-3.2-3b-instruct'
-agent = getCloneAgent(typeModel)
+type_model = 'codellama-7b-instruct'
+agent = get_clone_agent(type_model)
 
 # Get the initial code generation response from the agent
 response = get_first_response(agent, few_shot_prompt, user_prompt)
@@ -176,16 +179,17 @@ print("Response\n\n" + response)
 if "" == response:
     print("End with failure!")
 else:
-    i = 1
+    i = 0
     final_score = 0
+    ai_response = ""
 
     # Perform evaluation and refinement for a maximum of MAXROUNDS_NO iterations
-    for i in range(1, MAXROUNDS_NO):
+    for i in range(0, MAX_EVAL_ROUNDS):
         print("Evaluation")
 
         # Prepare the agent's code response for evaluation
-        ai_response = get_response_to_evaluate(response)
-        evaluator = get_evaluator(typeModel)
+        ai_response = get_formatted_code_solution(response)
+        evaluator = get_evaluator(type_model)
         evaluation = eval_code(str(user_prompt), str(ai_response), evaluator)
 
         print(evaluation)
@@ -209,6 +213,6 @@ else:
             break
 
     # If max iterations are reached and score is still below threshold, accept the latest version
-    if i == MAXROUNDS_NO:
+    if i == MAX_EVAL_ROUNDS:
         print(f"End debate with a solution with overall score: {final_score}")
         print(ai_response)

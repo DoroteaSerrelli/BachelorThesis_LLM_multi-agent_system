@@ -25,7 +25,7 @@ def extract_time_complexity(response_json):
     print("Risposta ricevuta: " + str(str_json))
     time_compl = str_json["time_complexity"]
 
-    return time_compl
+    return time_compl.lower()
 
 
 '''

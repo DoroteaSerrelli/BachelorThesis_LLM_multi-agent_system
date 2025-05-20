@@ -1,9 +1,10 @@
 """
     Helper functions used in debate strategies.
 """
+from Code.Debate_strategies import AGENTS_NO
 from metrics import extract_time_complexity
 
-def get_set_number_solutions(placeholder, AGENTS_NO):
+def get_set_number_solutions(placeholder, number_agents=AGENTS_NO):
     """
         Returns a list of agent indices excluding the one specified by `placeholder`.
 

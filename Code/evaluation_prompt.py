@@ -1,4 +1,4 @@
-''' Instruction prompt for evaluator '''
+""" Instruction prompt for evaluator """
 
 instruct_prompt = """\
 # Instruction

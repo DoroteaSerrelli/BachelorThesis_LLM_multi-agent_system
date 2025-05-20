@@ -1,18 +1,19 @@
-'''MAIN'''
+"""MAIN"""
+
 import sys
 
 # Import core modules used for debate simulation, agent creation, and code evaluation
 
-from Debate_strategies import simulate_round, AGENTS_NO, MAXROUNDS_NO, simulate_round_k_solutions, \
+from Debate_strategies import simulate_round, AGENTS_NO, simulate_round_k_solutions, \
     simulate_complete_round, after_evaluation_debate
-from LLM_definition import getCloneAgent, get_response_to_evaluate
+from LLM_definition import get_clone_agent, get_formatted_code_solution
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
 
 # Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
 # It includes multiple examples of correct outputs for different types of coding tasks
 
 import lmstudio as lms
-SERVER_API_HOST = "localhost:2345"
+SERVER_API_HOST = "localhost:2345"  #server lmstudio port
 
 # This must be the *first* convenience API interaction (otherwise the SDK
 # implicitly creates a client that accesses the default server API host)
@@ -21,6 +22,10 @@ lms.configure_default_client(SERVER_API_HOST)
 # Note: the dedicated configuration API was added in lmstudio-python 1.3.0
 # For compatibility with earlier SDK versions, it is still possible to use
 # lms.get_default_client(SERVER_API_HOST) to configure the default client
+
+# Maximum number of refinement response rounds allowed based on evaluator feedback, before ending the debate
+# with a partial solution.
+MAX_EVAL_ROUNDS = 5
 
 few_shot_prompt = """Provide a response structured in the following JSON format, which includes:
 - The code block import statements 
@@ -67,47 +72,54 @@ JSON RESPONSE:
 ```
 
 """
+print("Choose strategy debate (0, 1, 2): ")
 strategy_debate = input()
 sys.stdin.buffer.flush() # flush buffer stdin
 user_prompt = input()
 print(f"User prompt: {user_prompt}\n")
 
 # Initialize the list of agents using the selected model
-typeModel = 'codellama-7b-instruct' #'llama-3.2-3b-instruct' # You can switch to a different model, e.g., 'codellama-7b-instruct', 'qwen2.5-coder-3b-instruct'
-typeEvalModel = 'codellama-7b-instruct'
+types_model = [None] * AGENTS_NO
+
+for i in range(0, AGENTS_NO):
+    types_model[i] = 'codellama-7b-instruct'    # You can switch to a different model, e.g., 'qwen2.5-coder-3b-instruct'
+
+type_evaluator_model = 'codellama-7b-instruct'
 agents = []
 
 # Clone agents based on the configured number of agents (AGENTS_NO)
 
 for i in range(0, AGENTS_NO):
-    agents.append(getCloneAgent(typeModel))
+    agents.append(get_clone_agent(types_model))
 
 debate_response = ""
 
 # Simulate a multi-agent debate round with the user prompt and the few-shot examples
 if strategy_debate == "0":
-    debate_response = str(simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
+    debate_response = str(simulate_round(user_prompt, few_shot_prompt, agents))
 elif strategy_debate == '1':
-    debate_response = str(simulate_round_k_solutions(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
+    debate_response = str(simulate_round_k_solutions(user_prompt, few_shot_prompt, agents))
 elif strategy_debate == '2':
-    debate_response = str(simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
+    debate_response = str(simulate_complete_round(user_prompt, few_shot_prompt, agents))
 else:
-    print("ERRORE INPUT: 0, 1, 2 AMMESSI")
-    exit(-1)  # input error
+    # input error
+    print("INPUT ERROR: INSERT ONLY 0, 1, 2")
+    exit(-1)
+
 # If no consensus is reached during the debate, end the process with a failure message
-if "-1" == debate_response:
+if debate_response == "-1":
     print("End debate with failure!")
 else:
-    i = 1
+    i = 0
     final_score = 0
     ai_response = ""
     # Evaluate the final proposed solution from the agents
-    for i in range(1, MAXROUNDS_NO):
+    for i in range(0, MAX_EVAL_ROUNDS):
         print("Evaluation")
 
         # Extract the candidate response (code+imports) to evaluate
-        ai_response = get_response_to_evaluate(debate_response)
-        evaluator = get_evaluator(typeEvalModel)
+        ai_response = get_formatted_code_solution(debate_response)
+        evaluator = get_evaluator(type_evaluator_model)
         evaluation = eval_code(str(user_prompt), str(ai_response), evaluator)
 
         print(evaluation)
@@ -122,11 +134,11 @@ else:
 
         # If the score is below the acceptable threshold (e.g., 90), trigger another debate round
         if final_score < 90:
-            debate_response = str(after_evaluation_debate(user_prompt, few_shot_prompt, evaluation_feedback, ai_response, agents, strategy_debate, max_rounds=MAXROUNDS_NO)) #vedi s emettere few_shot_prompt per il formato
+            debate_response = str(after_evaluation_debate(user_prompt, few_shot_prompt, evaluation_feedback, ai_response, agents, strategy_debate)) #vedi s emettere few_shot_prompt per il formato
         else:
             print(ai_response)  # print the accepted final response
             break
 
-    if i == MAXROUNDS_NO:   # solution provided has a score lower than 90
-        print(f"End debate with a solution with overall score: {final_score}")
+    if i == MAX_EVAL_ROUNDS:   # solution provided has a score lower than 90
+        print(f"End debate with a partial solution with overall score: {final_score}")
         print(ai_response)

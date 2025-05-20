@@ -11,8 +11,8 @@ from response_JSON_schema import schema_complexity, schema_inputs
 
 
 # Inizializzare il modello (copie di una tipologia di modello)
-def getCloneAgent(typeModel, temperature=0.3):
-    model = lms.llm(typeModel, config={"temperature": temperature})
+def get_clone_agent(type_model, temperature=0.3):
+    model = lms.llm(type_model, config={"temperature": temperature})
 
     return model
 
@@ -33,7 +33,7 @@ def extract_identifier(data: Dict[str, Any]) -> str | None:
     return data.get("identifier")
 
 
-def getDiscussionFeedbackPrompt_Test_Inputs(pers_response, pers_time, pers_cognitive, other_answers,
+def get_discussion_feedback_prompt_test_inputs(pers_response, pers_time, pers_cognitive, other_answers,
                                             readability_complexity, time_complexity, AGENTS_NO):
     deb_prompt = (
         'These are the solutions to the code generation problem from other agents, which are included in ---: ')
@@ -59,7 +59,7 @@ def getDiscussionFeedbackPrompt_Test_Inputs(pers_response, pers_time, pers_cogni
 # Costruzione del prompt per il dibattito tra modelli
 # other_answers = list
 
-def getDiscussionGivenAnswersFeedbackPrompt(placeholder, pers_response, pers_cognitive, other_answers,
+def get_discussion_given_answers_feedback_prompt(placeholder, pers_response, pers_cognitive, other_answers,
                                             others_readability_complexity, AGENTS_NO):
     deb_prompt = (
             'Here are some solutions to the code generation problem given by other agents, which are included in ---.'
@@ -107,7 +107,7 @@ def getDiscussionGivenAnswersFeedbackPrompt(placeholder, pers_response, pers_cog
     return deb_prompt
 
 
-def getDiscussionPromptKSolutions(responses, k_cognitive_complexity, AGENTS_NO):
+def get_discussion_prompt_k_solutions(responses, k_cognitive_complexity, AGENTS_NO):
 
     deb_prompt = (
             'Here are the solutions to the code generation problem chosen in the previous round by other agents, which are included in ---.'
@@ -135,7 +135,7 @@ def getDiscussionPromptKSolutions(responses, k_cognitive_complexity, AGENTS_NO):
     return deb_prompt
 
 
-def getDiscussionPrompt(pers_response, other_answers):
+def get_discussion_prompt(pers_response, other_answers):
     deb_prompt = (
         'Here are the solutions to the code generation problem provided by other agents:\n'
     )
@@ -175,7 +175,7 @@ def get_first_response(model, few_shot_prompt, user_prompt, temperature=0.3):
 
 
 # Funzione per ottenere la risposta del modello
-def get_first_response_Test_Inputs(model, few_shot_prompt, user_prompt):
+def get_first_response_test_inputs(model, few_shot_prompt, user_prompt):
     # Definire il prompt di sistema
     system_prompt = (
         "You are an AI expert programmer that writes code "
@@ -205,7 +205,7 @@ def get_response(model, user_prompt, debate_response):
 
 
 # Funzione per fornire una risposta del modello durante una discussione
-def get_response_Test_Inputs(model, user_prompt, debate_response):
+def get_response_test_inputs(model, user_prompt, debate_response):
     messages = [{"role": "user", "content": "User asks: " + user_prompt + "\n" + debate_response}
                 ]
     response = model.respond({"messages": messages}, response_format=schema_inputs)
@@ -214,17 +214,8 @@ def get_response_Test_Inputs(model, user_prompt, debate_response):
 
 # Convert JSON schema response into a code response: imports+code
 
-def get_response_to_evaluate(ai_response):
-    """
-    Estrae le stringhe 'imports' e 'code' da un dizionario.
+def get_formatted_code_solution(ai_response):
 
-    Args:
-        data (dict): Un dizionario che contiene le chiavi 'imports' e 'code'.
-
-    Returns:
-        str: Una stringa che contiene il contenuto di 'imports' e 'code', concatenati con un separatore.
-        None: Se 'imports' o 'code' non sono presenti nel dizionario.
-    """
     import json
     response_json = json.loads(ai_response)
     if "imports" in response_json and "code" in response_json:
@@ -241,7 +232,7 @@ def get_response_to_evaluate(ai_response):
 
 #------------------------
 
-def getDiscussionGivenAnswersFeedbackPrompt_NoComparing(answers, readability_complexity, AGENTS_NO):
+def get_discussion_given_answers_feedback_prompt_no_comparing(answers, readability_complexity, AGENTS_NO):
     deb_prompt = (
             'Here are some solutions to the code generation problem given, which are included in ---.'
             'Each solution has:'
@@ -270,7 +261,7 @@ def getDiscussionGivenAnswersFeedbackPrompt_NoComparing(answers, readability_com
 
 #-----------------------------
 
-def get_MultipleChoiceNumbers_prompt(answers, readability_complexity, AGENTS_NO):
+def get_multiple_choice_numbers_prompt(answers, readability_complexity, AGENTS_NO):
     deb_prompt = (
             'Here are some proposed solutions (0, 1, 2, ...) for the code generation problem:\n'
     )
@@ -290,3 +281,44 @@ def get_MultipleChoiceNumbers_prompt(answers, readability_complexity, AGENTS_NO)
                        )
 
     return deb_prompt
+
+
+def get_discussion_feedback_prompt(placeholder, pers_response, pers_cognitive, other_answers, readability_complexity):
+        deb_prompt = (
+
+            'These are the solutions to the code generation problem from other agents, which are included in ---: ')
+
+        range_values = get_set_number_solutions(placeholder)
+        for i in range_values:
+            deb_prompt += ('\n ONE AGENT SOLUTION: \n --- ' + other_answers[i] + '\n --- ' +
+
+                           'This solution has time complexity = ' + extract_time_complexity(other_answers[i]) +
+
+                           ' and cognitive_complexity = ' + str(readability_complexity[i]) +
+
+                           '--- '
+
+                           )
+
+        deb_prompt += ("""\nUsing the solutions from other agents as additional advice, examine your answer, which is delimited by ---.
+
+
+                                If you can improve your answer, which is included in ---, in terms of time complexity or cognitive complexity,
+
+
+                                state your new answer at the start of your new response in the form **Yes**; otherwise, 
+
+
+                                answers in the form **No**."""
+
+
+                       '--- YOUR ANSWER:' + pers_response + ' '
+
+
+                                                            ' Your answer has time_complexity= ' + extract_time_complexity(
+
+            pers_response) +
+
+                       ' and cognitive_complexity = ' + str(pers_cognitive) + '---')
+
+        return deb_prompt

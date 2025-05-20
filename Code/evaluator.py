@@ -19,7 +19,7 @@ EXEC_ERR_WEIGHT = 15
 MAX_ERRORS = 10
 
 
-def get_evaluator(type_model):
+def get_evaluator(type_model, temperature=1.0):
     """
     Initializes and returns an LLM evaluator instance based on the given model type.
 
@@ -29,7 +29,9 @@ def get_evaluator(type_model):
     Returns:
         evaluator: An instance of the language model ready to evaluate code.
     """
-    evaluator = lms.llm(type_model)
+
+    evaluator = lms.llm(type_model, config={"temperature": temperature})
+
     return evaluator
 
 

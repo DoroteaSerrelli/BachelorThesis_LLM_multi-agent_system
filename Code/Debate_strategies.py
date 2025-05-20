@@ -8,12 +8,12 @@
 # Imports
 from LLM_definition import (
     get_first_response,
-    getDiscussionGivenAnswersFeedbackPrompt,
-    getDiscussionPrompt,
+    get_discussion_given_answers_feedback_prompt,
+    get_discussion_prompt,
     get_response,
-    getDiscussionPromptKSolutions,
+    get_discussion_prompt_k_solutions,
     get_agreement,
-    getDiscussionGivenAnswersFeedbackPrompt_NoComparing, get_MultipleChoiceNumbers_prompt, getCloneAgent,
+    get_discussion_given_answers_feedback_prompt_no_comparing, get_multiple_choice_numbers_prompt, get_clone_agent,
     get_model_info, extract_identifier
 )
 
@@ -29,7 +29,7 @@ AGENTS_NO = 3
 MAXROUNDS_NO = 5
 
 
-def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
+def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO):
     """
         Simulates a multi-round debate among agents until consensus is reached or a fallback is triggered.
 
@@ -80,7 +80,7 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
             )''' # quello usato
             # quello da provare
             debate_prompts.append(
-                get_MultipleChoiceNumbers_prompt(response, readability_complexity, AGENTS_NO)
+                get_multiple_choice_numbers_prompt(response, readability_complexity, AGENTS_NO)
             )
 
         # === Collect feedback from each agent (which solution they prefer) ===
@@ -118,7 +118,7 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
     return response[vote_index]
 
 
-def simulate_round_k_solutions(user_prompt, few_shot_prompt, agents, max_rounds):
+def simulate_round_k_solutions(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO):
     """
         Same as simulate_round(), but adds a strategy where agents debate over a smaller subset (k)
         of top candidate solutions when a deadlock occurs.
@@ -166,7 +166,7 @@ def simulate_round_k_solutions(user_prompt, few_shot_prompt, agents, max_rounds)
             )'''  # quello usato
             # quello da provare
             debate_prompts.append(
-                get_MultipleChoiceNumbers_prompt(
+                get_multiple_choice_numbers_prompt(
                     response, readability_complexity, AGENTS_NO)
             )
 
@@ -235,13 +235,13 @@ def debate_self_refinement(agents, responses, user_prompt):
         # Construct the prompt to trigger self-refinement
 
         if responses[i] != "":
-            debate_prompts[i] = getDiscussionPrompt(responses[i], other_responses)
+            debate_prompts[i] = get_discussion_prompt(responses[i], other_responses)
             responses[i] = get_response(agents[i], user_prompt, debate_prompts[i])
         else:# se ha dato nessuna risposta
             increase_temp = 0.5 #aumento la temperatura
             info_model = get_model_info(agents[i])
             typeModel = extract_identifier(info_model)
-            agents[i] = getCloneAgent(typeModel, increase_temp)
+            agents[i] = get_clone_agent(typeModel, increase_temp)
             responses[i] = get_first_response(agents[i], "", user_prompt)
 
         # Generate improved response
@@ -276,7 +276,7 @@ def debate_on_k_solutions(k_candidates_chosen, user_prompt, responses, readabili
     for i in range(AGENTS_NO):
 
         # Build the prompt to analyze k-candidate solutions
-        debate_prompts[i] = getDiscussionPromptKSolutions(responses, k_cognitive_complexity, AGENTS_NO)
+        debate_prompts[i] = get_discussion_prompt_k_solutions(responses, k_cognitive_complexity, AGENTS_NO)
         # Agent generates a new opinion
         responses[i] = get_response(agents[i], user_prompt, debate_prompts[i])
         print(f"Improved model {i} response: {responses[i]}")
@@ -336,7 +336,7 @@ def majority_voting(AGENTS_NO, feedback):
     Used when comparison-based evaluation may bias or slow convergence.
 '''
 
-def simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds):
+def simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO):
     # === Phase 1: Each model independently generates a first response ===
     response = []  # Stores responses from all agents
     for i in range(AGENTS_NO):
@@ -366,7 +366,7 @@ def simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds):
         #quello usato debate_prompt = getDiscussionGivenAnswersFeedbackPrompt_NoComparing(response, readability_complexity, AGENTS_NO) # prova per non comparazione
         #quello da provare
 
-        debate_prompt = get_MultipleChoiceNumbers_prompt(response, readability_complexity, AGENTS_NO)
+        debate_prompt = get_multiple_choice_numbers_prompt(response, readability_complexity, AGENTS_NO)
 
         # === Collect feedback from each agent (which solution they prefer) ===
         feedback = []
