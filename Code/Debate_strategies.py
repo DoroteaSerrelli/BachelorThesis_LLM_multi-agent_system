@@ -4,7 +4,7 @@
     The debate process aims to iteratively refine and evaluate candidate solutions,
     based on cognitive (readability) and time complexity, until a consensus is reached.
 """
-
+from Code.debate_prompt_attempts import get_refined_debate_prompt, get_formatted_responses, get_refined_agreement
 # Imports
 from LLM_definition import (
     get_first_response,
@@ -16,7 +16,7 @@ from LLM_definition import (
     get_discussion_given_answers_feedback_prompt_no_comparing, get_multiple_choice_numbers_prompt, get_clone_agent,
     get_model_info, extract_identifier
 )
-
+import json
 from metrics import get_cognitive_complexity
 from tabulate import tabulate
 from utility_function import remove_duplicates, equals_cognitive_complexity, equals_time_complexity, \
@@ -29,7 +29,7 @@ AGENTS_NO = 3
 MAXROUNDS_NO = 5
 
 
-def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO):
+def debate_with_self_refinement(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO):
     """
         Simulates a multi-round debate among agents until consensus is reached or a fallback is triggered.
 
@@ -42,6 +42,7 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO
     """
 
     # === Phase 1: Each model independently generates a first response ===
+
     response = []  # Stores responses from all agents
     for i in range(AGENTS_NO):
         response.append(get_first_response(agents[i], few_shot_prompt, user_prompt))
@@ -51,12 +52,16 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO
         print(f"Response model {i}: {response[i]}")
 
     # === Phase 2: Iterative debate rounds ===
-    round = 1
-    while round <= max_rounds:
+    current_round = 1
+
+    feedback = []
+
+    while current_round <= max_rounds:
+
+
         # === Measure readability (cognitive complexity) of each response ===
         readability_complexity = []  # Stores total cognitive complexity for each response
         details_readability_complexity = []  # Stores node-level breakdown of complexity
-        import json
 
         for i in range(AGENTS_NO):
             response_json = json.loads(response[i])  # Parse JSON response
@@ -66,29 +71,28 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO
             details_readability_complexity.append(details)
 
         # === Construct the prompt for each agent to analyze others' responses ===
-        debate_prompts = []
-
+        #debate_prompts = []
+        debate_prompt = ""
         for i in range(AGENTS_NO):
-            # Exclude agent's own response and complexity
+            '''# Exclude agent's own response and complexity
             other_responses = [r for j, r in enumerate(response) if j != i]
             other_readability_compl = [r for j, r in enumerate(readability_complexity) if j != i]
             # Build a custom prompt for that agent to evaluate others' responses
-            '''debate_prompts.append(
-                getDiscussionGivenAnswersFeedbackPrompt(
+            debate_prompts.append(
+                get_discussion_given_answers_feedback_prompt(
                     i, response[i], readability_complexity[i], other_responses, other_readability_compl, AGENTS_NO
                 )
-            )''' # quello usato
-            # quello da provare
-            debate_prompts.append(
-                get_multiple_choice_numbers_prompt(response, readability_complexity, AGENTS_NO)
-            )
+            )'''
+            formatted_responses = get_formatted_responses(response, readability_complexity)
+            debate_prompt = get_refined_debate_prompt(AGENTS_NO, user_prompt, formatted_responses)
+
 
         # === Collect feedback from each agent (which solution they prefer) ===
-        feedback = []
-        for i in range(AGENTS_NO):
-            feedback.append(get_agreement(agents[i], user_prompt, debate_prompts[i]))
 
-        print(f"\nRound {round} - Feedback:")
+        for i in range(AGENTS_NO):
+            feedback.append(get_refined_agreement(agents[i], debate_prompt))
+
+        print(f"\nRound {current_round} - Feedback:")
         for i in range(0, AGENTS_NO):
             print(f"Feedback model {i}: {feedback[i]}\n")
 
@@ -111,7 +115,7 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO
         # === If disagreement persists, proceed with self-refinement strategy ===
         response = debate_self_refinement(agents, response, user_prompt)
 
-        round += 1
+        current_round += 1
 
     # === If max rounds exceeded, apply majority voting to resolve ===
     vote_index = majority_voting(AGENTS_NO, feedback)
@@ -510,7 +514,7 @@ def after_evaluation_debate(user_prompt, few_shot_prompt, feedback_evaluator, pr
 
     debate_response = ""
     if strategy_debate == "0":
-        debate_response = str(simulate_round(refinement_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
+        debate_response = str(debate_with_self_refinement(refinement_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
     elif strategy_debate == '1':
         debate_response = str(simulate_round_k_solutions(refinement_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO))
     else:

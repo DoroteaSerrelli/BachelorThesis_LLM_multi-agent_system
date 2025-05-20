@@ -117,3 +117,19 @@ def get_k_responses(response, feedback):
         k_responses.append(response[int(i)])
 
     return k_responses
+
+# Convert JSON schema response into a code response: imports+code
+
+def get_formatted_code_solution(ai_response):
+
+    import json
+    response_json = json.loads(ai_response)
+    if "imports" in response_json and "code" in response_json:
+        imports = response_json["imports"]
+        code = response_json["code"]
+        if imports != "":
+            return f"{imports}\n\n{code}"
+        else:
+            return f"{code}"
+    else:
+        return None

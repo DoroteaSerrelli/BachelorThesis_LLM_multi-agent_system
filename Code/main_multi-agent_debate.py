@@ -4,9 +4,10 @@ import sys
 
 # Import core modules used for debate simulation, agent creation, and code evaluation
 
-from Debate_strategies import simulate_round, AGENTS_NO, simulate_round_k_solutions, \
+from Debate_strategies import debate_with_self_refinement, AGENTS_NO, simulate_round_k_solutions, \
     simulate_complete_round, after_evaluation_debate
-from LLM_definition import get_clone_agent, get_formatted_code_solution
+from LLM_definition import get_clone_agent
+from utility_function import get_formatted_code_solution
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
 
 # Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
@@ -96,7 +97,7 @@ debate_response = ""
 
 # Simulate a multi-agent debate round with the user prompt and the few-shot examples
 if strategy_debate == "0":
-    debate_response = str(simulate_round(user_prompt, few_shot_prompt, agents))
+    debate_response = str(debate_with_self_refinement(user_prompt, few_shot_prompt, agents))
 elif strategy_debate == '1':
     debate_response = str(simulate_round_k_solutions(user_prompt, few_shot_prompt, agents))
 elif strategy_debate == '2':

@@ -7,8 +7,9 @@ AGENTS_NO = 2
 MAXROUNDS_NO = 5
 
 from LLM_definition import get_clone_agent, get_first_response, get_response, get_discussion_prompt, get_agreement, \
-    get_discussion_feedback_prompt, get_formatted_code_solution, get_first_response_test_inputs, \
+    get_discussion_feedback_prompt, get_first_response_test_inputs, \
     get_discussion_feedback_prompt_test_inputs, get_response_test_inputs
+from utility_function import get_formatted_code_solution
 from evaluator import eval_code, get_evaluator
 
 

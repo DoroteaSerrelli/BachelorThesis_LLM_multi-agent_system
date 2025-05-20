@@ -1,6 +1,6 @@
 '''Example of evaluator usage'''
 
-from LLM_definition import get_formatted_code_solution
+from utility_function import get_formatted_code_solution
 from evaluator import get_evaluator, eval_code
 
 

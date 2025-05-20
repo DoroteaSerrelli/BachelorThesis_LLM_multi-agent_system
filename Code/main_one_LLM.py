@@ -27,7 +27,8 @@ from Code.response_JSON_schema import schema_complexity
 
 # Import constants and utility functions for managing multi-round debates
 
-from LLM_definition import get_clone_agent, get_formatted_code_solution
+from LLM_definition import get_clone_agent
+from utility_function import get_formatted_code_solution
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
 
 # Maximum number of refinement response rounds allowed based on evaluator feedback, before ending the debate
