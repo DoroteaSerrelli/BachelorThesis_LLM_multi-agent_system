@@ -252,12 +252,12 @@ def get_discussion_given_answers_feedback_prompt_no_comparing(answers, readabili
 
 #-----------------------------
 
-def get_discussion_feedback_prompt(placeholder, pers_response, pers_cognitive, other_answers, readability_complexity):
+def get_discussion_feedback_prompt(placeholder, pers_response, pers_cognitive, other_answers, readability_complexity, AGENTS_NO):
         deb_prompt = (
 
             'These are the solutions to the code generation problem from other agents, which are included in ---: ')
 
-        range_values = get_set_number_solutions(placeholder)
+        range_values = get_set_number_solutions(placeholder, AGENTS_NO)
         for i in range_values:
             deb_prompt += ('\n ONE AGENT SOLUTION: \n --- ' + other_answers[i] + '\n --- ' +
 
