@@ -4,7 +4,7 @@ import sys
 
 # Import core modules used for debate simulation, agent creation, and code evaluation
 
-from Debate_strategies import debate_with_self_refinement, AGENTS_NO, simulate_round_k_solutions, \
+from Debate_strategies import debate_with_self_refinement, AGENTS_NO, debate_with_k_candidates, \
     simulate_complete_round, after_evaluation_debate
 from LLM_definition import get_clone_agent
 from utility_function import get_formatted_code_solution
@@ -83,15 +83,15 @@ print(f"User prompt: {user_prompt}\n")
 types_model = [None] * AGENTS_NO
 
 for i in range(0, AGENTS_NO):
-    types_model[i] = 'codellama-7b-instruct'    # You can switch to a different model, e.g., 'qwen2.5-coder-3b-instruct'
+    types_model[i] = 'codellama-13b-instruct'    # You can switch to a different model, e.g., 'qwen2.5-coder-3b-instruct'
 
-type_evaluator_model = 'codellama-7b-instruct'
+type_evaluator_model = 'deepseek-coder-v2-lite-instruct'
 agents = []
 
 # Clone agents based on the configured number of agents (AGENTS_NO)
 
 for i in range(0, AGENTS_NO):
-    agents.append(get_clone_agent(types_model))
+    agents.append(get_clone_agent(types_model[i]))
 
 debate_response = ""
 
@@ -99,7 +99,7 @@ debate_response = ""
 if strategy_debate == "0":
     debate_response = str(debate_with_self_refinement(user_prompt, few_shot_prompt, agents))
 elif strategy_debate == '1':
-    debate_response = str(simulate_round_k_solutions(user_prompt, few_shot_prompt, agents))
+    debate_response = str(debate_with_k_candidates(user_prompt, few_shot_prompt, agents))
 elif strategy_debate == '2':
     debate_response = str(simulate_complete_round(user_prompt, few_shot_prompt, agents))
 else:

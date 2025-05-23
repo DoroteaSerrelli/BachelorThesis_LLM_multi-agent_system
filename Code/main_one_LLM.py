@@ -20,10 +20,10 @@
 
 
 # Import the function to get the first response from the LLM
-from Code.LLM_definition import get_first_response
+from LLM_definition import get_first_response
 
 # Import schema used to enforce structure of complex JSON responses
-from Code.response_JSON_schema import schema_complexity
+from response_JSON_schema import schema_complexity
 
 # Import constants and utility functions for managing multi-round debates
 
@@ -36,6 +36,7 @@ from evaluator import eval_code, get_evaluator, extract_criteria_scores, calcula
 MAX_EVAL_ROUNDS = 5
 
 # Generate a response according to the user prompt in schema_complexity JSON schema
+
 
 def get_response_unique(model, user_prompt):
     messages = [{"role": "user", "content": user_prompt}]
@@ -106,15 +107,15 @@ def self_refinement_unique(user_prompt, feedback_evaluator, previous_code):
 
     # Fill in the placeholders in the instruction with actual input values
     refinement_prompt = refinement_instruction_prompt.replace("{user_prompt}", user_prompt)
-    refinement_prompt = refinement_instruction_prompt.replace("{previous_code}", previous_code)
-    refinement_prompt = refinement_instruction_prompt.replace("{evaluation_feedback}", feedback_evaluator)
+    refinement_prompt = refinement_prompt.replace("{previous_code}", previous_code)
+    refinement_prompt = refinement_prompt.replace("{evaluation_feedback}", feedback_evaluator)
 
     # Generate a refined solution using the model
     refined_solution = get_response_unique(agent, refinement_prompt)
     return refined_solution
 
 
-#-----------MAIN------------#
+# ================ MAIN ================#
 
 # Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
 # It includes multiple examples of correct outputs for different types of coding tasks
