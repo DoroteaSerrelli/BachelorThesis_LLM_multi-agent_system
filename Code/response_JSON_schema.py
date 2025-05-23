@@ -21,6 +21,21 @@ schema = {
     "required": ["documentation", "imports", "code"]
 }
 
+"""Schema for feedback during debate"""
+schema_feedback = {
+
+  "type": "object",
+  "properties": {
+    "response": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "required": ["response"],
+  "additionalProperties": False
+
+}
+
 """Schema for code solutions to to_do about code generation within Big-O complexity."""
 
 schema_complexity = {

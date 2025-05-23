@@ -1,7 +1,7 @@
 '''Complete Python code'''
 from tabulate import tabulate
 
-from Code.metrics import extract_input_values, calulate_time_complexity, get_cognitive_complexity
+from metrics import extract_input_values, calulate_time_complexity, get_cognitive_complexity
 
 AGENTS_NO = 2
 MAXROUNDS_NO = 5
@@ -72,7 +72,7 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
             other_readability_compl = [r for j, r in enumerate(readability_complexity) if j != i]
             debate_prompts.append(
                 get_discussion_feedback_prompt_test_inputs(response[i], time_complexity[i], readability_complexity[i], other_responses,
-                                            other_readability_compl, other_time_compl))
+                                            other_readability_compl, other_time_compl, AGENTS_NO))
 
             # Risposte di entrambi i modelli riguardo ai miglioramenti
         feedback = []

@@ -1,10 +1,11 @@
 """
     Helper functions used in debate strategies.
 """
-from Code.Debate_strategies import AGENTS_NO
-from metrics import extract_time_complexity
 
-def get_set_number_solutions(placeholder, number_agents=AGENTS_NO):
+from metrics import extract_time_complexity
+import json
+
+def get_set_number_solutions(placeholder, AGENTS_NO):
     """
         Returns a list of agent indices excluding the one specified by `placeholder`.
 
@@ -122,7 +123,6 @@ def get_k_responses(response, feedback):
 
 def get_formatted_code_solution(ai_response):
 
-    import json
     response_json = json.loads(ai_response)
     if "imports" in response_json and "code" in response_json:
         imports = response_json["imports"]
@@ -133,3 +133,47 @@ def get_formatted_code_solution(ai_response):
             return f"{code}"
     else:
         return None
+
+
+
+def get_feedback_value(json_data):
+    """
+    Extracts the value of "response" from a JSON object conforming to schema_feedback.
+
+    Args:
+        json_data (str or dict): The JSON string or Python dictionary to extract from.
+
+    Returns:
+        int: The integer value associated with the "response" key.
+        None: If the JSON is invalid or the "response" key is not present
+              (even though the schema makes it required, this helps with robustness).
+    """
+    if isinstance(json_data, str):
+        try:
+            data = json.loads(json_data)
+        except json.JSONDecodeError:
+            print("Error: The provided string is not valid JSON.")
+            return None
+    elif isinstance(json_data, dict):
+        data = json_data
+    else:
+        print("Error: Input must be a JSON string or a dictionary.")
+        return None
+
+    if "response" in data and isinstance(data["response"], int):
+        print("HO OTTENUTO " + str(data["response"]))
+        return data["response"]
+    else:
+        print("Error: The 'response' key not found or is not an integer.")
+        return None
+
+
+
+# Token counts
+from transformers import AutoTokenizer
+
+# Usa il tokenizer adatto al tuo modello
+tokenizer = AutoTokenizer.from_pretrained("codellama/CodeLlama-13b-Instruct-hf")
+
+def count_tokens(text):
+    return len(tokenizer.tokenize(text))
