@@ -1,7 +1,8 @@
 ###DEBATE AS ANSWER MULTIPLE CHOICE QUESTIONS
-from Code.Debate_strategies import AGENTS_NO
-from Code.metrics import extract_time_complexity
-from Code.utility_function import get_formatted_code_solution
+
+from metrics import extract_time_complexity
+from utility_function import get_formatted_code_solution
+from response_JSON_schema import schema_feedback
 
 
 def get_multiple_choice_numbers_prompt(answers, readability_complexity, AGENTS_NO):
@@ -126,7 +127,7 @@ STEP 3: Provide your answer as described in **Output Format** section.
 {ai_responses}
 """
 
-def get_formatted_responses(responses, cognitive_complexity): #responses = JSON responses
+def get_formatted_responses(responses, cognitive_complexity, AGENTS_NO): #responses = JSON responses
     extracted_formatted_responses = []
     extracted_time_complexity = []
 
@@ -139,18 +140,18 @@ def get_formatted_responses(responses, cognitive_complexity): #responses = JSON 
         extracted_time_complexity.append(extract_time_complexity(responses[i]))
 
     for i in range(0, AGENTS_NO):
-        formatted_responses[i] = (string + "SOLUTION: " + extracted_formatted_responses[i] +
-                                  "\nUNIQUE NUMBER: " + str(i) +
+        formatted_responses.append(string + "SOLUTION: " + extracted_formatted_responses[i] +
+                                  "\nUNIQUE NUMBER OF SOLUTION: " + str(i) +
                                   "\nTIME COMPLEXITY: " + extracted_time_complexity[i] +
-                                  "\nCOGNITIVE COMPLEXITY: " + cognitive_complexity[i])
+                                  "\nCOGNITIVE COMPLEXITY: " + str(cognitive_complexity[i]))
 
     return formatted_responses
 
 def get_refined_debate_prompt(AGENTS_NO, user_prompt, formatted_responses):
 
     prompt = example_refined_debate_prompt
-    prompt = prompt.replace("{AGENTS_NO}", AGENTS_NO)
-    prompt = prompt.replace("{_AGENTS_NO-1}", AGENTS_NO-1)
+    prompt = prompt.replace("{AGENTS_NO}", str(AGENTS_NO))
+    prompt = prompt.replace("{_AGENTS_NO-1}", str(AGENTS_NO-1))
     prompt = prompt.replace("{user_prompt}", user_prompt)
     ai_responses = ""
 
@@ -163,5 +164,36 @@ def get_refined_debate_prompt(AGENTS_NO, user_prompt, formatted_responses):
 
 def get_refined_agreement(model, deb_prompt):
     messages = [{"role": "user", "content": deb_prompt}]
-    response = model.respond({"messages": messages})  #vedi se è necessario definire uno schema JSON per l'agreement
+    response = model.respond({"messages": messages}, response_format=schema_feedback)
     return response.content
+
+
+
+
+def getDiscussionGivenAnswersFeedbackPrompt_NoComparing(answers, user_prompt, readability_complexity, AGENTS_NO):
+    deb_prompt = (
+        f'''Here are several solutions to the following code generation problem:
+        -----
+        CODE GENERATION TASK:
+        {user_prompt}
+        -----\n'''
+        ' Each solution is identified by a unique number and includes:'
+        '* The code;'
+        '* a time complexity (in Big-O notation); '
+        '* a cognitive complexity score (how difficult the solution is to understand and maintain). '
+        'Your task is to select the best solution based on both time and cognitive complexity.'
+    )
+
+    for i in range(0, AGENTS_NO):
+        if (answers[i] != ""):
+            deb_prompt += (f"\n**{i}.**\n---\n{answers[i]}\n"
+                           f"* Time complexity: {extract_time_complexity(answers[i])}\n"
+                           f"* Cognitive complexity: {readability_complexity[i]}\n"
+                           f"---\n"
+                           )
+
+    deb_prompt += (f"""\nOnce selected the best solution, answers with **only** the number of the chosen solution.
+                        Your response must be a **single integer**, **without any explanations**, **no additional text**, and **no punctuation**.
+                        Responding with anything other than a number will be considered an error.""")
+
+    return deb_prompt
