@@ -4,8 +4,7 @@ import sys
 
 # Import core modules used for debate simulation, agent creation, and code evaluation
 
-from Debate_strategies import debate_with_self_refinement, AGENTS_NO, debate_with_k_candidates, \
-    simulate_complete_round, after_evaluation_debate, developers_debate, developers_debate_mixed_strategy
+from Debate_strategies import AGENTS_NO, after_evaluation_debate, developers_debate, developers_debate_mixed_strategy
 from LLM_definition import get_clone_agent
 from utility_function import get_formatted_code_solution
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
