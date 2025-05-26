@@ -74,18 +74,18 @@ def equals_time_complexity(solutions):
         return False
 
 
-def equals_cognitive_complexity(cognitive_complexity_sol):
+def equals_cognitive_complexity(k_cognitive_complexity_sol):
     """
         Checks if all cognitive complexity scores are equal across solutions.
 
         Parameters:
-        - cognitive_complexity_sol (List[int]): List of complexity scores for each solution.
+        - cognitive_complexity_sol: dict.
 
         Returns:
         - True if all scores are the same, False otherwise.
     """
 
-    set_local = set(cognitive_complexity_sol)
+    set_local = set(k_cognitive_complexity_sol.values())
     if len(set_local) == 1:
         return True
     else:
