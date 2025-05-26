@@ -5,7 +5,7 @@ import sys
 # Import core modules used for debate simulation, agent creation, and code evaluation
 
 from Debate_strategies import debate_with_self_refinement, AGENTS_NO, debate_with_k_candidates, \
-    simulate_complete_round, after_evaluation_debate, developers_debate
+    simulate_complete_round, after_evaluation_debate, developers_debate, developers_debate_mixed_strategy
 from LLM_definition import get_clone_agent
 from utility_function import get_formatted_code_solution
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
@@ -85,9 +85,9 @@ user_prompt = input()
 print(f"User prompt: {user_prompt}\n")
 
 # Initialize the list of agents using the selected model
-types_model = ['codellama-7b-instruct'] * AGENTS_NO # You can switch to a different model, e.g., 'qwen2.5-coder-3b-instruct'
+types_model = ['codellama-13b-instruct'] * AGENTS_NO # You can switch to a different model, e.g., 'qwen2.5-coder-3b-instruct', 'deepseek-coder-v2-lite-instruct'
 
-type_evaluator_model = 'codellama-7b-instruct'
+type_evaluator_model = 'qwen2.5-coder-14b-instruct' #'deepseek-coder-v2-lite-instruct'
 agents = []
 
 # Clone agents based on the configured number of agents (AGENTS_NO)
@@ -103,7 +103,7 @@ if strategy_debate == "0":
 elif strategy_debate == '1':
     debate_response = str(developers_debate(agents, user_prompt, role_programmer_prompt, strategy_debate))
 elif strategy_debate == '2':
-    debate_response = str(simulate_complete_round(user_prompt, role_programmer_prompt, agents))
+    debate_response = str(developers_debate_mixed_strategy(agents, user_prompt, role_programmer_prompt))
 else:
     # input error
     print("INPUT ERROR: INSERT ONLY 0, 1, 2")
@@ -135,8 +135,8 @@ else:
 
         print(f"Final code quality score: {final_score:.2f}")
 
-        # If the score is below the acceptable threshold (e.g., 90), trigger another debate round
-        if final_score < 90:
+        # If the score is below the acceptable threshold (e.g., 85), trigger another debate round
+        if final_score < 85:
             debate_response = str(after_evaluation_debate(user_prompt, role_programmer_prompt, evaluation_feedback, ai_response, agents, strategy_debate))
         else:
             print(ai_response)  # print the accepted final response
