@@ -5,7 +5,7 @@ import sys
 # Import core modules used for debate simulation, agent creation, and code evaluation
 
 from Debate_strategies import debate_with_self_refinement, AGENTS_NO, debate_with_k_candidates, \
-    simulate_complete_round, after_evaluation_debate
+    simulate_complete_round, after_evaluation_debate, developers_debate
 from LLM_definition import get_clone_agent
 from utility_function import get_formatted_code_solution
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
@@ -14,7 +14,7 @@ from evaluator import eval_code, get_evaluator, extract_criteria_scores, calcula
 # It includes multiple examples of correct outputs for different types of coding tasks
 
 import lmstudio as lms
-SERVER_API_HOST = "localhost:2345"  #server lmstudio port
+SERVER_API_HOST = "localhost:1234"  #server lmstudio port <--- 2345
 
 # This must be the *first* convenience API interaction (otherwise the SDK
 # implicitly creates a client that accesses the default server API host)
@@ -28,17 +28,18 @@ lms.configure_default_client(SERVER_API_HOST)
 # with a partial solution.
 MAX_EVAL_ROUNDS = 5
 
-few_shot_prompt = """Provide a response structured in the following JSON format, which includes:
-- The code block import statements 
+role_programmer_prompt = """You are an AI expert programmer that writes code or helps to review code for bugs,
+based on the user request. Given the user prompt, inserted in **CODE GENERATION TASK** section, provide a response structured in the following JSON format, which includes:
+- The code block import statements
 - The code
 - A description explaining the code (documentation)
 - The time complexity related to the code, expressed in Big-O notation.
 
-EXAMPLE: Generate a Python function to add two numbers.
+USER PROMPT EXAMPLE: Generate a Python function to add two numbers.
 JSON RESPONSE:
 ```
-{ 
-    "documentation": "The function 'add' takes two parameters ('a' and 'b') and returns their sum ('a+b')." 
+{
+    "documentation": "The function 'add' takes two parameters ('a' and 'b') and returns their sum ('a+b')."
     "imports": "import sys",
     "code": "def add(a, b): return a + b",
     "time_complexity": "O(1)"
@@ -46,20 +47,20 @@ JSON RESPONSE:
 }
 ```
 
-EXAMPLE: Generate a Python script about binary search.
+USER PROMPT EXAMPLE: Generate a Python script about binary search.
 JSON RESPONSE:
 ```
 {
     "documentation": "The binary search algorithm is an efficient way to find an item from a sorted list. It works by repeatedly dividing the search interval in half. If the value of the search key is less than the middle item, the search continues in the lower half; if it's greater, the search continues in the upper half. This process continues until the value is found or the interval is empty. The binary search function returns the index of the target if found, otherwise -1.",
     "imports": "import sys",
-    "code": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = left + (right - left) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1\n\n# Example usage\narr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\ntarget = 7\nresult = binary_search(arr, target)\nif result != -1:\n    print(f'Element found at index {result}')\nelse:\n    print('Element not found')"
+    "code": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = left + (right - left) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1\n"
     "time_complexity": "O(log n)"
 }
 
 ```
 
-EXAMPLE: Generate a function to validate a password. 
-        It checks if password given by the user has a length of at least 8 and 
+USER PROMPT EXAMPLE: Generate a function to validate a password.
+        It checks if password given by the user has a length of at least 8 and
         contains at least one number and one letter.
 
 JSON RESPONSE:
@@ -67,12 +68,16 @@ JSON RESPONSE:
 {
     "documentation": "The function 'check_password' checks whether the input password has a length of at least 8 characters and contains at least one letter (alphabetic character) and at least one number. It uses regular expressions to ensure that the password contains both alphabetic characters and digits. If the password meets the requirements, the function returns True; otherwise, it returns False.",
     "imports": "import re",
-    "code": "def check_password(password):\n    # Check if the length is at least 8 characters\n    if len(password) < 8:\n        return False\n\n    # Check if the password contains at least one letter and one number\n    if not re.search(r'[a-zA-Z]', password):  # Check if there's at least one letter\n        return False\n    if not re.search(r'[0-9]', password):    # Check if there's at least one number\n        return False\n\n    return True\n\n# Example usage\npassword = input('Enter your password: ')\n\nif check_password(password):\n    print('The password is valid.')\nelse:\n    print('The password is not valid. It must have at least 8 characters, and contain at least one letter and one number.')"
+    "code": "def check_password(password):\n    # Check if the length is at least 8 characters\n    if len(password) < 8:\n        return False\n\n    # Check if the password contains at least one letter and one number\n    if not re.search(r'[a-zA-Z]', password):  # Check if there's at least one letter\n        return False\n    if not re.search(r'[0-9]', password):    # Check if there's at least one number\n        return False\n\n    return True\n"
     "time_complexity": "O(n)"
 }
 ```
 
+CODE GENERATION TASK
+{user_prompt}
+
 """
+
 print("Choose strategy debate (0, 1, 2): ")
 strategy_debate = input()
 sys.stdin.buffer.flush() # flush buffer stdin
@@ -80,12 +85,9 @@ user_prompt = input()
 print(f"User prompt: {user_prompt}\n")
 
 # Initialize the list of agents using the selected model
-types_model = [None] * AGENTS_NO
+types_model = ['codellama-7b-instruct'] * AGENTS_NO # You can switch to a different model, e.g., 'qwen2.5-coder-3b-instruct'
 
-for i in range(0, AGENTS_NO):
-    types_model[i] = 'codellama-13b-instruct'    # You can switch to a different model, e.g., 'qwen2.5-coder-3b-instruct'
-
-type_evaluator_model = 'deepseek-coder-v2-lite-instruct'
+type_evaluator_model = 'codellama-7b-instruct'
 agents = []
 
 # Clone agents based on the configured number of agents (AGENTS_NO)
@@ -97,11 +99,11 @@ debate_response = ""
 
 # Simulate a multi-agent debate round with the user prompt and the few-shot examples
 if strategy_debate == "0":
-    debate_response = str(debate_with_self_refinement(user_prompt, few_shot_prompt, agents))
+    debate_response = str(developers_debate(agents, user_prompt, role_programmer_prompt, strategy_debate))
 elif strategy_debate == '1':
-    debate_response = str(debate_with_k_candidates(user_prompt, few_shot_prompt, agents))
+    debate_response = str(developers_debate(agents, user_prompt, role_programmer_prompt, strategy_debate))
 elif strategy_debate == '2':
-    debate_response = str(simulate_complete_round(user_prompt, few_shot_prompt, agents))
+    debate_response = str(simulate_complete_round(user_prompt, role_programmer_prompt, agents))
 else:
     # input error
     print("INPUT ERROR: INSERT ONLY 0, 1, 2")
@@ -135,7 +137,7 @@ else:
 
         # If the score is below the acceptable threshold (e.g., 90), trigger another debate round
         if final_score < 90:
-            debate_response = str(after_evaluation_debate(user_prompt, few_shot_prompt, evaluation_feedback, ai_response, agents, strategy_debate)) #vedi s emettere few_shot_prompt per il formato
+            debate_response = str(after_evaluation_debate(user_prompt, role_programmer_prompt, evaluation_feedback, ai_response, agents, strategy_debate))
         else:
             print(ai_response)  # print the accepted final response
             break

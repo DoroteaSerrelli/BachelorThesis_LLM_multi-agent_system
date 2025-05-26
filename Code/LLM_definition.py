@@ -38,17 +38,9 @@ def extract_identifier(data: Dict[str, Any]) -> str | None:
 
 
 # Funzione per ottenere la risposta iniziale del modello al task di generazione del codice sorgente definito nell'user prompt
-def get_first_response(model, few_shot_prompt, user_prompt):
-    # Definire il prompt di sistema
-    system_prompt = (
-        "You are an AI expert programmer that writes code "
-        "or helps to review code for bugs, "
-        "based on the user request. "
-    )
+def get_programmer_first_response(model, problem_definition):
 
-    messages = [{"role": "user", "content": user_prompt},
-                {"role": "system", "content": system_prompt + few_shot_prompt}
-                ]
+    messages = [{"role": "user", "content": problem_definition}]
     response = model.respond({"messages": messages}, response_format=schema_complexity)
     return response.content
 
@@ -173,24 +165,37 @@ def get_discussion_prompt_k_solutions(responses, k_cognitive_complexity, AGENTS_
     return deb_prompt
 
 
-def get_discussion_prompt(pers_response, other_answers):
+def get_self_refinement_prompt(pers_response, user_prompt, other_answers):
     deb_prompt = (
-        'Here are the solutions to the code generation problem provided by other agents:\n'
+        f'''Here are several AI-generated solutions to the following code generation problem:
+        
+        -----
+        CODE GENERATION TASK:
+        {user_prompt}
+        -----\n
+        
+        -----
+        AI-GENERATED RESPONSES '''
     )
 
-    for i, answer in enumerate(other_answers):
-        deb_prompt += (f"\n--- SOLUTION FROM AGENT {i + 1} ---\n{answer}\n--- END OF SOLUTION ---\n")
+    # Ottenere tutte le chiavi
+    chiavi = other_answers.keys()
+    for i in chiavi:
+        deb_prompt += f"\n**{i}.**\n---\n{other_answers[i]}\n---"
+    deb_prompt += "-----\n"
 
     if pers_response != "":
         deb_prompt += (
-            "\n--- YOUR INITIAL ANSWER ---\n"
+            "\nConsidering the solutions listed in **AI-GENERATED RESPONSES** section, revise and improve your following answer: "
+            "\n----- "
+            "YOUR ANSWER "
             f"{pers_response}\n"
-            "--- END OF YOUR INITIAL ANSWER ---\n"
-            "\nConsidering the solutions from other agents, revise and improve your initial answer."
+            "-----\n"
+
         )
     else:
         deb_prompt += (
-            "\nConsidering the solutions from other agents, generate your best solution to the code generation problem."
+            "\nConsidering the solutions listed in **AI-GENERATED RESPONSES** section as additional information, generate your solution to the code generation task."
         )
 
     return deb_prompt
@@ -205,8 +210,8 @@ def get_agreement(model, user_prompt, deb_prompt):
 
 
 # Funzione per fornire una risposta del modello durante una discussione
-def get_response(model, user_prompt, debate_response):
-    messages = [{"role": "user", "content": "User asks: " + user_prompt + "\n" + debate_response}
+def get_response(model, debate_response):
+    messages = [{"role": "user", "content": debate_response}
                 ]
     response = model.respond({"messages": messages}, response_format=schema_complexity)
     return response.content

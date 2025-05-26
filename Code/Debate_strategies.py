@@ -8,14 +8,13 @@ from debate_prompt_attempts import get_refined_debate_prompt, get_formatted_resp
     get_multiple_choice_numbers_prompt, getDiscussionGivenAnswersFeedbackPrompt_NoComparing
 # Imports
 from LLM_definition import (
-    get_first_response,
+    get_programmer_first_response,
     get_discussion_given_answers_feedback_prompt,
-    get_discussion_prompt,
     get_response,
     get_discussion_prompt_k_solutions,
     get_agreement,
     get_discussion_given_answers_feedback_prompt_no_comparing, get_clone_agent,
-    get_model_info, extract_identifier
+    get_model_info, extract_identifier, get_self_refinement_prompt
 )
 import json
 from metrics import get_cognitive_complexity
@@ -29,6 +28,125 @@ AGENTS_NO = 3
 # Maximum number of allowed debate rounds before falling back to majority voting
 MAXROUNDS_NO = 5
 
+
+def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choosen, max_rounds=MAXROUNDS_NO):
+    # programmers = lista di agenti programmatori, programmer_prompt = il prompt del programmatore
+    # max_rounds = massimo numero di round di dibattito
+
+    problem_definition = programmer_prompt.replace("{user_prompt}", user_prompt)
+    responses = []
+
+    for programmer in programmers:
+        responses.append(get_programmer_first_response(programmer, problem_definition))
+
+    # Display all initial responses
+    i = 0
+    for response in responses:
+        print(f"Response developer {i}: {response}")
+        i += 1
+
+    current_round = 0
+    while current_round <= max_rounds:
+        # === Measure readability (cognitive complexity) of each response ===
+        readability_complexity = []  # Stores total cognitive complexity for each response
+        details_readability_complexity = []  # Stores node-level breakdown of complexity
+
+        for i in range(AGENTS_NO):
+            response_json = json.loads(responses[i])  # Parse JSON response
+            total, details = get_cognitive_complexity(response_json["code"])
+            print(tabulate(details, headers=["Complexity", "Node"], tablefmt="fancy_grid"))
+            readability_complexity.append(total)
+            details_readability_complexity.append(details)
+
+        # I programmatori non possono ignorare la sintassi. Rimuovere le risposte con cognitive complexity pari a -1: errori sintattici
+
+        counter = 0
+
+        responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
+        readability_complexity_allowed = {}  # i valori di cognitive complexity delle risposte che hanno cognitive complexity != -1
+
+        for i in range(0, AGENTS_NO):
+            if readability_complexity[i] != -1:
+                counter += 1
+                responses_allowed[i] = responses[i]
+                readability_complexity_allowed[i] = readability_complexity[i]
+
+        # ====== Costruzione prompt dibattito ========
+
+        # Formattazione per prompt di dibattito
+        formatted_responses = get_formatted_responses(responses_allowed, readability_complexity_allowed, counter)
+        debate_prompt = get_refined_debate_prompt(counter, user_prompt, formatted_responses)
+
+        print("DEBATE_PROMPT OTTENUTO: " + debate_prompt)
+
+        # Ottengo le soluzioni votate
+        # === Collect feedback from each agent (which solution they prefer) ===
+        debate_response = []
+        for i in range(AGENTS_NO):
+            debate_response.append(get_feedback_value(get_refined_agreement(programmers[i], debate_prompt)))
+
+        # Stampa risposte
+        print(f"\nRound {current_round} - Voting")
+        for i in range(0, AGENTS_NO):
+            print(f"Feedback model {i}: {debate_response[i]}\n")
+
+        # Si verifica se c'è convergenza
+        possible_solutions = set(debate_response)  # Unique solutions selected by the agents
+
+        if len(possible_solutions) == 0:  # Tutte le risposte generate dai modelli sono sintatticamente errate
+            return "-1"  # Dibattito fallito
+
+        if len(possible_solutions) == 1:
+            for var in possible_solutions:
+                if 0 <= var < AGENTS_NO:
+                    print("Agreement")
+                    print("\nFinal answer:")
+
+                    solution = responses[int(var)]
+                    print(solution)
+                    return solution  # Return the agreed-upon solution
+                print("VOTING ERROR FOR SOLUTION NUMBER " + str(var))
+
+        if strategy_choosen == 0:
+            # SI PASSA AL SELF-REFINEMENT
+
+            responses = do_self_refinement(programmers, responses, readability_complexity, user_prompt)
+            debate_response.clear()
+            readability_complexity.clear()
+            details_readability_complexity.clear()
+
+            i = 0
+            for response in responses:
+                print(f"Response self-refined developer {i}: {response}")
+                i += 1
+
+        if strategy_choosen == 1:
+            # SI PASSA ALL'INSTANT RUNOFF VOTING
+            responses = do_instant_runoff_voting(programmers, debate_response, responses_allowed, readability_complexity, user_prompt)
+
+            if len(responses) == 1:
+                for var in responses:
+
+                    print("Agreement")
+                    print("\nFinal answer:")
+
+                    solution = responses[int(var)]
+                    print(solution)
+                    return solution  # Return the agreed-upon solution
+
+
+            debate_response.clear()
+            readability_complexity.clear()
+            details_readability_complexity.clear()
+
+            i = 0
+            for response in responses:
+                print(f"Response instant_runoff_voting developer {i}: {response}")
+                i += 1
+
+
+
+        current_round += 1
 
 def debate_with_self_refinement(user_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO):
     """
@@ -46,7 +164,7 @@ def debate_with_self_refinement(user_prompt, few_shot_prompt, agents, max_rounds
 
     response = []  # Stores responses from all agents
     for i in range(AGENTS_NO):
-        response.append(get_first_response(agents[i], few_shot_prompt, user_prompt))
+        response.append(get_programmer_first_response(agents[i], few_shot_prompt, user_prompt))
 
     # Display all initial responses
     for i in range(AGENTS_NO):
@@ -72,22 +190,23 @@ def debate_with_self_refinement(user_prompt, few_shot_prompt, agents, max_rounds
             details_readability_complexity.append(details)
 
         # === Construct the prompt for each agent to analyze others' responses ===
-        #debate_prompts = []
-        debate_prompt = ""
-        for i in range(AGENTS_NO):
-            '''# Exclude agent's own response and complexity
-            other_responses = [r for j, r in enumerate(response) if j != i]
-            other_readability_compl = [r for j, r in enumerate(readability_complexity) if j != i]
-            # Build a custom prompt for that agent to evaluate others' responses
-            debate_prompts.append(
-                get_discussion_given_answers_feedback_prompt(
-                    i, response[i], readability_complexity[i], other_responses, other_readability_compl, AGENTS_NO
-                )
-            )'''
-            formatted_responses = get_formatted_responses(response, readability_complexity, AGENTS_NO)
-            debate_prompt = get_refined_debate_prompt(AGENTS_NO, user_prompt, formatted_responses)
-            print(f"Prompt token count for round {current_round}: {count_tokens(debate_prompt)}")
 
+        # Rimuovere le risposte con cognitive complexity pari a -1: errori sintattici
+
+        counter = 0
+
+        responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
+        readability_complexity_allowed = {} # i valori di cognitive complexity delle risposte che hanno cognitive complexity != -1
+
+        for i in range(0, AGENTS_NO):
+            if readability_complexity[i] != -1:
+                counter += 1
+                responses_allowed[i] = response[i]
+                readability_complexity_allowed[i] = readability_complexity[i]
+
+        # Formattazione per prompt di dibattito
+        formatted_responses = get_formatted_responses(responses_allowed, readability_complexity_allowed, counter)
+        debate_prompt = get_refined_debate_prompt(counter, user_prompt, formatted_responses)
 
         # === Collect feedback from each agent (which solution they prefer) ===
 
@@ -108,6 +227,9 @@ def debate_with_self_refinement(user_prompt, few_shot_prompt, agents, max_rounds
         # === Check if all agents agree on the same solution ===
         possible_solutions = set(feedback_allowed)  # Unique solutions selected by the agents
 
+        if len(possible_solutions) == 0: # Tutte le risposte generate dai modelli sono sintatticamente errate
+            return "-1" # Dibattito fallito
+
         if len(possible_solutions) == 1:
             print("Agreement")
             print("\nFinal answer:")
@@ -117,29 +239,20 @@ def debate_with_self_refinement(user_prompt, few_shot_prompt, agents, max_rounds
                 print(solution)
             return solution  # Return the agreed-upon solution
 
-        if len(possible_solutions) == 0:
-            for i in range(AGENTS_NO):
-                response.append(get_first_response(agents[i], few_shot_prompt, user_prompt))
-
-            # Display all initial responses
-            for i in range(AGENTS_NO):
-                print(f"Response model {i}: {response[i]}")
-                current_round += 1
-                continue
 
         # Print all proposed candidate solutions for transparency
         for var in feedback_allowed:
             print("Candidate solution: " + str(var))
 
         # === If disagreement persists, proceed with self-refinement strategy ===
-        response = debate_self_refinement(agents, response, user_prompt)
+        response = do_self_refinement(agents, response, readability_complexity, user_prompt)
 
         feedback.clear()
 
         current_round += 1
 
     # === If max rounds exceeded, apply majority voting to resolve ===
-    vote_index = majority_voting(AGENTS_NO, feedback_allowed)
+    vote_index = majority_voting(feedback_allowed)
     return response[int(vote_index)]
 
 
@@ -155,7 +268,7 @@ def debate_with_k_candidates(user_prompt, few_shot_prompt, agents, max_rounds=MA
     # === Phase 1: Each model independently generates a first response ===
     response = []  # Stores responses from all agents
     for i in range(AGENTS_NO):
-        response.append(get_first_response(agents[i], few_shot_prompt, user_prompt))
+        response.append(get_programmer_first_response(agents[i], few_shot_prompt, user_prompt))
 
     # Display all initial responses
     for i in range(AGENTS_NO):
@@ -181,20 +294,9 @@ def debate_with_k_candidates(user_prompt, few_shot_prompt, agents, max_rounds=MA
             details_readability_complexity.append(details)
 
         # === Construct the prompt for each agent to analyze others' responses ===
-        #debate_prompts = []
         debate_prompt = ""
 
         for i in range(AGENTS_NO):
-            # Exclude agent's own response and complexity
-            other_responses = [r for j, r in enumerate(response) if j != i]
-            other_readability_compl = [r for j, r in enumerate(readability_complexity) if j != i]
-            # Build a custom prompt for that agent to evaluate others' responses
-            '''debate_prompts.append(
-                getDiscussionGivenAnswersFeedbackPrompt(
-                    i, response[i], readability_complexity[i], other_responses, other_readability_compl, AGENTS_NO
-                )
-            )'''  # quello usato
-            # quello da provare
             formatted_responses = get_formatted_responses(response, readability_complexity, AGENTS_NO)
             debate_prompt = get_refined_debate_prompt(AGENTS_NO, user_prompt, formatted_responses)
             print(f"Prompt token count for round {current_round}: {count_tokens(debate_prompt)}")
@@ -226,7 +328,7 @@ def debate_with_k_candidates(user_prompt, few_shot_prompt, agents, max_rounds=MA
 
         if len(possible_solutions) == 0:
             for i in range(AGENTS_NO):
-                response.append(get_first_response(agents[i], few_shot_prompt, user_prompt))
+                response.append(get_programmer_first_response(agents[i], few_shot_prompt, user_prompt))
 
             # Display all initial responses
             for i in range(AGENTS_NO):
@@ -251,21 +353,21 @@ def debate_with_k_candidates(user_prompt, few_shot_prompt, agents, max_rounds=MA
 
         # === If disagreement persists, proceed with self-refinement strategy ===
         if len(k_response) == len(possible_solutions):
-            response = debate_self_refinement(agents, response, user_prompt)
+            response = do_self_refinement(agents, response, user_prompt)
 
         feedback.clear()
 
         current_round += 2
 
     # === If max rounds exceeded, apply majority voting to resolve ===
-    vote_index = majority_voting(AGENTS_NO, feedback_allowed)
+    vote_index = majority_voting(feedback_allowed)
     return response[int(vote_index)]
 
 
 
 # === Self-refinement ===
 
-def debate_self_refinement(agents, responses, user_prompt):
+def do_self_refinement(agents, responses, readability_complexity, user_prompt):
     """
         Allows each agent to refine its own response based on the others' answers.
 
@@ -277,17 +379,29 @@ def debate_self_refinement(agents, responses, user_prompt):
     for i in range(AGENTS_NO):
         # Provide each agent with all other responses except its own
         other_responses = [r for j, r in enumerate(responses) if j != i]
+
+        # Rimuovere le risposte con cognitive complexity pari a -1: errori sintattici
+
+        counter = 0
+
+        other_responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
+
+        for i in range(0, AGENTS_NO):
+            if readability_complexity[i] != -1:
+                counter += 1
+                other_responses_allowed[i] = other_responses[i]
+
+
         # Construct the prompt to trigger self-refinement
 
-        if responses[i] != "":
-            debate_prompts[i] = get_discussion_prompt(responses[i], other_responses)
-            responses[i] = get_response(agents[i], user_prompt, debate_prompts[i])
+        if readability_complexity[i] != -1:
+            debate_prompts[i] = get_self_refinement_prompt(responses[i], user_prompt, other_responses_allowed)
+            print(f"SELF_REFINEMENT DEBATE PER AGENTE {i}: {debate_prompts[i]}")
+            responses[i] = get_response(agents[i], debate_prompts[i])
         else:# se ha dato nessuna risposta
-            increase_temp = 0.5 #aumento la temperatura
-            info_model = get_model_info(agents[i])
-            typeModel = extract_identifier(info_model)
-            agents[i] = get_clone_agent(typeModel, increase_temp)
-            responses[i] = get_first_response(agents[i], "", user_prompt)
+            debate_prompts[i] = get_self_refinement_prompt("", user_prompt, other_responses_allowed)
+            print(f"SELF_REFINEMENT DEBATE PER AGENTE {i}: {debate_prompts[i]}")
+            responses[i] = get_response(agents[i], debate_prompts[i])
 
         # Generate improved response
         print(f"Improved model {i} response: {responses[i]}")
@@ -333,7 +447,7 @@ def continue_debate_on_k_solutions(k_candidates_chosen, user_prompt, responses, 
 
 
 # === Fallback: Majority Voting ===
-def majority_voting(AGENTS_NO, feedback):
+def majority_voting(feedback):
     """
         Fallback strategy that selects the most popular response when no agreement is reached.
 
@@ -388,16 +502,16 @@ def simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds=MAX
     # === Phase 1: Each model independently generates a first response ===
     response = []  # Stores responses from all agents
     for i in range(AGENTS_NO):
-        response.append(get_first_response(agents[i], few_shot_prompt, user_prompt))
+        response.append(get_programmer_first_response(agents[i], few_shot_prompt, user_prompt))
 
     # Display all initial responses
     for i in range(AGENTS_NO):
         print(f"Response model {i}: {response[i]}")
 
     # === Phase 2: Iterative debate rounds ===
-    round = 1
+    current_round = 1
     not_agreement_rounds = 0    # numero di round in cui non ci è stata convergenza
-    while round <= max_rounds:
+    while current_round <= max_rounds:
         # === Measure readability (cognitive complexity) of each response ===
         readability_complexity = []  # Stores total cognitive complexity for each response
         details_readability_complexity = []  # Stores node-level breakdown of complexity
@@ -419,7 +533,7 @@ def simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds=MAX
         for i in range(AGENTS_NO):
             feedback.append(get_feedback_value(get_refined_agreement(agents[i], debate_prompt)))
 
-        print(f"\nRound {round} - Feedback:")
+        print(f"\nRound {current_round} - Feedback")
         for i in range(AGENTS_NO):
             print(f"Feedback model {i}: {feedback[i]}\n")
 
@@ -453,7 +567,7 @@ def simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds=MAX
                 print(solution)
                 return solution  # Return the agreed-upon solution
             else:   #oppure inserire un modello mediatore che estrae la migliore soluzione
-                response = debate_self_refinement(agents, response, user_prompt)
+                response = do_self_refinement(agents, response, user_prompt)
                 not_agreement_rounds = 0
 
 
@@ -476,7 +590,7 @@ def simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds=MAX
         round += 1
 
     # === If max rounds exceeded, apply majority voting to resolve ===
-    vote_index = majority_voting(AGENTS_NO, feedback)
+    vote_index = majority_voting(feedback)
     return response[vote_index]
 
 
@@ -492,7 +606,7 @@ def simulate_complete_round(user_prompt, few_shot_prompt, agents, max_rounds=MAX
     identify problems to fix collaboratively.
 '''
 
-def after_evaluation_debate(user_prompt, few_shot_prompt, feedback_evaluator, previous_code, agents, strategy_debate, max_rounds=MAXROUNDS_NO):
+def after_evaluation_debate(user_prompt, few_shot_prompt, feedback_evaluator, previous_code, programmers, strategy_debate, max_rounds=MAXROUNDS_NO):
     refinement_instruction_prompt = \
         '''# Instruction
             Your task is to refine the previous solution to the code generation task based on the feedback provided by the evaluator.
@@ -556,7 +670,7 @@ def after_evaluation_debate(user_prompt, few_shot_prompt, feedback_evaluator, pr
             {
                 "documentation": "The binary search algorithm is an efficient way to find an item from a sorted list. It works by repeatedly dividing the search interval in half. If the value of the search key is less than the middle item, the search continues in the lower half; if it's greater, the search continues in the upper half. This process continues until the value is found or the interval is empty. The binary search function returns the index of the target if found, otherwise -1.",
                 "imports": "import sys",
-                "code": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = left + (right - left) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1\n\n# Example usage\narr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\ntarget = 7\nresult = binary_search(arr, target)\nif result != -1:\n    print(f'Element found at index {result}')\nelse:\n    print('Element not found')"
+                "code": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = left + (right - left) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1\n"
                 "time_complexity": "O(log n)"
             }
 
@@ -567,14 +681,75 @@ def after_evaluation_debate(user_prompt, few_shot_prompt, feedback_evaluator, pr
     refinement_prompt = refinement_prompt.replace("{previous_code}", previous_code)
     refinement_prompt = refinement_prompt.replace("{evaluation_feedback}", feedback_evaluator)
 
-    print("STO IN AFTER_EVALUATION: REFINEMENT_PROMOT: " + refinement_prompt)
 
     debate_response = ""
     if strategy_debate == "0":
-        debate_response = str(debate_with_self_refinement(user_prompt, refinement_prompt, agents, max_rounds=MAXROUNDS_NO))
+        debate_response = str(developers_debate(programmers, user_prompt, refinement_prompt, strategy_debate, max_rounds=MAXROUNDS_NO))
     elif strategy_debate == '1':
-        debate_response = str(debate_with_k_candidates(user_prompt, refinement_prompt, agents, max_rounds=MAXROUNDS_NO))
+        debate_response = str(developers_debate(programmers, user_prompt, refinement_prompt, strategy_debate, max_rounds=MAXROUNDS_NO))
     else:
-        debate_response = str(simulate_complete_round(refinement_prompt, few_shot_prompt, agents, max_rounds=MAXROUNDS_NO)) #<======= DA MODIFICARE L'ORDINE DEI PRIMI DUE PARAMETRI
+        debate_response = str(simulate_complete_round(refinement_prompt, few_shot_prompt, programmers, max_rounds=MAXROUNDS_NO)) #<======= DA MODIFICARE L'ORDINE DEI PRIMI DUE PARAMETRI
 
     return debate_response
+
+
+def do_instant_runoff_voting(programmers, debate_response, responses_allowed, readability_complexity, user_prompt):
+    # Apply instant runoff voting to break disagreement
+    winner = instant_runoff_voting(debate_response, responses_allowed.keys())
+
+    if isinstance(winner, int):
+        if winner in responses_allowed:
+            print("Final decision through Instant Runoff Voting:")
+            solution = responses_allowed[winner]
+            print(solution)
+            return solution
+
+    elif isinstance(winner, list):
+        print("Tie between the following candidates (Instant Runoff Voting):")
+        for w in winner:
+            print(f"Candidate {w}: {responses_allowed[w]}")
+        return responses_allowed[winner[0]]  # Return one of the tied responses
+
+
+def instant_runoff_voting(votes, valid_candidates):
+    """
+    votes: list of primary preferences (e.g., [1, 0, 2, 1]) from the agents.
+    valid_candidates: set or list of valid candidate indices (with syntactically correct code).
+
+    Returns:
+        - a single winning candidate index (int), or
+        - a list of tied candidates (list of int) if no clear winner.
+    """
+    from collections import Counter
+
+    active_candidates = set(valid_candidates)
+
+    while len(active_candidates) > 1:
+        vote_count = Counter()
+
+        # Count only the first valid vote per agent
+        for vote in votes:
+            if vote in active_candidates:
+                vote_count[vote] += 1
+
+        total_votes = sum(vote_count.values())
+
+        # Check for absolute majority
+        for candidate, count in vote_count.items():
+            if count > total_votes / 2:
+                return candidate
+
+        # Eliminate candidate(s) with fewest votes
+        if not vote_count:
+            break  # No valid votes remain
+
+        min_votes = min(vote_count.values())
+        to_eliminate = [cand for cand, count in vote_count.items() if count == min_votes]
+
+        if len(to_eliminate) == len(active_candidates):
+            return list(active_candidates)  # Tie
+
+        for cand in to_eliminate:
+            active_candidates.remove(cand)
+
+    return list(active_candidates) if len(active_candidates) > 1 else next(iter(active_candidates))

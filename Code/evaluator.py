@@ -50,7 +50,7 @@ def eval_code(user_prompt, ai_response, evaluator):
     prompt = instruct_prompt
     prompt = prompt.replace("{user_prompt}", user_prompt)
     prompt = prompt.replace("{ai_response}", ai_response)
-
+    print("EVALUATION PROMPT\n" + prompt)
     messages = [{"role": "user", "content": prompt}]
     response = evaluator.respond({"messages": messages}, response_format=evaluation_schema)
     return response.content

@@ -26,10 +26,50 @@ Compilation Errors: The number of syntax errors or other issues that prevent the
 Execution Errors: The number of runtime errors or logical errors that cause the code to fail during execution. Provide the count.
 
 # Output Format
-Return only a valid JSON object with the criteria as keys and their corresponding value as integer values representing score.
-Then, provide a detailed explanations for your assessment, including specific examples of issues and the error counts.
+You must return your evaluation strictly in the following JSON format: 
 
-# Example Output
+```
+{
+    "type": "object",
+    "properties": {
+        "Correctness": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the correctness of the AI-generated code."
+        },
+        "Security": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the security of the AI-generated code."
+        },
+        "Maintainability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the maintainability of the AI-generated code."
+        },
+        "Reliability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the reliability of the AI-generated code."
+        },
+        "Compilation Errors": {
+            "type": "integer",
+            "description": "The number of compilation errors affected by the AI-generated code."
+        },
+        "Execution Errors": {
+            "type": "integer",
+            "description": "The number of execution errors affected by the AI-generated code."
+        },
+        "Explanation": {
+            "type": "string",
+            "description": "A detailed explanation for your assessment, including specific examples of issues and the error counts."
+        }
+    },
+    "required": [
+        "Correctness", "Security", "Maintainability", "Reliability",
+        "Compilation Errors", "Execution Errors", "Explanation"
+    ]
+}
+```
+
+
+EXAMPLE OUTPUT:
 ```
 {
   "Correctness": 50,
