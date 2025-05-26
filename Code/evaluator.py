@@ -19,7 +19,7 @@ EXEC_ERR_WEIGHT = 15
 MAX_ERRORS = 10
 
 
-def get_evaluator(type_model, temperature=1.0):
+def get_evaluator(type_model, temperature=0.2):
     """
     Initializes and returns an LLM evaluator instance based on the given model type.
 
