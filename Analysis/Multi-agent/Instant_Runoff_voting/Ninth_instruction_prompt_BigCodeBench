@@ -1,0 +1,1387 @@
+"C:\Users\SeSaLab Tesi\miniconda3\envs\BachelorThesis_LLM_multi-agent_system\python.exe" "C:\Users\SeSaLab Tesi\Documents\TesistiAntonioDellaPorta\Serrelli_LLM_Multi_Agent\BachelorThesis_LLM_multi-agent_system\Code\main_multi-agent_debate.py" 
+{'instruct_prompt': 'Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.\nThe function should output with:\n    float: The average of the sums of absolute differences for each shuffled permutation of the list.\nYou should write self-contained code starting with:\n```\nimport itertools\nfrom random import shuffle\ndef task_func(numbers=list(range(1, 3))):\n```', 'canonical_solution': '    permutations = list(itertools.permutations(numbers))\n    sum_diffs = 0\n\n    for perm in permutations:\n        perm = list(perm)\n        shuffle(perm)\n        diffs = [abs(perm[i] - perm[i+1]) for i in range(len(perm)-1)]\n        sum_diffs += sum(diffs)\n\n    avg_sum_diffs = sum_diffs / len(permutations)\n    \n    return avg_sum_diffs', 'code_prompt': 'import itertools\nfrom random import shuffle\ndef task_func(numbers=list(range(1, 3))):\n', 'libs': "['random', 'itertools']"}
+{'instruct_prompt': 'Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.\nThe function should raise the exception for: ValueError if the length is a negative number\nThe function should output with:\n    dict: A dictionary where each key is a character from the generated string and the value\n    is the count of how many times that character appears in the string.\nYou should write self-contained code starting with:\n```\nimport collections\nimport random\nimport string\ndef task_func(length=100):\n```', 'canonical_solution': "    if length < 0:\n        raise ValueError\n    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))\n    char_counts = collections.Counter(random_string)\n    return dict(char_counts)", 'code_prompt': 'import collections\nimport random\nimport string\ndef task_func(length=100):\n', 'libs': "['collections', 'random', 'string']"}
+{'instruct_prompt': 'Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.\nThe function should output with:\n    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.\nYou should write self-contained code starting with:\n```\nimport random\nimport statistics\ndef task_func(LETTERS):\n```', 'canonical_solution': '    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}\n    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))\n    return sorted_dict', 'code_prompt': 'import random\nimport statistics\ndef task_func(LETTERS):\n', 'libs': "['statistics', 'random']"}
+{'instruct_prompt': 'Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.\nThe function should output with:\n    dict: A dictionary where each key is a letter from the input list and the value is the mean of\n    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).\nYou should write self-contained code starting with:\n```\nimport random\nimport numpy as np\ndef task_func(LETTERS):\n```', 'canonical_solution': '    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}\n    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}\n    return mean_dict', 'code_prompt': 'import random\nimport numpy as np\ndef task_func(LETTERS):\n', 'libs': "['numpy', 'random']"}
+{'instruct_prompt': "Count the occurrence of each integer in the values of the input dictionary, where each value is a list of integers, and return a dictionary with these counts. The resulting dictionary's keys are the integers, and the values are their respective counts across all lists in the input dictionary.\nThe function should output with:\n    dict: A dictionary where each key is an integer from any of the input lists, and the value is the count of\n    how often that integer appears in all the lists combined.\nYou should write self-contained code starting with:\n```\nfrom collections import Counter\nimport itertools\ndef task_func(d):\n```", 'canonical_solution': '    count_dict = Counter(itertools.chain.from_iterable(d.values()))\n    return dict(count_dict)', 'code_prompt': 'from collections import Counter\nimport itertools\ndef task_func(d):\n', 'libs': "['collections', 'itertools']"}
+{'instruct_prompt': 'Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.\nThe function should output with:\n    dict: A dictionary where each key corresponds to a letter from the input list and each value is the\n    population standard deviation of a list of random integers associated with that key.\nYou should write self-contained code starting with:\n```\nimport random\nimport math\ndef task_func(LETTERS=[chr(i) for i in range(97, 123)]):\n```', 'canonical_solution': '    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}\n    sd_dict = {\n        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))\n        for k, v in random_dict.items()\n    }\n    return sd_dict', 'code_prompt': 'import random\nimport math\ndef task_func(LETTERS=[chr(i) for i in range(97, 123)]):\n', 'libs': "['math', 'random']"}
+{'instruct_prompt': "Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.\nThe function should output with:\n    str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.\nYou should write self-contained code starting with:\n```\nimport os\nimport re\ndef task_func(pattern, log_dir='/var/log/'):\n```", 'canonical_solution': '    log_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]\n    log_files = sorted(log_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)), reverse=True)\n\n    return os.path.join(log_dir, log_files[0]) if log_files else None', 'code_prompt': "import os\nimport re\ndef task_func(pattern, log_dir='/var/log/'):\n", 'libs': "['re', 'os']"}
+{'instruct_prompt': "Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.\nThe function should output with:\n    str: The name of the top-selling product based on the total quantity sold.\nYou should write self-contained code starting with:\n```\nimport csv\nimport collections\nimport operator\ndef task_func(csv_file_path):\n```", 'canonical_solution': "    with open(csv_file_path, 'r') as f:\n        reader = csv.reader(f)\n        next(reader)  # Skip the header row\n        sales_data = collections.defaultdict(int)\n        for row in reader:\n            product, quantity = row[0], int(row[1])\n            sales_data[product] += quantity\n\n    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]\n\n    return top_selling_product", 'code_prompt': 'import csv\nimport collections\nimport operator\ndef task_func(csv_file_path):\n', 'libs': "['operator', 'csv', 'collections']"}
+{'instruct_prompt': "Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.\nThe function should output with:\n    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.\nYou should write self-contained code starting with:\n```\nfrom collections import Counter\nimport itertools\nfrom random import randint\ndef task_func(T1, RANGE=100):\n```", 'canonical_solution': '    int_list = [list(map(int, x)) for x in T1]\n    flattened_list = list(itertools.chain(*int_list))\n    total_nums = sum(flattened_list)\n\n    random_nums = [randint(0, RANGE) for _ in range(total_nums)]\n    counts = Counter(random_nums)\n\n    return counts', 'code_prompt': 'from collections import Counter\nimport itertools\nfrom random import randint\ndef task_func(T1, RANGE=100):\n', 'libs': "['collections', 'random', 'itertools']"}
+{'instruct_prompt': "Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.\nThe function should output with:\n    tuple:\n    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.\n    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\ndef task_func(list_of_pairs):\n```", 'canonical_solution': '    df = pd.DataFrame(list_of_pairs, columns=["Category", "Value"])\n    plt.figure(figsize=(10, 5))\n    sns.barplot(x="Category", y="Value", data=df)\n    plt.title("Category vs Value")\n    ax = plt.gca()\n    return df, ax', 'code_prompt': 'import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\ndef task_func(list_of_pairs):\n', 'libs': "['pandas', 'matplotlib', 'seaborn']"}
+None of PyTorch, TensorFlow >= 2.0, or Flax have been found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+Choose strategy debate (0, 1, 2): 
+1
+User prompt: Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```
+
+Response developer 0: {
+    "code": "def task_func(T1, RANGE=100):\n        # Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.\n        T1 = [int(i) for i in T1]\n        random_list = []\n        sum_of_T1 = sum(T1)\n        for _ in range(sum_of_T1):\n            random_list.append(randint(0, RANGE))\n        counter = Counter()\n        counter.update(random_list)\n        return counter",
+    "documentation": "The function 'task_func' takes in a list of integers 'T1'. First, it converts each element of T1 to an integer and then generates a list of random integers where the number of integers is determined by the sum of the elements of T1. The function then counts the occurrences of each number in the generated list using a Counter object.",
+    "imports": "from collections import Counter\nimport itertools\nfrom random import randint"
+    ,
+    "time_complexity": "O(n)"
+}
+
+Response developer 1: {
+    "code": "def task_func(T1, RANGE = 100): \n\treturn Counter(itertools.chain(*[randint(0,RANGE) for i in range(sum(list(map(int, T1))))]))",
+    "documentation": "The function 'task_func' takes two arguments 'T1' and 'RANGE'. It converts all elements in 'T1' to integers and creates a list of random integers where the number of integers is determined by the sum of the integers in 'T1'. Random integers are generated between 0 and 'RANGE' (default is 100). The function counts the occurrences of each number in the generated list using a Counter. Finally, it outputs with a 'Counter' object representing the count of each number appearing in the list of generated random integers.",
+    "imports": "\nimport itertools\nfrom collections import Counter\nfrom random import randint",
+    "time_complexity": "O(N)"
+}
+Response developer 2: {"code":"from collections import Counter\nimport itertools\nfrom random import randint\ndef task_func(T1, RANGE=100):\n    T2 = [int(i) for i in T1]\n    count = len(set(itertools.chain(*[itertools.repeat(i, int(i)) for i in T2])))\n    result_list = []\n    while len(result_list) < sum(T2):\n        result_list.append(randint(0, RANGE))\n    counter = Counter()\n    [counter.update({j: 1}) for j in result_list]\n    return counter","documentation":"The function task_func takes a list of integers and an optional parameter RANGE (default is 100). It first converts the elements in T1 to integers.\nIt then counts the number of unique integers in T2. The count is used to determine how many random integers will be generated. A set is created from itertools repeat to ensure the result_list has no duplicates.\nA list of random integers between 0 and RANGE is generated using randint function\nThe counter object is then initialized, and each element in result_list is updated with count=1 using a list comprehension. \nCounter: The Counter object representing the count of each number appearing in the list of generated random integers.","imports":"from collections import Counter\nimport itertools\nfrom random import randint","time_complexity":"O(N)"}
+
+╒══════════════╤═══════════════════════════════════════════╕
+│   Complexity │ Node                                      │
+╞══════════════╪═══════════════════════════════════════════╡
+│            0 │ T1 = [int(i) for i in T1]                 │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ random_list = []                          │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ sum_of_T1 = sum(T1)                       │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ for _ in range(sum_of_T1):                │
+│              │     random_list.append(randint(0, RANGE)) │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter = Counter()                       │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter.update(random_list)               │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ return counter                            │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ Total                                     │
+╘══════════════╧═══════════════════════════════════════════╛
+╒══════════════╤═══════════════════════════════════════════════════════════════════════════════════════════════╕
+│   Complexity │ Node                                                                                          │
+╞══════════════╪═══════════════════════════════════════════════════════════════════════════════════════════════╡
+│            0 │ return Counter(itertools.chain(*[randint(0, RANGE) for i in range(sum(list(map(int, T1))))])) │
+├──────────────┼───────────────────────────────────────────────────────────────────────────────────────────────┤
+│            0 │ Total                                                                                         │
+╘══════════════╧═══════════════════════════════════════════════════════════════════════════════════════════════╛
+╒══════════════╤═══════════════════════════════════════════════════════════════════════════════╕
+│   Complexity │ Node                                                                          │
+╞══════════════╪═══════════════════════════════════════════════════════════════════════════════╡
+│            0 │ T2 = [int(i) for i in T1]                                                     │
+├──────────────┼───────────────────────────────────────────────────────────────────────────────┤
+│            0 │ count = len(set(itertools.chain(*[itertools.repeat(i, int(i)) for i in T2]))) │
+├──────────────┼───────────────────────────────────────────────────────────────────────────────┤
+│            0 │ result_list = []                                                              │
+├──────────────┼───────────────────────────────────────────────────────────────────────────────┤
+│            1 │ while (len(result_list) < sum(T2)):                                           │
+│              │     result_list.append(randint(0, RANGE))                                     │
+├──────────────┼───────────────────────────────────────────────────────────────────────────────┤
+│            0 │ counter = Counter()                                                           │
+├──────────────┼───────────────────────────────────────────────────────────────────────────────┤
+│            0 │ [counter.update({j: 1}) for j in result_list]                                 │
+├──────────────┼───────────────────────────────────────────────────────────────────────────────┤
+│            0 │ return counter                                                                │
+├──────────────┼───────────────────────────────────────────────────────────────────────────────┤
+│            1 │ Total                                                                         │
+╘══════════════╧═══════════════════════════════════════════════════════════════════════════════╛
+DEBATE_PROMPT OTTENUTO: 
+# Instruction
+You are an expert source code evaluator. Your task is to analyze a list of the source code generated by AI models
+and select the best one.
+We will provide you with the user input (the original coding prompt) and a list of 3 AI-generated code response.
+You should first read the user input carefully to understand the coding task, and then select the best code 
+response based on the **Evaluation** section below.
+
+# Evaluation
+## Metric Definition
+Each code solution has:
+    - an unique number between 0 and 2;
+    - a time complexity expressed in Big-O notation;
+    - a cognitive complexity. 
+
+You will be assessing each code solution according the following aspects: time complexity and cognitive complexity.
+The definition of each criteria is described in Criteria section.
+According these criteria, you will generate an integer which is the unique number related to the best code solution. 
+Prioritize solutions with lower time complexity first. If time complexities are equal, then prioritize lower cognitive complexity.
+The instruction for the coding task is provided in the **User Input** section, while the list of code solutions 
+is provided in the **AI-generated Responses** section.
+
+
+## Criteria
+- Time complexity: it measures how the execution time of the algorithm grows as the input size increases. 
+Big-O notation is the standard for expressing time complexity. More lower it is (e.g., O(N) is better than O(N^2)), better the code solution is.
+- Cognitive complexity: it quantifies the difficulty for a human to understand a piece of code or a function.
+More lower it is (e.g., a flat structure is better than deeply nested loops), better the code solution is.
+
+# Output Format
+Return only a single integer which corresponds to the unique number of the best code solution choosen.
+Your response must be a single integer with **no explanation**, **no text**, and **no punctuation**.
+Responding with anything other than a number will be considered an error.
+
+
+## Evaluation Steps
+STEP 1: Analyze each code response in terms of time complexity and cognitive complexity.
+STEP 2: Based on the defined criteria and prioritization in **Metric Definition** section, select the best code solution.
+STEP 3: Provide your answer as described in **Output Format** section.
+
+
+# User Input
+Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```
+
+## AI-generated Responses
+
+------
+SOLUTION: 
+from collections import Counter
+import itertools
+from random import randint
+
+def task_func(T1, RANGE=100):
+        # Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+        T1 = [int(i) for i in T1]
+        random_list = []
+        sum_of_T1 = sum(T1)
+        for _ in range(sum_of_T1):
+            random_list.append(randint(0, RANGE))
+        counter = Counter()
+        counter.update(random_list)
+        return counter
+UNIQUE NUMBER OF SOLUTION: 0
+TIME COMPLEXITY: o(n)
+COGNITIVE COMPLEXITY: 1
+------
+SOLUTION: 
+
+import itertools
+from collections import Counter
+from random import randint
+
+def task_func(T1, RANGE = 100): 
+	return Counter(itertools.chain(*[randint(0,RANGE) for i in range(sum(list(map(int, T1))))]))
+UNIQUE NUMBER OF SOLUTION: 1
+TIME COMPLEXITY: o(n)
+COGNITIVE COMPLEXITY: 0
+------
+SOLUTION: 
+from collections import Counter
+import itertools
+from random import randint
+
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+    T2 = [int(i) for i in T1]
+    count = len(set(itertools.chain(*[itertools.repeat(i, int(i)) for i in T2])))
+    result_list = []
+    while len(result_list) < sum(T2):
+        result_list.append(randint(0, RANGE))
+    counter = Counter()
+    [counter.update({j: 1}) for j in result_list]
+    return counter
+UNIQUE NUMBER OF SOLUTION: 2
+TIME COMPLEXITY: o(n)
+COGNITIVE COMPLEXITY: 1
+
+HO OTTENUTO 0
+HO OTTENUTO 0
+HO OTTENUTO 0
+
+Round 0 - Voting
+Feedback model 0: 0
+
+Feedback model 1: 0
+
+Feedback model 2: 0
+
+Agreement
+
+Final answer:
+{
+    "code": "def task_func(T1, RANGE=100):\n        # Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.\n        T1 = [int(i) for i in T1]\n        random_list = []\n        sum_of_T1 = sum(T1)\n        for _ in range(sum_of_T1):\n            random_list.append(randint(0, RANGE))\n        counter = Counter()\n        counter.update(random_list)\n        return counter",
+    "documentation": "The function 'task_func' takes in a list of integers 'T1'. First, it converts each element of T1 to an integer and then generates a list of random integers where the number of integers is determined by the sum of the elements of T1. The function then counts the occurrences of each number in the generated list using a Counter object.",
+    "imports": "from collections import Counter\nimport itertools\nfrom random import randint"
+    ,
+    "time_complexity": "O(n)"
+}
+
+Evaluation
+EVALUATION PROMPT
+# Instruction
+You are an expert source code evaluator. Your task is to analyze the quality of the source code generated by AI models.
+We will provide you with the user input (the original coding prompt) and an AI-generated code response.
+You should first read the user input carefully to understand the coding task, and then evaluate the quality of the code 
+response based on the **Evaluation** section below.
+You will provide detailed explanations of your findings, including specific counts of compilation and execution errors.
+
+# Evaluation
+## Metric Definition
+You will be assessing code quality, which is characterized by following aspects: code correctness, security vulnerabilities,
+ease of maintenance, reliability, and the presence of compilation and execution errors.
+For each criteria, described in Criteria section, you will generate a score between 0 and 100.
+The instruction for the coding task is provided in the **User input** section, while the code is provided in the 
+**AI-generated Response** section.
+
+
+## Criteria
+Correctness: The code accurately implements the functionality described in the user prompt and produces the expected output.
+Security: The code avoids common security vulnerabilities and follows best practices for secure coding.
+Maintainability: The code is well-structured, readable, and easy to understand and modify. Consider factors like naming conventions, modularity, comments, and adherence to coding standards.
+Reliability: The code handles edge cases and potential errors gracefully, avoiding unexpected crashes or incorrect behavior.
+Compilation Errors: The number of syntax errors or other issues that prevent the code from compiling. Provide the count.
+Execution Errors: The number of runtime errors or logical errors that cause the code to fail during execution. Provide the count.
+
+# Output Format
+You must return your evaluation strictly in the following JSON format: 
+
+```
+{
+    "type": "object",
+    "properties": {
+        "Correctness": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the correctness of the AI-generated code."
+        },
+        "Security": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the security of the AI-generated code."
+        },
+        "Maintainability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the maintainability of the AI-generated code."
+        },
+        "Reliability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the reliability of the AI-generated code."
+        },
+        "Compilation Errors": {
+            "type": "integer",
+            "description": "The number of compilation errors affected by the AI-generated code."
+        },
+        "Execution Errors": {
+            "type": "integer",
+            "description": "The number of execution errors affected by the AI-generated code."
+        },
+        "Explanation": {
+            "type": "string",
+            "description": "A detailed explanation for your assessment, including specific examples of issues and the error counts."
+        }
+    },
+    "required": [
+        "Correctness", "Security", "Maintainability", "Reliability",
+        "Compilation Errors", "Execution Errors", "Explanation"
+    ]
+}
+```
+
+
+EXAMPLE OUTPUT:
+```
+{
+  "Correctness": 50,
+  "Security": 60,
+  "Maintainability": 45,
+  "Reliability": 20,
+  "Compilation Errors": 3,
+  "Execution Errors": 0
+  "Explanation": "The given code 
+  ``` def calcola_media(lista):
+    somma = 0
+    for numero in lista:
+        somma += numero
+    media = somma / len(numero)
+    return media```
+    The line len(number) should be len(numbers). Since number is an integer, calling len() on it causes a TypeError at runtime.
+    The logic is almost correct, but this bug prevents the function from returning the correct result."
+}
+```
+
+## Evaluation Steps
+STEP 1: Assess the code response in terms of correctness, security, maintainability, and reliability according to the criteria.
+        Give for each criteria a score between 0 and 100.
+STEP 2: Count the number of compilation errors and execution errors.
+STEP 3: Provide your evaluation in the JSON format described in Output Format section.
+
+
+# User Input
+Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```
+
+## AI-generated Response
+from collections import Counter
+import itertools
+from random import randint
+
+def task_func(T1, RANGE=100):
+        # Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+        T1 = [int(i) for i in T1]
+        random_list = []
+        sum_of_T1 = sum(T1)
+        for _ in range(sum_of_T1):
+            random_list.append(randint(0, RANGE))
+        counter = Counter()
+        counter.update(random_list)
+        return counter
+
+
+
+{
+"Compilation Errors": 1,
+"Correctness": 42,
+"Execution Errors": 0,
+"Explanation":"The function is partially correct, but there are some issues with the logic. The first issue is the line 'sum_of_T1 = sum(T1)'. Since T1 is a list of strings, calling 'sum()' on it causes an error at runtime. The second issue is the loop 'for _ in range(sum_of_T1):'. This loops does not generate a number between 0 and RANGE (default value is 100). Instead, it generates random integers with values less than or equal to sum_of_T1. Hence, there is no guarantee that the generated list will contain all integers in the range from 0 to RANGE. To correct the function, we need to replace 'sum()' with 'sum(map(int, T1))'. Additionally, we can use a better logic for the loop and generate random integers as follows: "
+    ,
+"Maintainability": 42,
+"Reliability": 32,
+"Security": 60
+}
+
+Final code quality score: 58.70
+Response developer 0: {
+    "code": "def task_func(T1, RANGE=100):\n        # Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.\n        T1 = [int(i) for i in T1]\n        random_list = []\n        sum_of_T1 = sum(map(int, T1))\n        for _ in range(sum_of_T1):\n            random_list.append(randint(0, RANGE))\n        counter = Counter()\n        counter.update(random_list)\n        return counter",
+    "documentation": "The task function generates a list of random integers and counts the occurrences of each number in the generated list using a Counter.\n",
+    "imports": "import itertools\nfrom collections import Counter\nfrom random import randint\n"
+    ,
+    "time_complexity": "O(n log n)"
+}
+Response developer 1: {
+	"code": "def task_func(T1, RANGE=100):\n        T1 = [int(i) for i in T1]\n        random_list = []\n        sum_of_T1 = sum(map(int, T1))\n        for _ in range(sum_of_T1):\n            random_list.append(randint(0, RANGE))\n        counter = Counter()\n        counter.update(random_list)\n        return counter",
+	"documentation": "The function takes in a list of elements as 'T1'. The inputted elements are converted to integers and a list of random integers is created with the sum being equal to the sum of all elements in 'T1'. Each element is generated between 0 and RANGE (default value is 100). A counter object is used to count the occurrences of each integer and returns it.",
+	"imports": "from collections import Counter\nimport itertools\nfrom random import randint",
+	"time_complexity": "O(nlog n)"
+}
+Response developer 2: {
+    "code": "import random\n\ndef task_func(T1, RANGE=100):\n    T1 = [int(i) for i in T1]\n    sum_of_T1 = sum(map(int, T1))\n    random_list = []\n    for _ in range(sum_of_T1):\n        random_list.append(random.randint(0,RANGE))\n    counter = Counter()\n    counter.update(random_list)\n    return counter",
+    "documentation": "The task function takes a list of strings 'T1' and converts all elements to integers. Then it creates an empty list 'random_list', sets the range for random integers from 0 to 'RANGE'. It then generates a number of random integers between 0 and RANGE equal in length to the sum of all integers converted from T1. Finally, it returns a counter object that contains the count of each integer in the generated list.",
+    "imports": "from collections import Counter\nimport itertools\nfrom random import randint",
+    "time_complexity": "O(sum_of_T1)"
+}
+╒══════════════╤═══════════════════════════════════════════╕
+│   Complexity │ Node                                      │
+╞══════════════╪═══════════════════════════════════════════╡
+│            0 │ T1 = [int(i) for i in T1]                 │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ random_list = []                          │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ sum_of_T1 = sum(map(int, T1))             │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ for _ in range(sum_of_T1):                │
+│              │     random_list.append(randint(0, RANGE)) │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter = Counter()                       │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter.update(random_list)               │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ return counter                            │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ Total                                     │
+╘══════════════╧═══════════════════════════════════════════╛
+╒══════════════╤═══════════════════════════════════════════╕
+│   Complexity │ Node                                      │
+╞══════════════╪═══════════════════════════════════════════╡
+│            0 │ T1 = [int(i) for i in T1]                 │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ random_list = []                          │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ sum_of_T1 = sum(map(int, T1))             │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ for _ in range(sum_of_T1):                │
+│              │     random_list.append(randint(0, RANGE)) │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter = Counter()                       │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter.update(random_list)               │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ return counter                            │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ Total                                     │
+╘══════════════╧═══════════════════════════════════════════╛
+╒══════════════╤══════════════════════════════════════════════════╕
+│   Complexity │ Node                                             │
+╞══════════════╪══════════════════════════════════════════════════╡
+│            0 │ T1 = [int(i) for i in T1]                        │
+├──────────────┼──────────────────────────────────────────────────┤
+│            0 │ sum_of_T1 = sum(map(int, T1))                    │
+├──────────────┼──────────────────────────────────────────────────┤
+│            0 │ random_list = []                                 │
+├──────────────┼──────────────────────────────────────────────────┤
+│            1 │ for _ in range(sum_of_T1):                       │
+│              │     random_list.append(random.randint(0, RANGE)) │
+├──────────────┼──────────────────────────────────────────────────┤
+│            0 │ counter = Counter()                              │
+├──────────────┼──────────────────────────────────────────────────┤
+│            0 │ counter.update(random_list)                      │
+├──────────────┼──────────────────────────────────────────────────┤
+│            0 │ return counter                                   │
+├──────────────┼──────────────────────────────────────────────────┤
+│            1 │ Total                                            │
+╘══════════════╧══════════════════════════════════════════════════╛
+DEBATE_PROMPT OTTENUTO: 
+# Instruction
+You are an expert source code evaluator. Your task is to analyze a list of the source code generated by AI models
+and select the best one.
+We will provide you with the user input (the original coding prompt) and a list of 3 AI-generated code response.
+You should first read the user input carefully to understand the coding task, and then select the best code 
+response based on the **Evaluation** section below.
+
+# Evaluation
+## Metric Definition
+Each code solution has:
+    - an unique number between 0 and 2;
+    - a time complexity expressed in Big-O notation;
+    - a cognitive complexity. 
+
+You will be assessing each code solution according the following aspects: time complexity and cognitive complexity.
+The definition of each criteria is described in Criteria section.
+According these criteria, you will generate an integer which is the unique number related to the best code solution. 
+Prioritize solutions with lower time complexity first. If time complexities are equal, then prioritize lower cognitive complexity.
+The instruction for the coding task is provided in the **User Input** section, while the list of code solutions 
+is provided in the **AI-generated Responses** section.
+
+
+## Criteria
+- Time complexity: it measures how the execution time of the algorithm grows as the input size increases. 
+Big-O notation is the standard for expressing time complexity. More lower it is (e.g., O(N) is better than O(N^2)), better the code solution is.
+- Cognitive complexity: it quantifies the difficulty for a human to understand a piece of code or a function.
+More lower it is (e.g., a flat structure is better than deeply nested loops), better the code solution is.
+
+# Output Format
+Return only a single integer which corresponds to the unique number of the best code solution choosen.
+Your response must be a single integer with **no explanation**, **no text**, and **no punctuation**.
+Responding with anything other than a number will be considered an error.
+
+
+## Evaluation Steps
+STEP 1: Analyze each code response in terms of time complexity and cognitive complexity.
+STEP 2: Based on the defined criteria and prioritization in **Metric Definition** section, select the best code solution.
+STEP 3: Provide your answer as described in **Output Format** section.
+
+
+# User Input
+Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```
+
+## AI-generated Responses
+
+------
+SOLUTION: 
+import itertools
+from collections import Counter
+from random import randint
+
+
+def task_func(T1, RANGE=100):
+        # Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+        T1 = [int(i) for i in T1]
+        random_list = []
+        sum_of_T1 = sum(map(int, T1))
+        for _ in range(sum_of_T1):
+            random_list.append(randint(0, RANGE))
+        counter = Counter()
+        counter.update(random_list)
+        return counter
+UNIQUE NUMBER OF SOLUTION: 0
+TIME COMPLEXITY: o(n log n)
+COGNITIVE COMPLEXITY: 1
+------
+SOLUTION: 
+from collections import Counter
+import itertools
+from random import randint
+
+def task_func(T1, RANGE=100):
+        T1 = [int(i) for i in T1]
+        random_list = []
+        sum_of_T1 = sum(map(int, T1))
+        for _ in range(sum_of_T1):
+            random_list.append(randint(0, RANGE))
+        counter = Counter()
+        counter.update(random_list)
+        return counter
+UNIQUE NUMBER OF SOLUTION: 1
+TIME COMPLEXITY: o(nlog n)
+COGNITIVE COMPLEXITY: 1
+------
+SOLUTION: 
+from collections import Counter
+import itertools
+from random import randint
+
+import random
+
+def task_func(T1, RANGE=100):
+    T1 = [int(i) for i in T1]
+    sum_of_T1 = sum(map(int, T1))
+    random_list = []
+    for _ in range(sum_of_T1):
+        random_list.append(random.randint(0,RANGE))
+    counter = Counter()
+    counter.update(random_list)
+    return counter
+UNIQUE NUMBER OF SOLUTION: 2
+TIME COMPLEXITY: o(sum_of_t1)
+COGNITIVE COMPLEXITY: 1
+
+HO OTTENUTO 0
+HO OTTENUTO 0
+HO OTTENUTO 0
+
+Round 0 - Voting
+Feedback model 0: 0
+
+Feedback model 1: 0
+
+Feedback model 2: 0
+
+Agreement
+
+Final answer:
+{
+    "code": "def task_func(T1, RANGE=100):\n        # Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.\n        T1 = [int(i) for i in T1]\n        random_list = []\n        sum_of_T1 = sum(map(int, T1))\n        for _ in range(sum_of_T1):\n            random_list.append(randint(0, RANGE))\n        counter = Counter()\n        counter.update(random_list)\n        return counter",
+    "documentation": "The task function generates a list of random integers and counts the occurrences of each number in the generated list using a Counter.\n",
+    "imports": "import itertools\nfrom collections import Counter\nfrom random import randint\n"
+    ,
+    "time_complexity": "O(n log n)"
+}
+Evaluation
+EVALUATION PROMPT
+# Instruction
+You are an expert source code evaluator. Your task is to analyze the quality of the source code generated by AI models.
+We will provide you with the user input (the original coding prompt) and an AI-generated code response.
+You should first read the user input carefully to understand the coding task, and then evaluate the quality of the code 
+response based on the **Evaluation** section below.
+You will provide detailed explanations of your findings, including specific counts of compilation and execution errors.
+
+# Evaluation
+## Metric Definition
+You will be assessing code quality, which is characterized by following aspects: code correctness, security vulnerabilities,
+ease of maintenance, reliability, and the presence of compilation and execution errors.
+For each criteria, described in Criteria section, you will generate a score between 0 and 100.
+The instruction for the coding task is provided in the **User input** section, while the code is provided in the 
+**AI-generated Response** section.
+
+
+## Criteria
+Correctness: The code accurately implements the functionality described in the user prompt and produces the expected output.
+Security: The code avoids common security vulnerabilities and follows best practices for secure coding.
+Maintainability: The code is well-structured, readable, and easy to understand and modify. Consider factors like naming conventions, modularity, comments, and adherence to coding standards.
+Reliability: The code handles edge cases and potential errors gracefully, avoiding unexpected crashes or incorrect behavior.
+Compilation Errors: The number of syntax errors or other issues that prevent the code from compiling. Provide the count.
+Execution Errors: The number of runtime errors or logical errors that cause the code to fail during execution. Provide the count.
+
+# Output Format
+You must return your evaluation strictly in the following JSON format: 
+
+```
+{
+    "type": "object",
+    "properties": {
+        "Correctness": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the correctness of the AI-generated code."
+        },
+        "Security": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the security of the AI-generated code."
+        },
+        "Maintainability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the maintainability of the AI-generated code."
+        },
+        "Reliability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the reliability of the AI-generated code."
+        },
+        "Compilation Errors": {
+            "type": "integer",
+            "description": "The number of compilation errors affected by the AI-generated code."
+        },
+        "Execution Errors": {
+            "type": "integer",
+            "description": "The number of execution errors affected by the AI-generated code."
+        },
+        "Explanation": {
+            "type": "string",
+            "description": "A detailed explanation for your assessment, including specific examples of issues and the error counts."
+        }
+    },
+    "required": [
+        "Correctness", "Security", "Maintainability", "Reliability",
+        "Compilation Errors", "Execution Errors", "Explanation"
+    ]
+}
+```
+
+
+EXAMPLE OUTPUT:
+```
+{
+  "Correctness": 50,
+  "Security": 60,
+  "Maintainability": 45,
+  "Reliability": 20,
+  "Compilation Errors": 3,
+  "Execution Errors": 0
+  "Explanation": "The given code 
+  ``` def calcola_media(lista):
+    somma = 0
+    for numero in lista:
+        somma += numero
+    media = somma / len(numero)
+    return media```
+    The line len(number) should be len(numbers). Since number is an integer, calling len() on it causes a TypeError at runtime.
+    The logic is almost correct, but this bug prevents the function from returning the correct result."
+}
+```
+
+## Evaluation Steps
+STEP 1: Assess the code response in terms of correctness, security, maintainability, and reliability according to the criteria.
+        Give for each criteria a score between 0 and 100.
+STEP 2: Count the number of compilation errors and execution errors.
+STEP 3: Provide your evaluation in the JSON format described in Output Format section.
+
+
+# User Input
+Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```
+
+## AI-generated Response
+import itertools
+from collections import Counter
+from random import randint
+
+
+def task_func(T1, RANGE=100):
+        # Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+        T1 = [int(i) for i in T1]
+        random_list = []
+        sum_of_T1 = sum(map(int, T1))
+        for _ in range(sum_of_T1):
+            random_list.append(randint(0, RANGE))
+        counter = Counter()
+        counter.update(random_list)
+        return counter
+
+
+
+{
+  "Compilation Errors": 0,
+  "Correctness": 80,
+  "Execution Errors": 0,
+  "Explanation": "",
+  "Maintainability": 75,
+  "Reliability": 30,
+  "Security": 20
+}
+Final code quality score: 74.50
+Response developer 0: {
+    "code": "def task_func(T1, RANGE=100):\n        T1 = [int(i) for i in T1]\n        random_list = []\n        sum_of_T1 = sum(map(int, T1))\n        for _ in range(sum_of_T1):\n            random_list.append(randint(0, RANGE)) \n        counter = Counter()\n        counter.update(random_list)\n        return counter",
+    "documentation": "The task function takes a list of integers as the input parameter T1 and generates a random list of integers of length equal to the sum of integers in T1. The list is generated by adding random integers between 0 and RANGE (defaults to 100). Counter class from collections module is used to count the occurrences of each number in the generated list.",
+    "imports": "from random import randint \n        from collections import Counter",
+    "time_complexity": "O(n)"
+}
+Response developer 1: {
+    "code":"from collections import Counter\nimport random\ntime_to_generate_random_list=0",
+    "documentation":"This is the implementation of the given task. It uses list comprehension to generate a list of unique random numbers with length equal to the sum of all numbers in T1.\nThe time complexity is O(n^2) where n is the sum of elements in T1 because we are iterating over T1 and generating random numbers.\nWe used the Counter from collections module to count occurrences of each integer in the list. The time complexity for this is O(n).\nOverall, this code has a time complexity of O(n^2) + O(n) = O(n^2)\n",
+    "imports":"import random,collections"
+    ,
+    "time_complexity":"O(n^2)"
+}
+Response developer 2: {
+"code": "def task_func(T1, RANGE=100):\n        T1 = [int(i) for i in T1]\n        random_list = []\n        sum_of_T1 = sum(map(int, T1))\n        for _ in range(sum_of_T1):\n            random_list.append(randint(0, RANGE))     \n        counter = Counter()\n        counter.update(random_list)\n        return counter",
+"documentation": "Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.",
+"imports": "import itertools\nfrom collections import Counter\nfrom random import randint",
+"time_complexity": "O(n)"
+}
+╒══════════════╤═══════════════════════════════════════════╕
+│   Complexity │ Node                                      │
+╞══════════════╪═══════════════════════════════════════════╡
+│            0 │ T1 = [int(i) for i in T1]                 │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ random_list = []                          │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ sum_of_T1 = sum(map(int, T1))             │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ for _ in range(sum_of_T1):                │
+│              │     random_list.append(randint(0, RANGE)) │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter = Counter()                       │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter.update(random_list)               │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ return counter                            │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ Total                                     │
+╘══════════════╧═══════════════════════════════════════════╛
+╒══════════════╤══════════════════════════════╕
+│   Complexity │ Node                         │
+╞══════════════╪══════════════════════════════╡
+│           -1 │ No function definition found │
+╘══════════════╧══════════════════════════════╛
+╒══════════════╤═══════════════════════════════════════════╕
+│   Complexity │ Node                                      │
+╞══════════════╪═══════════════════════════════════════════╡
+│            0 │ T1 = [int(i) for i in T1]                 │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ random_list = []                          │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ sum_of_T1 = sum(map(int, T1))             │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ for _ in range(sum_of_T1):                │
+│              │     random_list.append(randint(0, RANGE)) │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter = Counter()                       │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter.update(random_list)               │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ return counter                            │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ Total                                     │
+╘══════════════╧═══════════════════════════════════════════╛
+DEBATE_PROMPT OTTENUTO: 
+# Instruction
+You are an expert source code evaluator. Your task is to analyze a list of the source code generated by AI models
+and select the best one.
+We will provide you with the user input (the original coding prompt) and a list of 2 AI-generated code response.
+You should first read the user input carefully to understand the coding task, and then select the best code 
+response based on the **Evaluation** section below.
+
+# Evaluation
+## Metric Definition
+Each code solution has:
+    - an unique number between 0 and 1;
+    - a time complexity expressed in Big-O notation;
+    - a cognitive complexity. 
+
+You will be assessing each code solution according the following aspects: time complexity and cognitive complexity.
+The definition of each criteria is described in Criteria section.
+According these criteria, you will generate an integer which is the unique number related to the best code solution. 
+Prioritize solutions with lower time complexity first. If time complexities are equal, then prioritize lower cognitive complexity.
+The instruction for the coding task is provided in the **User Input** section, while the list of code solutions 
+is provided in the **AI-generated Responses** section.
+
+
+## Criteria
+- Time complexity: it measures how the execution time of the algorithm grows as the input size increases. 
+Big-O notation is the standard for expressing time complexity. More lower it is (e.g., O(N) is better than O(N^2)), better the code solution is.
+- Cognitive complexity: it quantifies the difficulty for a human to understand a piece of code or a function.
+More lower it is (e.g., a flat structure is better than deeply nested loops), better the code solution is.
+
+# Output Format
+Return only a single integer which corresponds to the unique number of the best code solution choosen.
+Your response must be a single integer with **no explanation**, **no text**, and **no punctuation**.
+Responding with anything other than a number will be considered an error.
+
+
+## Evaluation Steps
+STEP 1: Analyze each code response in terms of time complexity and cognitive complexity.
+STEP 2: Based on the defined criteria and prioritization in **Metric Definition** section, select the best code solution.
+STEP 3: Provide your answer as described in **Output Format** section.
+
+
+# User Input
+Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```
+
+## AI-generated Responses
+
+------
+SOLUTION: 
+from random import randint 
+        from collections import Counter
+
+def task_func(T1, RANGE=100):
+        T1 = [int(i) for i in T1]
+        random_list = []
+        sum_of_T1 = sum(map(int, T1))
+        for _ in range(sum_of_T1):
+            random_list.append(randint(0, RANGE)) 
+        counter = Counter()
+        counter.update(random_list)
+        return counter
+UNIQUE NUMBER OF SOLUTION: 0
+TIME COMPLEXITY: o(n)
+COGNITIVE COMPLEXITY: 1
+------
+SOLUTION: 
+import itertools
+from collections import Counter
+from random import randint
+
+def task_func(T1, RANGE=100):
+        T1 = [int(i) for i in T1]
+        random_list = []
+        sum_of_T1 = sum(map(int, T1))
+        for _ in range(sum_of_T1):
+            random_list.append(randint(0, RANGE))     
+        counter = Counter()
+        counter.update(random_list)
+        return counter
+UNIQUE NUMBER OF SOLUTION: 2
+TIME COMPLEXITY: o(n)
+COGNITIVE COMPLEXITY: 1
+
+HO OTTENUTO 0
+HO OTTENUTO 0
+HO OTTENUTO 0
+
+Round 0 - Voting
+Feedback model 0: 0
+
+Feedback model 1: 0
+
+Feedback model 2: 0
+
+Agreement
+
+Final answer:
+{
+    "code": "def task_func(T1, RANGE=100):\n        T1 = [int(i) for i in T1]\n        random_list = []\n        sum_of_T1 = sum(map(int, T1))\n        for _ in range(sum_of_T1):\n            random_list.append(randint(0, RANGE)) \n        counter = Counter()\n        counter.update(random_list)\n        return counter",
+    "documentation": "The task function takes a list of integers as the input parameter T1 and generates a random list of integers of length equal to the sum of integers in T1. The list is generated by adding random integers between 0 and RANGE (defaults to 100). Counter class from collections module is used to count the occurrences of each number in the generated list.",
+    "imports": "from random import randint \n        from collections import Counter",
+    "time_complexity": "O(n)"
+}
+Evaluation
+EVALUATION PROMPT
+# Instruction
+You are an expert source code evaluator. Your task is to analyze the quality of the source code generated by AI models.
+We will provide you with the user input (the original coding prompt) and an AI-generated code response.
+You should first read the user input carefully to understand the coding task, and then evaluate the quality of the code 
+response based on the **Evaluation** section below.
+You will provide detailed explanations of your findings, including specific counts of compilation and execution errors.
+
+# Evaluation
+## Metric Definition
+You will be assessing code quality, which is characterized by following aspects: code correctness, security vulnerabilities,
+ease of maintenance, reliability, and the presence of compilation and execution errors.
+For each criteria, described in Criteria section, you will generate a score between 0 and 100.
+The instruction for the coding task is provided in the **User input** section, while the code is provided in the 
+**AI-generated Response** section.
+
+
+## Criteria
+Correctness: The code accurately implements the functionality described in the user prompt and produces the expected output.
+Security: The code avoids common security vulnerabilities and follows best practices for secure coding.
+Maintainability: The code is well-structured, readable, and easy to understand and modify. Consider factors like naming conventions, modularity, comments, and adherence to coding standards.
+Reliability: The code handles edge cases and potential errors gracefully, avoiding unexpected crashes or incorrect behavior.
+Compilation Errors: The number of syntax errors or other issues that prevent the code from compiling. Provide the count.
+Execution Errors: The number of runtime errors or logical errors that cause the code to fail during execution. Provide the count.
+
+# Output Format
+You must return your evaluation strictly in the following JSON format: 
+
+```
+{
+    "type": "object",
+    "properties": {
+        "Correctness": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the correctness of the AI-generated code."
+        },
+        "Security": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the security of the AI-generated code."
+        },
+        "Maintainability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the maintainability of the AI-generated code."
+        },
+        "Reliability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the reliability of the AI-generated code."
+        },
+        "Compilation Errors": {
+            "type": "integer",
+            "description": "The number of compilation errors affected by the AI-generated code."
+        },
+        "Execution Errors": {
+            "type": "integer",
+            "description": "The number of execution errors affected by the AI-generated code."
+        },
+        "Explanation": {
+            "type": "string",
+            "description": "A detailed explanation for your assessment, including specific examples of issues and the error counts."
+        }
+    },
+    "required": [
+        "Correctness", "Security", "Maintainability", "Reliability",
+        "Compilation Errors", "Execution Errors", "Explanation"
+    ]
+}
+```
+
+
+EXAMPLE OUTPUT:
+```
+{
+  "Correctness": 50,
+  "Security": 60,
+  "Maintainability": 45,
+  "Reliability": 20,
+  "Compilation Errors": 3,
+  "Execution Errors": 0
+  "Explanation": "The given code 
+  ``` def calcola_media(lista):
+    somma = 0
+    for numero in lista:
+        somma += numero
+    media = somma / len(numero)
+    return media```
+    The line len(number) should be len(numbers). Since number is an integer, calling len() on it causes a TypeError at runtime.
+    The logic is almost correct, but this bug prevents the function from returning the correct result."
+}
+```
+
+## Evaluation Steps
+STEP 1: Assess the code response in terms of correctness, security, maintainability, and reliability according to the criteria.
+        Give for each criteria a score between 0 and 100.
+STEP 2: Count the number of compilation errors and execution errors.
+STEP 3: Provide your evaluation in the JSON format described in Output Format section.
+
+
+# User Input
+Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```
+
+## AI-generated Response
+from random import randint 
+        from collections import Counter
+
+def task_func(T1, RANGE=100):
+        T1 = [int(i) for i in T1]
+        random_list = []
+        sum_of_T1 = sum(map(int, T1))
+        for _ in range(sum_of_T1):
+            random_list.append(randint(0, RANGE)) 
+        counter = Counter()
+        counter.update(random_list)
+        return counter
+
+
+
+{
+    "Compilation Errors": 2,
+    "Correctness": 43,
+    "Execution Errors": 100,
+    "Explanation": "The AI-generated code contains several compilation errors due to incorrect indentation and other syntax issues. It also has an execution error when the counter is called with the wrong parameters.",
+    "Maintainability": 78,
+    "Reliability": 32,
+    "Security": 40
+}
+Final code quality score: 44.20
+Response developer 0: {
+	"code": "def task_func(T1, RANGE=100):\n\tT1 = [int(i) for i in T1]\n\trandom_list = []\n\tsum_of_T1 = sum(map(int, T1))\n\tfor _ in range(sum_of_T1):\n\t\trandom_list.append(randint(0, RANGE))\n\tcounter = Counter()\n\tcounter.update(random_list)\n\treturn counter",
+	"documentation": "Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.",
+	"imports": "from collections import Counter\nfrom random import randint",
+	"time_complexity": "O(N)"
+}
+Response developer 1: {
+    "code": "def task_func(T1, RANGE=100):\n    T1 = [int(i) for i in T1]\n    random_list = []\n    sum_of_T1 = sum(map(int, T1))\n    for _ in range(sum_of_T1):\n        random_list.append(randint(0, RANGE))\n    counter = Counter()\n    counter.update(random_list)\n    return counter",
+    "documentation": "",
+    "imports": "",
+    "time_complexity": ""
+}
+Response developer 2: {
+    "code": "def task_func(T1, RANGE=100):\n    T1 = [int(i) for i in T1]\n    random_list = []\n    sum_of_T1 = sum(map(int, T1))\n    for _ in range(sum_of_T1):\n        random_list.append(randint(0, RANGE))\n    counter = Counter()\n    counter.update(random_list)\n    return counter",
+    "documentation": "",
+    "imports": "\nfrom collections import Counter\nimport itertools\nfrom random import randint",
+    "time_complexity": "O(n)"
+}
+╒══════════════╤═══════════════════════════════════════════╕
+│   Complexity │ Node                                      │
+╞══════════════╪═══════════════════════════════════════════╡
+│            0 │ T1 = [int(i) for i in T1]                 │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ random_list = []                          │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ sum_of_T1 = sum(map(int, T1))             │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ for _ in range(sum_of_T1):                │
+│              │     random_list.append(randint(0, RANGE)) │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter = Counter()                       │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter.update(random_list)               │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ return counter                            │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ Total                                     │
+╘══════════════╧═══════════════════════════════════════════╛
+╒══════════════╤═══════════════════════════════════════════╕
+│   Complexity │ Node                                      │
+╞══════════════╪═══════════════════════════════════════════╡
+│            0 │ T1 = [int(i) for i in T1]                 │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ random_list = []                          │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ sum_of_T1 = sum(map(int, T1))             │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ for _ in range(sum_of_T1):                │
+│              │     random_list.append(randint(0, RANGE)) │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter = Counter()                       │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter.update(random_list)               │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ return counter                            │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ Total                                     │
+╘══════════════╧═══════════════════════════════════════════╛
+╒══════════════╤═══════════════════════════════════════════╕
+│   Complexity │ Node                                      │
+╞══════════════╪═══════════════════════════════════════════╡
+│            0 │ T1 = [int(i) for i in T1]                 │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ random_list = []                          │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ sum_of_T1 = sum(map(int, T1))             │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ for _ in range(sum_of_T1):                │
+│              │     random_list.append(randint(0, RANGE)) │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter = Counter()                       │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ counter.update(random_list)               │
+├──────────────┼───────────────────────────────────────────┤
+│            0 │ return counter                            │
+├──────────────┼───────────────────────────────────────────┤
+│            1 │ Total                                     │
+╘══════════════╧═══════════════════════════════════════════╛
+DEBATE_PROMPT OTTENUTO: 
+# Instruction
+You are an expert source code evaluator. Your task is to analyze a list of the source code generated by AI models
+and select the best one.
+We will provide you with the user input (the original coding prompt) and a list of 3 AI-generated code response.
+You should first read the user input carefully to understand the coding task, and then select the best code 
+response based on the **Evaluation** section below.
+
+# Evaluation
+## Metric Definition
+Each code solution has:
+    - an unique number between 0 and 2;
+    - a time complexity expressed in Big-O notation;
+    - a cognitive complexity. 
+
+You will be assessing each code solution according the following aspects: time complexity and cognitive complexity.
+The definition of each criteria is described in Criteria section.
+According these criteria, you will generate an integer which is the unique number related to the best code solution. 
+Prioritize solutions with lower time complexity first. If time complexities are equal, then prioritize lower cognitive complexity.
+The instruction for the coding task is provided in the **User Input** section, while the list of code solutions 
+is provided in the **AI-generated Responses** section.
+
+
+## Criteria
+- Time complexity: it measures how the execution time of the algorithm grows as the input size increases. 
+Big-O notation is the standard for expressing time complexity. More lower it is (e.g., O(N) is better than O(N^2)), better the code solution is.
+- Cognitive complexity: it quantifies the difficulty for a human to understand a piece of code or a function.
+More lower it is (e.g., a flat structure is better than deeply nested loops), better the code solution is.
+
+# Output Format
+Return only a single integer which corresponds to the unique number of the best code solution choosen.
+Your response must be a single integer with **no explanation**, **no text**, and **no punctuation**.
+Responding with anything other than a number will be considered an error.
+
+
+## Evaluation Steps
+STEP 1: Analyze each code response in terms of time complexity and cognitive complexity.
+STEP 2: Based on the defined criteria and prioritization in **Metric Definition** section, select the best code solution.
+STEP 3: Provide your answer as described in **Output Format** section.
+
+
+# User Input
+Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```
+
+## AI-generated Responses
+
+------
+SOLUTION: 
+from collections import Counter
+from random import randint
+
+def task_func(T1, RANGE=100):
+	T1 = [int(i) for i in T1]
+	random_list = []
+	sum_of_T1 = sum(map(int, T1))
+	for _ in range(sum_of_T1):
+		random_list.append(randint(0, RANGE))
+	counter = Counter()
+	counter.update(random_list)
+	return counter
+UNIQUE NUMBER OF SOLUTION: 0
+TIME COMPLEXITY: o(n)
+COGNITIVE COMPLEXITY: 1
+------
+SOLUTION: 
+def task_func(T1, RANGE=100):
+    T1 = [int(i) for i in T1]
+    random_list = []
+    sum_of_T1 = sum(map(int, T1))
+    for _ in range(sum_of_T1):
+        random_list.append(randint(0, RANGE))
+    counter = Counter()
+    counter.update(random_list)
+    return counter
+UNIQUE NUMBER OF SOLUTION: 1
+TIME COMPLEXITY: 
+COGNITIVE COMPLEXITY: 1
+------
+SOLUTION: 
+
+from collections import Counter
+import itertools
+from random import randint
+
+def task_func(T1, RANGE=100):
+    T1 = [int(i) for i in T1]
+    random_list = []
+    sum_of_T1 = sum(map(int, T1))
+    for _ in range(sum_of_T1):
+        random_list.append(randint(0, RANGE))
+    counter = Counter()
+    counter.update(random_list)
+    return counter
+UNIQUE NUMBER OF SOLUTION: 2
+TIME COMPLEXITY: o(n)
+COGNITIVE COMPLEXITY: 1
+
+HO OTTENUTO 0
+HO OTTENUTO 0
+HO OTTENUTO 0
+
+Round 0 - Voting
+Feedback model 0: 0
+
+Feedback model 1: 0
+
+Feedback model 2: 0
+
+Agreement
+
+Final answer:
+{
+	"code": "def task_func(T1, RANGE=100):\n\tT1 = [int(i) for i in T1]\n\trandom_list = []\n\tsum_of_T1 = sum(map(int, T1))\n\tfor _ in range(sum_of_T1):\n\t\trandom_list.append(randint(0, RANGE))\n\tcounter = Counter()\n\tcounter.update(random_list)\n\treturn counter",
+	"documentation": "Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.",
+	"imports": "from collections import Counter\nfrom random import randint",
+	"time_complexity": "O(N)"
+}
+Evaluation
+EVALUATION PROMPT
+# Instruction
+You are an expert source code evaluator. Your task is to analyze the quality of the source code generated by AI models.
+We will provide you with the user input (the original coding prompt) and an AI-generated code response.
+You should first read the user input carefully to understand the coding task, and then evaluate the quality of the code 
+response based on the **Evaluation** section below.
+You will provide detailed explanations of your findings, including specific counts of compilation and execution errors.
+
+# Evaluation
+## Metric Definition
+You will be assessing code quality, which is characterized by following aspects: code correctness, security vulnerabilities,
+ease of maintenance, reliability, and the presence of compilation and execution errors.
+For each criteria, described in Criteria section, you will generate a score between 0 and 100.
+The instruction for the coding task is provided in the **User input** section, while the code is provided in the 
+**AI-generated Response** section.
+
+
+## Criteria
+Correctness: The code accurately implements the functionality described in the user prompt and produces the expected output.
+Security: The code avoids common security vulnerabilities and follows best practices for secure coding.
+Maintainability: The code is well-structured, readable, and easy to understand and modify. Consider factors like naming conventions, modularity, comments, and adherence to coding standards.
+Reliability: The code handles edge cases and potential errors gracefully, avoiding unexpected crashes or incorrect behavior.
+Compilation Errors: The number of syntax errors or other issues that prevent the code from compiling. Provide the count.
+Execution Errors: The number of runtime errors or logical errors that cause the code to fail during execution. Provide the count.
+
+# Output Format
+You must return your evaluation strictly in the following JSON format: 
+
+```
+{
+    "type": "object",
+    "properties": {
+        "Correctness": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the correctness of the AI-generated code."
+        },
+        "Security": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the security of the AI-generated code."
+        },
+        "Maintainability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the maintainability of the AI-generated code."
+        },
+        "Reliability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the reliability of the AI-generated code."
+        },
+        "Compilation Errors": {
+            "type": "integer",
+            "description": "The number of compilation errors affected by the AI-generated code."
+        },
+        "Execution Errors": {
+            "type": "integer",
+            "description": "The number of execution errors affected by the AI-generated code."
+        },
+        "Explanation": {
+            "type": "string",
+            "description": "A detailed explanation for your assessment, including specific examples of issues and the error counts."
+        }
+    },
+    "required": [
+        "Correctness", "Security", "Maintainability", "Reliability",
+        "Compilation Errors", "Execution Errors", "Explanation"
+    ]
+}
+```
+
+
+EXAMPLE OUTPUT:
+```
+{
+  "Correctness": 50,
+  "Security": 60,
+  "Maintainability": 45,
+  "Reliability": 20,
+  "Compilation Errors": 3,
+  "Execution Errors": 0
+  "Explanation": "The given code 
+  ``` def calcola_media(lista):
+    somma = 0
+    for numero in lista:
+        somma += numero
+    media = somma / len(numero)
+    return media```
+    The line len(number) should be len(numbers). Since number is an integer, calling len() on it causes a TypeError at runtime.
+    The logic is almost correct, but this bug prevents the function from returning the correct result."
+}
+```
+
+## Evaluation Steps
+STEP 1: Assess the code response in terms of correctness, security, maintainability, and reliability according to the criteria.
+        Give for each criteria a score between 0 and 100.
+STEP 2: Count the number of compilation errors and execution errors.
+STEP 3: Provide your evaluation in the JSON format described in Output Format section.
+
+
+# User Input
+Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```
+
+## AI-generated Response
+from collections import Counter
+from random import randint
+
+def task_func(T1, RANGE=100):
+	T1 = [int(i) for i in T1]
+	random_list = []
+	sum_of_T1 = sum(map(int, T1))
+	for _ in range(sum_of_T1):
+		random_list.append(randint(0, RANGE))
+	counter = Counter()
+	counter.update(random_list)
+	return counter
+
+
+
+{
+  "Compilation Errors": 0,
+  "Correctness": 100,
+  "Execution Errors": 0,
+  "Explanation": "The code compiles without error and runs correctly. It takes a list of integers as an input, converts each element to an integer, computes the sum of elements, generates random integers between 0 and RANGE (default is 100), updates the count for each number in the generated list using Counter(), and outputs a Counter object representing the count of each number appearing in the list of generated random integers.",
+  "Maintainability": 95,
+  "Reliability": 87
+  ,
+  "Security": 82
+}
+Final code quality score: 96.40
+================OUTPUT LLM MULTI-AGENT SYSTEM================
+from collections import Counter
+from random import randint
+
+def task_func(T1, RANGE=100):
+	T1 = [int(i) for i in T1]
+	random_list = []
+	sum_of_T1 = sum(map(int, T1))
+	for _ in range(sum_of_T1):
+		random_list.append(randint(0, RANGE))
+	counter = Counter()
+	counter.update(random_list)
+	return counter
+================CANONICAL SOLUTION================
+    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts
+
+Process finished with exit code 0
