@@ -21,10 +21,10 @@ from utility_function import equals_cognitive_complexity, equals_time_complexity
     get_random_element, get_k_responses, get_feedback_value, get_formatted_code_solution
 
 # Number of LLM agents participating in the debate
-AGENTS_NO = 3
+AGENTS_NO = 2
 
 # Maximum number of allowed debate rounds before falling back to majority voting
-MAXROUNDS_NO = 5
+MAXROUNDS_NO = 3
 
 
 def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choosen, max_rounds=MAXROUNDS_NO):
@@ -144,11 +144,9 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
 
         current_round += 1
 
-        # === If max rounds exceeded, apply majority voting to resolve ===
-        vote_index = majority_voting(responses_allowed)
-        return responses[int(vote_index)]
-
-
+    # === If max rounds exceeded, apply majority voting to resolve ===
+    vote_index = majority_voting(responses_allowed)
+    return responses[int(vote_index)]
 
 
 def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt, max_rounds=MAXROUNDS_NO):
@@ -298,8 +296,8 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
         current_round += 1
 
         # === If max rounds exceeded, apply majority voting to resolve ===
-        vote_index = majority_voting(responses_allowed)
-        return responses[int(vote_index)]
+    vote_index = majority_voting(responses_allowed)
+    return responses[int(vote_index)]
 
 
 
@@ -478,14 +476,13 @@ def after_evaluation_debate(user_prompt, few_shot_prompt, feedback_evaluator, pr
     refinement_prompt = refinement_prompt.replace("{previous_code}", previous_code)
     refinement_prompt = refinement_prompt.replace("{evaluation_feedback}", feedback_evaluator)
 
-
     debate_response = ""
     if strategy_debate == "0":
-        debate_response = str(developers_debate(programmers, user_prompt, refinement_prompt, strategy_debate, max_rounds=MAXROUNDS_NO))
+        debate_response += str(developers_debate(programmers, user_prompt, refinement_prompt, strategy_debate, max_rounds=MAXROUNDS_NO))
     elif strategy_debate == '1':
-        debate_response = str(developers_debate(programmers, user_prompt, refinement_prompt, strategy_debate, max_rounds=MAXROUNDS_NO))
+        debate_response += str(developers_debate(programmers, user_prompt, refinement_prompt, strategy_debate, max_rounds=MAXROUNDS_NO))
     else:
-        debate_response = str(developers_debate_mixed_strategy(programmers, user_prompt, refinement_prompt, max_rounds=MAXROUNDS_NO))
+        debate_response += str(developers_debate_mixed_strategy(programmers, user_prompt, refinement_prompt, max_rounds=MAXROUNDS_NO))
 
     return debate_response
 
@@ -506,6 +503,8 @@ def do_instant_runoff_voting(programmers, debate_response, responses_allowed, re
         for w in winner:
             print(f"Candidate {w}: {responses_allowed[w]}")
         return responses_allowed[winner[0]]  # Return one of the tied responses
+
+    return None
 
 
 def instant_runoff_voting(votes, valid_candidates):

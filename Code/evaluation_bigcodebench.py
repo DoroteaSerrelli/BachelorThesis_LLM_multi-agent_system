@@ -1,10 +1,15 @@
 from datasets import load_dataset
 
-# Carica il dataset in modalità streaming (opzionale, utile per dataset molto grandi)
+# Carica il dataset in modalità streaming
 ds = load_dataset("bigcode/bigcodebench", streaming=True, split="v0.1.4")
 
-# Estrai solo le colonne desiderate
-for sample in ds:
+instruct_prompt_list = []
+canonical_solution_list = []
+
+# Itera sulle prime 10 righe
+for i, sample in enumerate(ds):
+    if i == 10:
+        break
     instruct_prompt = sample["instruct_prompt"]
     canonical_solution = sample["canonical_solution"]
     code_prompt = sample["code_prompt"]
@@ -18,6 +23,8 @@ for sample in ds:
     })
 
 
+    instruct_prompt_list.append(instruct_prompt)
+    canonical_solution_list.append(canonical_solution)
 
 
 """VARIANTE SENZA STREAMING 
