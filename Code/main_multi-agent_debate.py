@@ -2,6 +2,8 @@
 
 import sys
 
+from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list
+
 # Import core modules used for debate simulation, agent creation, and code evaluation
 
 from Debate_strategies import AGENTS_NO, after_evaluation_debate, developers_debate, developers_debate_mixed_strategy
@@ -13,7 +15,7 @@ from evaluator import eval_code, get_evaluator, extract_criteria_scores, calcula
 # It includes multiple examples of correct outputs for different types of coding tasks
 
 import lmstudio as lms
-SERVER_API_HOST = "localhost:1234"  #server lmstudio port <--- 2345
+SERVER_API_HOST = "localhost:1234"  #server lmstudio port <---  2345
 
 # This must be the *first* convenience API interaction (otherwise the SDK
 # implicitly creates a client that accesses the default server API host)
@@ -25,7 +27,7 @@ lms.configure_default_client(SERVER_API_HOST)
 
 # Maximum number of refinement response rounds allowed based on evaluator feedback, before ending the debate
 # with a partial solution.
-MAX_EVAL_ROUNDS = 5
+MAX_EVAL_ROUNDS = 3
 
 role_programmer_prompt = """You are an AI expert programmer that writes code or helps to review code for bugs,
 based on the user request. Given the user prompt, inserted in **CODE GENERATION TASK** section, provide a response structured in the following JSON format, which includes:
@@ -80,13 +82,15 @@ CODE GENERATION TASK
 print("Choose strategy debate (0, 1, 2): ")
 strategy_debate = input()
 sys.stdin.buffer.flush() # flush buffer stdin
-user_prompt = input()
+#user_prompt = input()  <==== STDIN
+frame_no = 9
+user_prompt = instruct_prompt_list[frame_no]
 print(f"User prompt: {user_prompt}\n")
 
 # Initialize the list of agents using the selected model
 types_model = ['codellama-13b-instruct'] * AGENTS_NO # You can switch to a different model, e.g., 'qwen2.5-coder-3b-instruct', 'deepseek-coder-v2-lite-instruct'
 
-type_evaluator_model = 'qwen2.5-coder-14b-instruct' #'deepseek-coder-v2-lite-instruct'
+type_evaluator_model = 'codellama-13b-instruct' #'deepseek-coder-v2-lite-instruct'
 agents = []
 
 # Clone agents based on the configured number of agents (AGENTS_NO)
@@ -138,7 +142,8 @@ else:
         if final_score < 85:
             debate_response = str(after_evaluation_debate(user_prompt, role_programmer_prompt, evaluation_feedback, ai_response, agents, strategy_debate))
         else:
-            print(ai_response)  # print the accepted final response
+            print("================OUTPUT LLM MULTI-AGENT SYSTEM================\n" + ai_response)  # print the accepted final response
+            print("================CANONICAL SOLUTION================\n" + canonical_solution_list[frame_no])
             break
 
     if i == MAX_EVAL_ROUNDS:   # solution provided has a score lower than 90

@@ -18,6 +18,17 @@
     will serve as a baseline for performance comparison.
 """
 
+# Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
+# It includes multiple examples of correct outputs for different types of coding tasks
+
+import lmstudio as lms
+SERVER_API_HOST = "localhost:1234"  #server lmstudio port <--- 2345
+
+# This must be the *first* convenience API interaction (otherwise the SDK
+# implicitly creates a client that accesses the default server API host)
+lms.configure_default_client(SERVER_API_HOST)
+
+from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list
 
 # Import the function to get the first response from the LLM
 from LLM_definition import get_programmer_first_response
@@ -170,15 +181,19 @@ CODE GENERATION TASK
 
 """
 # Prompt input from the user for the coding task
-user_prompt = input()
+#user_prompt = input() <=== STDIN
+frame_no = 9
+user_prompt = instruct_prompt_list[frame_no]
 print(f"User prompt: {user_prompt}\n")
 
+problem_definition = role_programmer_prompt.replace("{user_prompt}", user_prompt)
+
 # Instantiate the LLM agent using a specified model type
-type_model = 'codellama-7b-instruct'
+type_model = 'deepseek-coder-v2-lite-instruct'
 agent = get_clone_agent(type_model)
 
 # Get the initial code generation response from the agent
-response = get_programmer_first_response(agent, role_programmer_prompt, user_prompt)
+response = get_programmer_first_response(agent, problem_definition)
 print("Response\n\n" + response)
 
 # Terminate if the agent produced no response
@@ -207,15 +222,16 @@ else:
 
         print(f"Final code quality score: {final_score:.2f}")
 
-        # If the score is below 90%, instruct the model to refine the code based on feedback
-        if final_score < 90:
+        # If the score is below 85%, instruct the model to refine the code based on feedback
+        if final_score < 85:
             response = str(
                 self_refinement_unique(user_prompt, evaluation_feedback, ai_response)
             )
             print("Response after evaluation" + "\n\n" + response)
         else:
             # Accept the final response if it meets the quality threshold
-            print(ai_response)
+            print("=================MODEL RESPONSE=================\n" + ai_response)
+            print("=================CANONICAL SOLUTION=================\n" + canonical_solution_list[frame_no])
             break
 
     # If max iterations are reached and score is still below threshold, accept the latest version
