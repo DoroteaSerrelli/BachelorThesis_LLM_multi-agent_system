@@ -1,0 +1,209 @@
+"C:\Users\SeSaLab Tesi\miniconda3\envs\BachelorThesis_LLM_multi-agent_system\python.exe" "C:\Users\SeSaLab Tesi\Documents\TesistiAntonioDellaPorta\Serrelli_LLM_Multi_Agent\BachelorThesis_LLM_multi-agent_system\Code\main_one_LLM.py" 
+{'instruct_prompt': 'Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.\nThe function should output with:\n    float: The average of the sums of absolute differences for each shuffled permutation of the list.\nYou should write self-contained code starting with:\n```\nimport itertools\nfrom random import shuffle\ndef task_func(numbers=list(range(1, 3))):\n```', 'canonical_solution': '    permutations = list(itertools.permutations(numbers))\n    sum_diffs = 0\n\n    for perm in permutations:\n        perm = list(perm)\n        shuffle(perm)\n        diffs = [abs(perm[i] - perm[i+1]) for i in range(len(perm)-1)]\n        sum_diffs += sum(diffs)\n\n    avg_sum_diffs = sum_diffs / len(permutations)\n    \n    return avg_sum_diffs', 'code_prompt': 'import itertools\nfrom random import shuffle\ndef task_func(numbers=list(range(1, 3))):\n', 'libs': "['random', 'itertools']"}
+{'instruct_prompt': 'Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.\nThe function should raise the exception for: ValueError if the length is a negative number\nThe function should output with:\n    dict: A dictionary where each key is a character from the generated string and the value\n    is the count of how many times that character appears in the string.\nYou should write self-contained code starting with:\n```\nimport collections\nimport random\nimport string\ndef task_func(length=100):\n```', 'canonical_solution': "    if length < 0:\n        raise ValueError\n    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))\n    char_counts = collections.Counter(random_string)\n    return dict(char_counts)", 'code_prompt': 'import collections\nimport random\nimport string\ndef task_func(length=100):\n', 'libs': "['collections', 'random', 'string']"}
+{'instruct_prompt': 'Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.\nThe function should output with:\n    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.\nYou should write self-contained code starting with:\n```\nimport random\nimport statistics\ndef task_func(LETTERS):\n```', 'canonical_solution': '    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}\n    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))\n    return sorted_dict', 'code_prompt': 'import random\nimport statistics\ndef task_func(LETTERS):\n', 'libs': "['statistics', 'random']"}
+{'instruct_prompt': 'Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.\nThe function should output with:\n    dict: A dictionary where each key is a letter from the input list and the value is the mean of\n    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).\nYou should write self-contained code starting with:\n```\nimport random\nimport numpy as np\ndef task_func(LETTERS):\n```', 'canonical_solution': '    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}\n    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}\n    return mean_dict', 'code_prompt': 'import random\nimport numpy as np\ndef task_func(LETTERS):\n', 'libs': "['numpy', 'random']"}
+{'instruct_prompt': "Count the occurrence of each integer in the values of the input dictionary, where each value is a list of integers, and return a dictionary with these counts. The resulting dictionary's keys are the integers, and the values are their respective counts across all lists in the input dictionary.\nThe function should output with:\n    dict: A dictionary where each key is an integer from any of the input lists, and the value is the count of\n    how often that integer appears in all the lists combined.\nYou should write self-contained code starting with:\n```\nfrom collections import Counter\nimport itertools\ndef task_func(d):\n```", 'canonical_solution': '    count_dict = Counter(itertools.chain.from_iterable(d.values()))\n    return dict(count_dict)', 'code_prompt': 'from collections import Counter\nimport itertools\ndef task_func(d):\n', 'libs': "['collections', 'itertools']"}
+{'instruct_prompt': 'Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.\nThe function should output with:\n    dict: A dictionary where each key corresponds to a letter from the input list and each value is the\n    population standard deviation of a list of random integers associated with that key.\nYou should write self-contained code starting with:\n```\nimport random\nimport math\ndef task_func(LETTERS=[chr(i) for i in range(97, 123)]):\n```', 'canonical_solution': '    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}\n    sd_dict = {\n        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))\n        for k, v in random_dict.items()\n    }\n    return sd_dict', 'code_prompt': 'import random\nimport math\ndef task_func(LETTERS=[chr(i) for i in range(97, 123)]):\n', 'libs': "['math', 'random']"}
+{'instruct_prompt': "Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.\nThe function should output with:\n    str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.\nYou should write self-contained code starting with:\n```\nimport os\nimport re\ndef task_func(pattern, log_dir='/var/log/'):\n```", 'canonical_solution': '    log_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]\n    log_files = sorted(log_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)), reverse=True)\n\n    return os.path.join(log_dir, log_files[0]) if log_files else None', 'code_prompt': "import os\nimport re\ndef task_func(pattern, log_dir='/var/log/'):\n", 'libs': "['re', 'os']"}
+{'instruct_prompt': "Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.\nThe function should output with:\n    str: The name of the top-selling product based on the total quantity sold.\nYou should write self-contained code starting with:\n```\nimport csv\nimport collections\nimport operator\ndef task_func(csv_file_path):\n```", 'canonical_solution': "    with open(csv_file_path, 'r') as f:\n        reader = csv.reader(f)\n        next(reader)  # Skip the header row\n        sales_data = collections.defaultdict(int)\n        for row in reader:\n            product, quantity = row[0], int(row[1])\n            sales_data[product] += quantity\n\n    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]\n\n    return top_selling_product", 'code_prompt': 'import csv\nimport collections\nimport operator\ndef task_func(csv_file_path):\n', 'libs': "['operator', 'csv', 'collections']"}
+{'instruct_prompt': "Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.\nThe function should output with:\n    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.\nYou should write self-contained code starting with:\n```\nfrom collections import Counter\nimport itertools\nfrom random import randint\ndef task_func(T1, RANGE=100):\n```", 'canonical_solution': '    int_list = [list(map(int, x)) for x in T1]\n    flattened_list = list(itertools.chain(*int_list))\n    total_nums = sum(flattened_list)\n\n    random_nums = [randint(0, RANGE) for _ in range(total_nums)]\n    counts = Counter(random_nums)\n\n    return counts', 'code_prompt': 'from collections import Counter\nimport itertools\nfrom random import randint\ndef task_func(T1, RANGE=100):\n', 'libs': "['collections', 'random', 'itertools']"}
+{'instruct_prompt': "Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.\nThe function should output with:\n    tuple:\n    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.\n    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\ndef task_func(list_of_pairs):\n```", 'canonical_solution': '    df = pd.DataFrame(list_of_pairs, columns=["Category", "Value"])\n    plt.figure(figsize=(10, 5))\n    sns.barplot(x="Category", y="Value", data=df)\n    plt.title("Category vs Value")\n    ax = plt.gca()\n    return df, ax', 'code_prompt': 'import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\ndef task_func(list_of_pairs):\n', 'libs': "['pandas', 'matplotlib', 'seaborn']"}
+None of PyTorch, TensorFlow >= 2.0, or Flax have been found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+User prompt: Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```
+
+Response
+
+{
+    "code": "import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\ndef task_func(list_of_pairs):\n    # Create a DataFrame from the list of pairs\n    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])\n    \n    # Set the title for the bar plot\n    plt.title('Category vs Value')\n    \n    # Create a bar chart using seaborn\n    sns.barplot(x='Category', y='Value', data=df)\n    \n    # Show the plot\n    plt.show()\n    return df, plt.gca()",
+    "documentation": "The function 'task_func' takes a list of pairs where each pair contains two elements: one for 'Category' and another for 'Value'. It uses these pairs to create a pandas DataFrame with columns named 'Category' and 'Value'. The function then generates a bar plot using matplotlib and seaborn libraries, setting the title as 'Category vs Value'. Finally, it returns both the created DataFrame and the Axes object of the plotted chart.",
+    "imports": "import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns",
+    "time_complexity": "O(n)"
+}
+Evaluation
+EVALUATION PROMPT
+# Instruction
+You are an expert source code evaluator. Your task is to analyze the quality of the source code generated by AI models.
+We will provide you with the user input (the original coding prompt) and an AI-generated code response.
+You should first read the user input carefully to understand the coding task, and then evaluate the quality of the code 
+response based on the **Evaluation** section below.
+You will provide detailed explanations of your findings, including specific counts of compilation and execution errors.
+
+# Evaluation
+## Metric Definition
+You will be assessing code quality, which is characterized by following aspects: code correctness, security vulnerabilities,
+ease of maintenance, reliability, and the presence of compilation and execution errors.
+For each criteria, described in Criteria section, you will generate a score between 0 and 100.
+The instruction for the coding task is provided in the **User input** section, while the code is provided in the 
+**AI-generated Response** section.
+
+
+## Criteria
+Correctness: The code accurately implements the functionality described in the user prompt and produces the expected output.
+Security: The code avoids common security vulnerabilities and follows best practices for secure coding.
+Maintainability: The code is well-structured, readable, and easy to understand and modify. Consider factors like naming conventions, modularity, comments, and adherence to coding standards.
+Reliability: The code handles edge cases and potential errors gracefully, avoiding unexpected crashes or incorrect behavior.
+Compilation Errors: The number of syntax errors or other issues that prevent the code from compiling. Provide the count.
+Execution Errors: The number of runtime errors or logical errors that cause the code to fail during execution. Provide the count.
+
+# Output Format
+You must return your evaluation strictly in the following JSON format: 
+
+```
+{
+    "type": "object",
+    "properties": {
+        "Correctness": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the correctness of the AI-generated code."
+        },
+        "Security": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the security of the AI-generated code."
+        },
+        "Maintainability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the maintainability of the AI-generated code."
+        },
+        "Reliability": {
+            "type": "integer",
+            "description": "The score from 0 to 100 about the reliability of the AI-generated code."
+        },
+        "Compilation Errors": {
+            "type": "integer",
+            "description": "The number of compilation errors affected by the AI-generated code."
+        },
+        "Execution Errors": {
+            "type": "integer",
+            "description": "The number of execution errors affected by the AI-generated code."
+        },
+        "Explanation": {
+            "type": "string",
+            "description": "A detailed explanation for your assessment, including specific examples of issues and the error counts."
+        }
+    },
+    "required": [
+        "Correctness", "Security", "Maintainability", "Reliability",
+        "Compilation Errors", "Execution Errors", "Explanation"
+    ]
+}
+```
+
+
+EXAMPLE OUTPUT:
+```
+{
+  "Correctness": 50,
+  "Security": 60,
+  "Maintainability": 45,
+  "Reliability": 20,
+  "Compilation Errors": 3,
+  "Execution Errors": 0
+  "Explanation": "The given code 
+  ``` def calcola_media(lista):
+    somma = 0
+    for numero in lista:
+        somma += numero
+    media = somma / len(numero)
+    return media```
+    The line len(number) should be len(numbers). Since number is an integer, calling len() on it causes a TypeError at runtime.
+    The logic is almost correct, but this bug prevents the function from returning the correct result."
+}
+```
+
+## Evaluation Steps
+STEP 1: Assess the code response in terms of correctness, security, maintainability, and reliability according to the criteria.
+        Give for each criteria a score between 0 and 100.
+STEP 2: Count the number of compilation errors and execution errors.
+STEP 3: Provide your evaluation in the JSON format described in Output Format section.
+
+
+# User Input
+Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```
+
+## AI-generated Response
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+    
+    # Set the title for the bar plot
+    plt.title('Category vs Value')
+    
+    # Create a bar chart using seaborn
+    sns.barplot(x='Category', y='Value', data=df)
+    
+    # Show the plot
+    plt.show()
+    return df, plt.gca()
+
+
+
+{
+  "Compilation Errors": 1,
+  "Correctness": 80,
+  "Execution Errors": 0,
+  "Explanation": "The AI-generated code correctly imports necessary libraries and starts the function definition as instructed. However, there is a syntax error in the line where the DataFrame is created: 'list_of_pairs' should be converted to a list if it isn't already for this operation. This oversight results in an AttributeError stating that 'tuple' object has no attribute 'DataFrame'. To fix this, one needs to ensure that 'list_of_pairs' is indeed a list before proceeding with the DataFrame creation. The rest of the code correctly creates a DataFrame and plots a bar chart using seaborn, meeting all other requirements. Despite the syntax error mentioned, the core functionality remains intact and meets the original task description.",
+  "Maintainability": 85,
+  "Reliability": 90,
+  "Security": 70
+}
+Final code quality score: 85.00
+=================MODEL RESPONSE=================
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+    
+    # Set the title for the bar plot
+    plt.title('Category vs Value')
+    
+    # Create a bar chart using seaborn
+    sns.barplot(x='Category', y='Value', data=df)
+    
+    # Show the plot
+    plt.show()
+    return df, plt.gca()
+=================CANONICAL SOLUTION=================
+    df = pd.DataFrame(list_of_pairs, columns=["Category", "Value"])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x="Category", y="Value", data=df)
+    plt.title("Category vs Value")
+    ax = plt.gca()
+    return df, ax
+
+Process finished with exit code 0
