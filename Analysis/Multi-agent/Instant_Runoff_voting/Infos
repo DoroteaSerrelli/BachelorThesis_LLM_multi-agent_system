@@ -1,0 +1,4 @@
+Programmer model adopted: codellama-13b-instruct
+Evaluator model adopted: codellama-13b-instruct
+Agents number : 3
+Maximum rounds: 5
