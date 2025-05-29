@@ -177,3 +177,50 @@ tokenizer = AutoTokenizer.from_pretrained("codellama/CodeLlama-13b-Instruct-hf")
 
 def count_tokens(text):
     return len(tokenizer.tokenize(text))
+
+# FUNZIONE PER AUTOMATIZZARE LA COMPILAZIONE DI CODE SNIPPET
+
+import tempfile
+import os
+import py_compile
+import subprocess
+import sys
+
+def save_and_test_code(full_code_str):
+    """
+    Salva la stringa di codice completa in un file temporaneo,
+    compila e esegue il codice Python,
+    stampa output o errori.
+    """
+    # Crea file temporaneo
+    with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False) as tmp_file:
+        tmp_file.write(full_code_str)
+        tmp_filepath = tmp_file.name
+
+    print(f"\n[INFO] Codice salvato in file temporaneo: {tmp_filepath}")
+
+    # Prova a compilare
+    try:
+        py_compile.compile(tmp_filepath, doraise=True)
+        print(f"✓ Byte-code generato per {os.path.basename(tmp_filepath)}")
+    except py_compile.PyCompileError as err:
+        print("🛑 SYNTAX ERROR durante la compilazione:\n")
+        print(err.msg)
+        return
+
+    # Esegui il file in subprocess
+    completed = subprocess.run(
+        [sys.executable, tmp_filepath],
+        text=True,
+        capture_output=True
+    )
+
+    if completed.returncode == 0:
+        print("\n💬 OUTPUT PROGRAMMA ↓↓↓\n")
+        print(completed.stdout)
+    else:
+        print("\n🔥 ECCEZIONE RUNTIME ↓↓↓\n")
+        print(completed.stderr)
+
+    # Elimina il file temporaneo (<=== DA VEDERE)
+    # os.unlink(tmp_filepath)
