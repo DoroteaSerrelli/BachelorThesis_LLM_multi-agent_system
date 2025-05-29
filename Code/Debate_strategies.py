@@ -8,7 +8,7 @@ import json
 
 from tabulate import tabulate
 
-from Code.response_JSON_schema import schema_feedback
+from response_JSON_schema import schema_feedback
 # Imports
 from LLM_definition import (
     get_programmer_first_response,
@@ -43,6 +43,7 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
         print(f"Response developer {i}: {response}")
         i += 1
 
+    responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
     current_round = 0
     while current_round <= max_rounds:
         # === Measure readability (cognitive complexity) of each response ===
@@ -60,7 +61,7 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
 
         counter = 0
 
-        responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
+        responses_allowed.clear()
         readability_complexity_allowed = {}  # i valori di cognitive complexity delle risposte che hanno cognitive complexity != -1
 
         for i in range(0, AGENTS_NO):
@@ -167,6 +168,7 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
 
     current_round = 0
     divergence_round = 0
+    responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
     while current_round <= max_rounds:
         # === Measure readability (cognitive complexity) of each response ===
         readability_complexity = []  # Stores total cognitive complexity for each response
@@ -183,7 +185,7 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
 
         counter = 0
 
-        responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
+        responses_allowed.clear()
         readability_complexity_allowed = {}  # i valori di cognitive complexity delle risposte che hanno cognitive complexity != -1
 
         for i in range(0, AGENTS_NO):
@@ -552,6 +554,39 @@ def instant_runoff_voting(votes, valid_candidates):
 
 
 
+refine_debate_attempt = """
+You are an expert source code evaluator. 
+
+We will provide you with the user input (the original coding prompt) and a list of {AGENTS_NO} AI-generated code responses 
+to the user input.
+Each code response has following attributes:
+    - an unique number between 0 and {_AGENTS_NO-1}.
+    - a time complexity expressed in Big-O notation: it measures how the execution time of the algorithm grows 
+        as the input size increases. More lower it is (e.g., O(N) is better than O(N^2)), better the code solution is.
+    - a cognitive complexity: it quantifies the difficulty for a human to understand a piece of code or a function.
+        More lower it is (e.g., a flat structure is better than deeply nested loops), better the code solution is. 
+
+Your task is to analyze the list of the code solutions and select the best one following these steps:
+
+STEP 1: Read the user input carefully to understand the coding task.
+STEP 2: Analyze each code response in terms of time complexity and cognitive complexity.
+STEP 3: Select the best code solution in this way: 
+        - prioritize solutions with lower time complexity first. 
+        - if time complexities are equal, then prioritize lower cognitive complexity.
+STEP 4: Answer with only a single integer which corresponds to the unique number of the best code solution choosen.
+        Your response must be a single integer with **no explanation**, **no text**, and **no punctuation**.
+        Responding with anything other than a number will be considered an error.
+
+ The instruction for the coding task is provided in the **User Input** section, while the list of code solutions 
+is provided in the **AI-generated Responses** section.
+
+
+# User Input
+{user_prompt}
+
+## AI-generated Responses
+{ai_responses}
+"""
 
 
 
@@ -627,7 +662,7 @@ def get_formatted_responses(responses, cognitive_complexity, AGENTS_NO): #respon
 
 def get_refined_debate_prompt(AGENTS_NO, user_prompt, formatted_responses):
 
-    prompt = example_refined_debate_prompt
+    prompt = refine_debate_attempt
     prompt = prompt.replace("{AGENTS_NO}", str(AGENTS_NO))
     prompt = prompt.replace("{_AGENTS_NO-1}", str(AGENTS_NO-1))
     prompt = prompt.replace("{user_prompt}", user_prompt)

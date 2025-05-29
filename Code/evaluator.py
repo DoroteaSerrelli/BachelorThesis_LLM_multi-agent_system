@@ -5,7 +5,7 @@
 import lmstudio as lms
 
 from response_JSON_schema import evaluation_schema
-from evaluation_prompt import instruct_prompt
+from evaluation_prompt import instruct_prompt, refined_instruct_prompt
 
 # Weights in percentage (total = 100)
 CORRECTNESS_WEIGHT = 40
@@ -47,7 +47,7 @@ def eval_code(user_prompt, ai_response, evaluator):
     Returns:
         str: A structured JSON response containing evaluation scores and explanation.
     """
-    prompt = instruct_prompt
+    prompt = refined_instruct_prompt
     prompt = prompt.replace("{user_prompt}", user_prompt)
     prompt = prompt.replace("{ai_response}", ai_response)
     print("EVALUATION PROMPT\n" + prompt)

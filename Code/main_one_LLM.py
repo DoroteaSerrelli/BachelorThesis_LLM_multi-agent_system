@@ -22,7 +22,7 @@
 # It includes multiple examples of correct outputs for different types of coding tasks
 
 import lmstudio as lms
-SERVER_API_HOST = "localhost:1234"  #server lmstudio port <--- 2345
+SERVER_API_HOST = "localhost:2345"  #server lmstudio port <--- 1234
 
 # This must be the *first* convenience API interaction (otherwise the SDK
 # implicitly creates a client that accesses the default server API host)
@@ -189,7 +189,7 @@ print(f"User prompt: {user_prompt}\n")
 problem_definition = role_programmer_prompt.replace("{user_prompt}", user_prompt)
 
 # Instantiate the LLM agent using a specified model type
-type_model = 'deepseek-coder-v2-lite-instruct'
+type_model = 'codellama-13b-instruct' #'deepseek-coder-v2-lite-instruct'
 agent = get_clone_agent(type_model)
 
 # Get the initial code generation response from the agent

@@ -8,14 +8,14 @@ from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_lis
 
 from Debate_strategies import AGENTS_NO, after_evaluation_debate, developers_debate, developers_debate_mixed_strategy
 from LLM_definition import get_clone_agent
-from utility_function import get_formatted_code_solution
+from utility_function import get_formatted_code_solution, save_and_test_code
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
 
 # Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
 # It includes multiple examples of correct outputs for different types of coding tasks
 
 import lmstudio as lms
-SERVER_API_HOST = "localhost:1234"  #server lmstudio port <---  2345
+SERVER_API_HOST = "localhost:2345"  #server lmstudio port <---  1234
 
 # This must be the *first* convenience API interaction (otherwise the SDK
 # implicitly creates a client that accesses the default server API host)
@@ -30,13 +30,32 @@ lms.configure_default_client(SERVER_API_HOST)
 MAX_EVAL_ROUNDS = 3
 
 role_programmer_prompt = """You are an AI expert programmer that writes code or helps to review code for bugs,
-based on the user request. Given the user prompt, inserted in **CODE GENERATION TASK** section, provide a response structured in the following JSON format, which includes:
-- The code block import statements
-- The code
-- A description explaining the code (documentation)
-- The time complexity related to the code, expressed in Big-O notation.
+based on the user request. Given a code generation task, inserted in **CODE GENERATION TASK** section, provide a response structured in the following JSON schema:
 
-USER PROMPT EXAMPLE: Generate a Python function to add two numbers.
+schema_complexity = {
+    "type": "object",
+    "properties": {
+        "documentation": {
+            "type": "string",
+            "description": "Description of the problem and approach"
+        },
+        "imports": {
+            "type": "string",
+            "description": "Code block import statements"
+        },
+        "code": {
+            "type": "string",
+            "description": "Code block not including import statements"
+        },
+        "time_complexity": {
+            "type": "string",
+            "description": "Time complexity of the code block not including import statements, expressed in Big-O notation"
+        }
+    },
+    "required": ["documentation", "imports", "code", "time_complexity"]
+}
+
+CODE GENERATION TASK EXAMPLE: Generate a Python function to add two numbers.
 JSON RESPONSE:
 ```
 {
@@ -48,7 +67,7 @@ JSON RESPONSE:
 }
 ```
 
-USER PROMPT EXAMPLE: Generate a Python script about binary search.
+CODE GENERATION TASK EXAMPLE: Generate a Python script about binary search.
 JSON RESPONSE:
 ```
 {
@@ -60,7 +79,7 @@ JSON RESPONSE:
 
 ```
 
-USER PROMPT EXAMPLE: Generate a function to validate a password.
+CODE GENERATION TASK EXAMPLE: Generate a function to validate a password.
         It checks if password given by the user has a length of at least 8 and
         contains at least one number and one letter.
 
@@ -83,7 +102,7 @@ print("Choose strategy debate (0, 1, 2): ")
 strategy_debate = input()
 sys.stdin.buffer.flush() # flush buffer stdin
 #user_prompt = input()  <==== STDIN
-frame_no = 9
+frame_no = 3
 user_prompt = instruct_prompt_list[frame_no]
 print(f"User prompt: {user_prompt}\n")
 
@@ -149,3 +168,11 @@ else:
     if i == MAX_EVAL_ROUNDS:   # solution provided has a score lower than 90
         print(f"End debate with a partial solution with overall score: {final_score}")
         print(ai_response)
+
+    # Esecuzione code snippet
+
+    print("\n--- Test di compilazione ed esecuzione del codice generato ---")
+    success = save_and_test_code(ai_response)
+
+    # Salvare i risultati in un file csv
+    # Colonne storico possibiili: instruction_prompt, code snippet del sistema multi-agent, documentazione, imports, cognitive_complexity, time_complexity, valutazione (json)
