@@ -5,6 +5,12 @@
 from metrics import extract_time_complexity
 import json
 
+def extract_documentation(response_json):
+        str_json = json.loads(response_json)
+        docs = str_json["documentation"]
+
+        return docs
+
 def get_set_number_solutions(placeholder, AGENTS_NO):
     """
         Returns a list of agent indices excluding the one specified by `placeholder`.
@@ -224,3 +230,267 @@ def save_and_test_code(full_code_str):
 
     # Elimina il file temporaneo (<=== DA VEDERE)
     # os.unlink(tmp_filepath)
+
+
+# FUNZIONE PER AUTOMATIZZARE L'ESECUZIONE DI TEST UNITARI
+'''
+import subprocess
+import tempfile
+import os
+import shutil
+
+def evaluate_code_with_tests(code: str, test_code: str) -> bool:
+    """Valuta se il codice dell'agente passa tutti i test di BigCodeBench."""
+    print("[*] Inizio valutazione codice con test...")
+    temp_dir = tempfile.mkdtemp(prefix="agent_eval_")
+    print(f"[*] Cartella temporanea creata: {temp_dir}")
+    passed = False
+
+    try:
+        # Scrivi la soluzione dell'agente in submission.py
+        submission_path = os.path.join(temp_dir, "submission.py")
+        with open(submission_path, "w") as f:
+            f.write(code)
+        print(f"[*] Codice scritto in {submission_path}")
+
+        # Scrivi i test in test_case.py
+        test_with_import = "from submission import task_func\n" + test_code
+        test_path = os.path.join(temp_dir, "test_case.py")
+        with open(test_path, "w") as f:
+            f.write(test_with_import)
+        print(f"[*] Test scritto in {test_path}")
+
+        # Esegui i test con unittest
+        print("[*] Esecuzione test con unittest...")
+        result = subprocess.run(
+            ["python3", "-m", "unittest", "test_case.py"],
+            cwd=temp_dir,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=10
+        )
+        print("[*] Test eseguiti.")
+
+        passed = result.returncode == 0
+        if passed:
+            print("[✅] Tutti i test sono passati.")
+        else:
+            print("[❌] Test falliti:")
+            print(result.stdout.decode())
+            print(result.stderr.decode())
+
+    except subprocess.TimeoutExpired:
+        print("[!] Timeout nei test")
+        passed = False
+
+    except Exception as e:
+        print(f"[!] Errore durante l'esecuzione dei test: {e}")
+        passed = False
+
+    finally:
+        shutil.rmtree(temp_dir)
+        print(f"[*] Cartella temporanea {temp_dir} rimossa.")
+
+    return passed
+'''
+
+import subprocess
+import tempfile
+import os
+import shutil
+import re
+
+
+def evaluate_code_with_tests(code: str, test_code: str) -> dict:
+    """Valuta se il codice dell'agente passa tutti i test e conta successi e fallimenti."""
+    print("[*] Inizio valutazione codice con test...")
+    temp_dir = tempfile.mkdtemp(prefix="agent_eval_")
+    print(f"[*] Cartella temporanea creata: {temp_dir}")
+
+    passed = False
+    tests_run = 0
+    tests_failed = 0
+
+    try:
+        # Scrivi la soluzione dell'agente in submission.py
+        submission_path = os.path.join(temp_dir, "submission.py")
+        with open(submission_path, "w") as f:
+            f.write(code)
+        print(f"[*] Codice scritto in {submission_path}")
+
+        # Scrivi i test in test_case.py
+        test_with_import = "from submission import task_func\n" + test_code
+        test_path = os.path.join(temp_dir, "test_case.py")
+        with open(test_path, "w") as f:
+            f.write(test_with_import)
+        print(f"[*] Test scritto in {test_path}")
+
+        # Esegui i test con unittest
+        print("[*] Esecuzione test con unittest...")
+        result = subprocess.run(
+            ["python3", "-m", "unittest", "test_case.py"],
+            cwd=temp_dir,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=10
+        )
+        print("[*] Test eseguiti.")
+
+        output = result.stdout.decode() + result.stderr.decode()
+        # Estrarre il numero di test eseguiti (es: Ran 3 tests in ...)
+        match_run = re.search(r"Ran (\d+) tests?", output)
+        if match_run:
+            tests_run = int(match_run.group(1))
+
+        # Estrarre fallimenti/ errori (es: FAILED (failures=1, errors=0))
+        match_failed = re.search(r"FAILED \(failures=(\d+)(?:, errors=(\d+))?", output)
+        if match_failed:
+            failures = int(match_failed.group(1))
+            errors = int(match_failed.group(2)) if match_failed.group(2) else 0
+            tests_failed = failures + errors
+        else:
+            # Se non è presente FAILED, assumiamo 0 fallimenti
+            tests_failed = 0
+
+        tests_passed = tests_run - tests_failed
+        passed = tests_failed == 0
+
+        if passed:
+            print(f"[✅] Tutti i test sono passati ({tests_passed}/{tests_run}).")
+        else:
+            print(f"[❌] Test falliti: {tests_failed} su {tests_run}")
+            print(output)
+
+    except subprocess.TimeoutExpired:
+        print("[!] Timeout nei test")
+        passed = False
+
+    except Exception as e:
+        print(f"[!] Errore durante l'esecuzione dei test: {e}")
+        passed = False
+
+    finally:
+        shutil.rmtree(temp_dir)
+        print(f"[*] Cartella temporanea {temp_dir} rimossa.")
+
+    return {
+        "passed": passed,
+        "tests_run": tests_run,
+        "tests_passed": tests_passed if 'tests_passed' in locals() else 0,
+        "tests_failed": tests_failed if 'tests_failed' in locals() else 0
+    }
+
+# FUNZIONE PER SALVARE I RISULTATI IN UN FILE CSV
+
+import csv
+import os
+
+
+def save_task_data_to_csv(
+        filepath: str,
+        task_id,
+        instruct_prompt,
+        canonical_solution,
+        code_multiagent_system,
+        documentation,
+        cognitive_complexity,
+        time_complexity,
+        evaluation,
+        tests_success,
+        test_fails
+):
+    # Controlla se il file esiste già
+    file_exists = os.path.isfile(filepath)
+
+    with open(filepath, mode='a', newline='', encoding='utf-8') as csvfile:
+        fieldnames = [
+            'task_id',
+            'instruct_prompt',
+            'canonical_solution',
+            'code_multiagent_system',
+            'documentation',
+            'cognitive_complexity',
+            'time_complexity',
+            'evaluation',
+            'tests_success',
+            'test_fails'
+        ]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # Scrivi intestazione solo se il file non esiste
+        if not file_exists:
+            writer.writeheader()
+
+        # Scrivi la riga di dati
+        writer.writerow({
+            'task_id': task_id,
+            'instruct_prompt': instruct_prompt,
+            'canonical_solution': canonical_solution,
+            'code_multiagent_system': code_multiagent_system,
+            'documentation': documentation,
+            'cognitive_complexity': cognitive_complexity,
+            'time_complexity': time_complexity,
+            'evaluation': evaluation,
+            'tests_success': tests_success,
+            'test_fails': test_fails
+        })
+
+# FUNZIONE PER INTEGRAZIONE DI SONARQUBE PER CALCOLO COGNITIVE COMPLEXITY, SICUREZZA, AFFIDABILITA' E MANUTANIBILITA'
+
+import os
+import json
+import uuid
+import csv
+import requests
+import subprocess
+import shutil
+
+# === CONFIGURAZIONE ===
+SONAR_HOST = "http://localhost:9000"
+SONAR_TOKEN = "YOUR_SONAR_TOKEN"
+SONAR_SCANNER_CMD = "sonar-scanner"
+
+# === CREA TEMP DIR + ANALIZZA CODICE CON SONARQUBE ===
+def analyze_code_sonarqube(code: str) -> tuple[str, int]:
+    project_key = f"multiagent-{uuid.uuid4().hex[:8]}"
+    tmp_dir = f"./temp_sonar_{uuid.uuid4().hex[:6]}"
+    os.makedirs(tmp_dir, exist_ok=True)
+
+    # Salva codice
+    code_path = os.path.join(tmp_dir, "solution.py")
+    with open(code_path, "w") as f:
+        f.write(code)
+
+    # Configurazione sonar
+    with open(os.path.join(tmp_dir, "sonar-project.properties"), "w") as f:
+        f.write(f"""
+sonar.projectKey={project_key}
+sonar.sources=.
+sonar.host.url={SONAR_HOST}
+sonar.login={SONAR_TOKEN}
+        """)
+
+    try:
+        subprocess.run([SONAR_SCANNER_CMD], cwd=tmp_dir, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except subprocess.CalledProcessError as e:
+        print(f"[!] Errore analisi Sonar: {e}")
+        return project_key, -1
+
+    complexity = get_cognitive_complexity_sonarqube(project_key)
+    return project_key, complexity
+
+# === RECUPERA COGNITIVE COMPLEXITY VIA API ===
+def get_cognitive_complexity_sonarqube(project_key: str) -> int:
+    url = f"{SONAR_HOST}/api/measures/component"
+    params = {
+        "component": project_key,
+        "metricKeys": "cognitive_complexity"
+    }
+    auth = (SONAR_TOKEN, "")
+    try:
+        r = requests.get(url, params=params, auth=auth)
+        data = r.json()
+        return int(data["component"]["measures"][0]["value"])
+    except Exception as e:
+        print(f"[!] Errore API SonarQube: {e}")
+        return -1

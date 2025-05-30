@@ -2,13 +2,16 @@
 
 import sys
 
-from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list
+from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list, test_list
+
+from metrics import extract_time_complexity, get_cognitive_complexity
 
 # Import core modules used for debate simulation, agent creation, and code evaluation
 
 from Debate_strategies import AGENTS_NO, after_evaluation_debate, developers_debate, developers_debate_mixed_strategy
 from LLM_definition import get_clone_agent
-from utility_function import get_formatted_code_solution, save_and_test_code
+from utility_function import get_formatted_code_solution, save_and_test_code, evaluate_code_with_tests, \
+    save_task_data_to_csv, extract_documentation
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
 
 # Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
@@ -102,7 +105,7 @@ print("Choose strategy debate (0, 1, 2): ")
 strategy_debate = input()
 sys.stdin.buffer.flush() # flush buffer stdin
 #user_prompt = input()  <==== STDIN
-frame_no = 3
+frame_no = 9
 user_prompt = instruct_prompt_list[frame_no]
 print(f"User prompt: {user_prompt}\n")
 
@@ -138,6 +141,7 @@ else:
     i = 0
     final_score = 0
     ai_response = ""
+    evaluation = ""
     # Evaluate the final proposed solution from the agents
     for i in range(0, MAX_EVAL_ROUNDS):
         print("Evaluation")
@@ -174,5 +178,17 @@ else:
     print("\n--- Test di compilazione ed esecuzione del codice generato ---")
     success = save_and_test_code(ai_response)
 
+    print("\n--- Esecuzione test codice output del sistema con i test unitari di BigCodeBenchmark --- ")
+
+    test_code = test_list[frame_no]
+
+    # Valutazione
+    test_results = evaluate_code_with_tests(ai_response, test_code)
+    print("Il codice generato dal sistema LLM multi-agente ha passato tutti i test!" if test_results["passed"] else "Il codice generato dal sistema LLM multi-agente non ha passato tutti i test")
+
     # Salvare i risultati in un file csv
-    # Colonne storico possibiili: instruction_prompt, code snippet del sistema multi-agent, documentazione, imports, cognitive_complexity, time_complexity, valutazione (json)
+    cognitive_complexity = get_cognitive_complexity(debate_response)
+    time_complexity = extract_time_complexity(debate_response)
+    docs = extract_documentation(debate_response)
+    save_task_data_to_csv("csv_results.csv", frame_no, instruct_prompt_list[frame_no], canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity, time_complexity, evaluation, test_results["tests_passed"], test_results["tests_failed"])
+    print("I dati sono stati salvati nel file csv_results.csv")
