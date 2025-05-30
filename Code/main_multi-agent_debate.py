@@ -2,6 +2,7 @@
 
 import sys
 
+from Code.utility_function import analyze_code_sonarqube, get_all_sonar_metrics
 from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list, test_list
 
 from metrics import extract_time_complexity, get_cognitive_complexity
@@ -18,7 +19,7 @@ from evaluator import eval_code, get_evaluator, extract_criteria_scores, calcula
 # It includes multiple examples of correct outputs for different types of coding tasks
 
 import lmstudio as lms
-SERVER_API_HOST = "localhost:2345"  #server lmstudio port <---  1234
+SERVER_API_HOST = "localhost:1234"  #server lmstudio port <--- 2345
 
 # This must be the *first* convenience API interaction (otherwise the SDK
 # implicitly creates a client that accesses the default server API host)
@@ -104,15 +105,22 @@ CODE GENERATION TASK
 print("Choose strategy debate (0, 1, 2): ")
 strategy_debate = input()
 sys.stdin.buffer.flush() # flush buffer stdin
-#user_prompt = input()  <==== STDIN
-frame_no = 9
-user_prompt = instruct_prompt_list[frame_no]
+print("User prompt from stdin (insert 0) or user prompt from BigCodeBench (insert 1): ")
+user_prompt_mode = int(input())
+user_prompt = ""
+frame_no = 7
+if user_prompt_mode == 0:
+    sys.stdin.buffer.flush() # flush buffer stdin
+    user_prompt = input("Insert user prompt: ")
+else:
+    user_prompt = instruct_prompt_list[frame_no]
+
 print(f"User prompt: {user_prompt}\n")
 
 # Initialize the list of agents using the selected model
-types_model = ['codellama-13b-instruct'] * AGENTS_NO # You can switch to a different model, e.g., 'qwen2.5-coder-3b-instruct', 'deepseek-coder-v2-lite-instruct'
+types_model = ['codellama-7b-instruct'] * AGENTS_NO # You can switch to a different model, e.g., 'qwen2.5-coder-3b-instruct', 'deepseek-coder-v2-lite-instruct'
 
-type_evaluator_model = 'codellama-13b-instruct' #'deepseek-coder-v2-lite-instruct'
+type_evaluator_model = 'codellama-7b-instruct' #'deepseek-coder-v2-lite-instruct'
 agents = []
 
 # Clone agents based on the configured number of agents (AGENTS_NO)
@@ -178,17 +186,28 @@ else:
     print("\n--- Test di compilazione ed esecuzione del codice generato ---")
     success = save_and_test_code(ai_response)
 
-    print("\n--- Esecuzione test codice output del sistema con i test unitari di BigCodeBenchmark --- ")
+    if user_prompt_mode == 1:
 
-    test_code = test_list[frame_no]
+        print("\n--- Esecuzione test codice output del sistema con i test unitari di BigCodeBenchmark --- ")
 
-    # Valutazione
-    test_results = evaluate_code_with_tests(ai_response, test_code)
-    print("Il codice generato dal sistema LLM multi-agente ha passato tutti i test!" if test_results["passed"] else "Il codice generato dal sistema LLM multi-agente non ha passato tutti i test")
+        test_code = test_list[frame_no]
+
+        # Valutazione
+        test_results = evaluate_code_with_tests(ai_response, test_code)
+        print("Il codice generato dal sistema LLM multi-agente ha passato tutti i test!" if test_results["passed"] else "Il codice generato dal sistema LLM multi-agente non ha passato tutti i test")
 
     # Salvare i risultati in un file csv
     cognitive_complexity = get_cognitive_complexity(debate_response)
     time_complexity = extract_time_complexity(debate_response)
     docs = extract_documentation(debate_response)
-    save_task_data_to_csv("csv_results.csv", frame_no, instruct_prompt_list[frame_no], canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity, time_complexity, evaluation, test_results["tests_passed"], test_results["tests_failed"])
-    print("I dati sono stati salvati nel file csv_results.csv")
+    if user_prompt_mode == 1:
+        save_task_data_to_csv("csv_results.csv", frame_no, instruct_prompt_list[frame_no], canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity, time_complexity, evaluation, test_results["tests_passed"], test_results["tests_failed"])
+        print("I dati sono stati salvati nel file csv_results.csv")
+
+    project_key, complexity, all_metrics = analyze_code_sonarqube(ai_response)
+
+    print("Cognitive_complexity SONARQUBE: " + str(complexity))
+
+    print("Altre metriche SonarQube:")
+    for metric, value in all_metrics.items():
+        print(f"{metric}: {value}")

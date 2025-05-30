@@ -447,12 +447,13 @@ import shutil
 
 # === CONFIGURAZIONE ===
 SONAR_HOST = "http://localhost:9000"
-SONAR_TOKEN = "YOUR_SONAR_TOKEN"
-SONAR_SCANNER_CMD = "sonar-scanner"
+SONAR_TOKEN = "SONAR_TOKEN_PROJECT_UNIQUE"
+SONAR_SCANNER_CMD = "C:\\sonar-scanner-7.1.0.4889-windows-x64\\bin\\sonar-scanner.bat"
+project_key = "PROJECT_KEY_BACHELOR_THESIS"
 
 # === CREA TEMP DIR + ANALIZZA CODICE CON SONARQUBE ===
 def analyze_code_sonarqube(code: str) -> tuple[str, int]:
-    project_key = f"multiagent-{uuid.uuid4().hex[:8]}"
+    #project_key = f"multiagent-{uuid.uuid4().hex[:8]}"
     tmp_dir = f"./temp_sonar_{uuid.uuid4().hex[:6]}"
     os.makedirs(tmp_dir, exist_ok=True)
 
@@ -477,7 +478,8 @@ sonar.login={SONAR_TOKEN}
         return project_key, -1
 
     complexity = get_cognitive_complexity_sonarqube(project_key)
-    return project_key, complexity
+    other_measures = get_all_sonar_metrics(project_key)
+    return project_key, complexity, other_measures
 
 # === RECUPERA COGNITIVE COMPLEXITY VIA API ===
 def get_cognitive_complexity_sonarqube(project_key: str) -> int:
@@ -494,3 +496,39 @@ def get_cognitive_complexity_sonarqube(project_key: str) -> int:
     except Exception as e:
         print(f"[!] Errore API SonarQube: {e}")
         return -1
+
+
+#CALCOLA METRICHE SONARQUBE
+
+def get_all_sonar_metrics(project_key: str) -> dict:
+    url = f"{SONAR_HOST}/api/measures/component"
+    metric_keys = ",".join([
+        "cognitive_complexity",
+        "security_rating",
+        "reliability_rating",
+        "sqale_rating",  # maintainability rating
+        "bugs",
+        "vulnerabilities",
+        "code_smells",
+        "coverage",
+        "duplicated_lines_density",
+        "ncloc"
+    ])
+    params = {
+        "component": project_key,
+        "metricKeys": metric_keys
+    }
+    auth = (SONAR_TOKEN, "")
+    try:
+        r = requests.get(url, params=params, auth=auth)
+        r.raise_for_status()
+        data = r.json()
+
+        metrics = {}
+        for measure in data.get("component", {}).get("measures", []):
+            metrics[measure["metric"]] = measure["value"]
+
+        return metrics
+    except Exception as e:
+        print(f"[!] Errore API SonarQube: {e}")
+        return {}
