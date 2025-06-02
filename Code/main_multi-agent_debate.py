@@ -118,9 +118,9 @@ else:
 print(f"User prompt: {user_prompt}\n")
 
 # Initialize the list of agents using the selected model
-types_model = ['codellama-7b-instruct'] * AGENTS_NO # You can switch to a different model, e.g., 'qwen2.5-coder-3b-instruct', 'deepseek-coder-v2-lite-instruct'
+types_model = ['qwen2.5-coder-3b-instruct'] * AGENTS_NO # You can switch to a different model, e.g., 'codellama-7b-instruct', 'deepseek-coder-v2-lite-instruct'
 
-type_evaluator_model = 'codellama-7b-instruct' #'deepseek-coder-v2-lite-instruct'
+type_evaluator_model = 'qwen2.5-coder-3b-instruct' #'deepseek-coder-v2-lite-instruct'
 agents = []
 
 # Clone agents based on the configured number of agents (AGENTS_NO)
@@ -174,7 +174,8 @@ else:
             debate_response = str(after_evaluation_debate(user_prompt, role_programmer_prompt, evaluation_feedback, ai_response, agents, strategy_debate))
         else:
             print("================OUTPUT LLM MULTI-AGENT SYSTEM================\n" + ai_response)  # print the accepted final response
-            print("================CANONICAL SOLUTION================\n" + canonical_solution_list[frame_no])
+            if user_prompt_mode == 1:
+                print("================CANONICAL SOLUTION================\n" + canonical_solution_list[frame_no])
             break
 
     if i == MAX_EVAL_ROUNDS:   # solution provided has a score lower than 90

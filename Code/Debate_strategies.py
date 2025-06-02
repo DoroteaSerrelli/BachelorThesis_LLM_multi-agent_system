@@ -73,7 +73,7 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
         # ====== Costruzione prompt dibattito ========
 
         # Formattazione per prompt di dibattito
-        formatted_responses = get_formatted_responses(responses_allowed, readability_complexity_allowed, counter)
+        formatted_responses = get_formatted_responses(responses_allowed, readability_complexity_allowed)
         debate_prompt = get_refined_debate_prompt(counter, user_prompt, formatted_responses)
 
         print("DEBATE_PROMPT OTTENUTO: " + debate_prompt)
@@ -121,7 +121,7 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
 
         if strategy_choosen == 1:
             # SI PASSA ALL'INSTANT RUNOFF VOTING
-            responses = do_instant_runoff_voting(programmers, debate_response, responses_allowed, readability_complexity, user_prompt)
+            responses = do_instant_runoff_voting(debate_response, responses_allowed)
 
             if len(responses) == 1:
                 for var in responses:
@@ -197,7 +197,7 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
         # ====== Costruzione prompt dibattito ========
 
         # Formattazione per prompt di dibattito
-        formatted_responses = get_formatted_responses(responses_allowed, readability_complexity_allowed, counter)
+        formatted_responses = get_formatted_responses(responses_allowed, readability_complexity_allowed)
         debate_prompt = get_refined_debate_prompt(counter, user_prompt, formatted_responses)
 
         print("DEBATE_PROMPT OTTENUTO: " + debate_prompt)
@@ -233,7 +233,6 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
         divergence_round += 1
 
         if divergence_round >= 2:
-            k_responses = []
             # Verifico se tutte le soluzioni hanno uguale complessità di tempo e uguale complessità di leggibilità
             k_responses = get_k_responses(responses, debate_response)
             k_readability_complexity = {}
@@ -258,41 +257,20 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
                 print(solution)
                 return solution  # Return the agreed-upon solution
             else:
-                # SI PASSA AL SELF-REFINEMENT
-                responses = do_self_refinement(programmers, responses, readability_complexity, user_prompt)
-                debate_response.clear()
-                readability_complexity.clear()
-                details_readability_complexity.clear()
-
-                i = 0
-                for response in responses:
-                    print(f"Response self-refined developer {i}: {response}")
-                    i += 1
-                divergence_round = 0
+                # SI PASSA ALL'INSTANT RUNOFF VOTING
+                response = do_instant_runoff_voting(debate_response, responses_allowed)
+                return response
 
         else:
-            # SI PASSA ALL'INSTANT RUNOFF VOTING
-
-            responses = do_instant_runoff_voting(programmers, debate_response, responses_allowed, readability_complexity, user_prompt)
-
-            if len(responses) == 1:
-                for var in responses:
-
-                    print("Agreement")
-                    print("\nFinal answer:")
-
-                    solution = responses[int(var)]
-                    print(solution)
-                    return solution  # Return the agreed-upon solution
-
-
+            # SI PASSA AL SELF-REFINEMENT
+            responses = do_self_refinement(programmers, responses, readability_complexity, user_prompt)
             debate_response.clear()
             readability_complexity.clear()
             details_readability_complexity.clear()
 
             i = 0
             for response in responses:
-                print(f"Response instant_runoff_voting developer {i}: {response}")
+                print(f"Response self-refined developer {i}: {response}")
                 i += 1
 
         current_round += 1
@@ -320,13 +298,10 @@ def do_self_refinement(agents, responses, readability_complexity, user_prompt):
 
         # Rimuovere le risposte con cognitive complexity pari a -1: errori sintattici
 
-        counter = 0
-
         other_responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
 
         for i in range(0, AGENTS_NO):
             if readability_complexity[i] != -1:
-                counter += 1
                 other_responses_allowed[i] = other_responses[i]
 
 
@@ -403,7 +378,7 @@ def majority_voting(feedback):
     identify problems to fix collaboratively.
 '''
 
-def after_evaluation_debate(user_prompt, few_shot_prompt, feedback_evaluator, previous_code, programmers, strategy_debate, max_rounds=MAXROUNDS_NO):
+def after_evaluation_debate(user_prompt, feedback_evaluator, previous_code, programmers, strategy_debate):
     refinement_instruction_prompt = \
         '''# Instruction
             Your task is to refine the previous solution to the code generation task based on the feedback provided by the evaluator.
@@ -489,7 +464,9 @@ def after_evaluation_debate(user_prompt, few_shot_prompt, feedback_evaluator, pr
     return debate_response
 
 
-def do_instant_runoff_voting(programmers, debate_response, responses_allowed, readability_complexity, user_prompt):
+import random
+
+def do_instant_runoff_voting(debate_response, responses_allowed):
     # Apply instant runoff voting to break disagreement
     winner = instant_runoff_voting(debate_response, responses_allowed.keys())
 
@@ -500,13 +477,18 @@ def do_instant_runoff_voting(programmers, debate_response, responses_allowed, re
             print(solution)
             return solution
 
-    elif isinstance(winner, list):
+    elif isinstance(winner, list): #tie
         print("Tie between the following candidates (Instant Runoff Voting):")
         for w in winner:
             print(f"Candidate {w}: {responses_allowed[w]}")
-        return responses_allowed[winner[0]]  # Return one of the tied responses
+
+        # Choose randomly a candidate
+        chosen = random.choice(winner)
+        print(f"Randomly selected winner: Candidate {chosen}")
+        return responses_allowed[chosen]
 
     return None
+
 
 
 def instant_runoff_voting(votes, valid_candidates):
@@ -638,7 +620,7 @@ STEP 3: Provide your answer as described in **Output Format** section.
 {ai_responses}
 """
 
-def get_formatted_responses(responses, cognitive_complexity, AGENTS_NO): #responses = JSON responses
+def get_formatted_responses(responses, cognitive_complexity): #responses = JSON responses
     extracted_formatted_responses = {}
     extracted_time_complexity = {}
 
