@@ -22,13 +22,17 @@
 # It includes multiple examples of correct outputs for different types of coding tasks
 
 import lmstudio as lms
+
+from Code.Debate_strategies import AGENTS_NO
+from Code.metrics import get_cognitive_complexity, extract_time_complexity
+
 SERVER_API_HOST = "localhost:2345"  #server lmstudio port <--- 1234
 
 # This must be the *first* convenience API interaction (otherwise the SDK
 # implicitly creates a client that accesses the default server API host)
 lms.configure_default_client(SERVER_API_HOST)
 
-from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list
+from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list, test_list
 
 # Import the function to get the first response from the LLM
 from LLM_definition import get_programmer_first_response
@@ -39,8 +43,11 @@ from response_JSON_schema import schema_complexity
 # Import constants and utility functions for managing multi-round debates
 
 from LLM_definition import get_clone_agent
-from utility_function import get_formatted_code_solution
+from utility_function import get_formatted_code_solution, save_and_test_code, evaluate_code_with_tests, \
+    extract_documentation, save_task_data_to_csv, analyze_code_sonarqube
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
+
+import time
 
 # Maximum number of refinement response rounds allowed based on evaluator feedback, before ending the debate
 # with a partial solution.
@@ -181,9 +188,16 @@ CODE GENERATION TASK
 
 """
 # Prompt input from the user for the coding task
-#user_prompt = input() <=== STDIN
-frame_no = 9
-user_prompt = instruct_prompt_list[frame_no]
+
+print("User prompt from stdin (insert 0) or user prompt from BigCodeBench (insert 1): ")
+user_prompt_mode = int(input())
+user_prompt = ""
+frame_no = 0
+if user_prompt_mode == 0:
+    user_prompt = input("Insert user prompt: ")
+else:
+    user_prompt = instruct_prompt_list[frame_no]
+
 print(f"User prompt: {user_prompt}\n")
 
 problem_definition = role_programmer_prompt.replace("{user_prompt}", user_prompt)
@@ -192,6 +206,7 @@ problem_definition = role_programmer_prompt.replace("{user_prompt}", user_prompt
 type_model = 'codellama-13b-instruct' #'deepseek-coder-v2-lite-instruct'
 agent = get_clone_agent(type_model)
 
+start = time.time() # calcolare il tempo di esecuzione del task
 # Get the initial code generation response from the agent
 response = get_programmer_first_response(agent, problem_definition)
 print("Response\n\n" + response)
@@ -200,12 +215,15 @@ print("Response\n\n" + response)
 if "" == response:
     print("End with failure!")
 else:
-    i = 0
+    counts = 0
     final_score = 0
     ai_response = ""
+    evaluation = ""
 
     # Perform evaluation and refinement for a maximum of MAXROUNDS_NO iterations
     for i in range(0, MAX_EVAL_ROUNDS):
+
+        counts = i
         print("Evaluation")
 
         # Prepare the agent's code response for evaluation
@@ -231,10 +249,52 @@ else:
         else:
             # Accept the final response if it meets the quality threshold
             print("=================MODEL RESPONSE=================\n" + ai_response)
-            print("=================CANONICAL SOLUTION=================\n" + canonical_solution_list[frame_no])
+            if user_prompt_mode == 1:
+                print("================CANONICAL SOLUTION================\n" + canonical_solution_list[frame_no])
             break
 
+
     # If max iterations are reached and score is still below threshold, accept the latest version
-    if i == MAX_EVAL_ROUNDS:
+    if counts + 1 == MAX_EVAL_ROUNDS:
         print(f"End debate with a solution with overall score: {final_score}")
         print(ai_response)
+
+    end = time.time()
+    elapsed_single = end - start
+
+    print(f"Tempo di esecuzione per LLM: {elapsed_single:.2f}s")
+
+    # Esecuzione code snippet
+
+    print("\n--- Test di compilazione ed esecuzione del codice generato ---")
+    success = save_and_test_code(ai_response)
+
+    if user_prompt_mode == 1:
+        print("\n--- Esecuzione test codice output del sistema con i test unitari di BigCodeBenchmark --- ")
+
+        test_code = test_list[frame_no]
+
+        # Valutazione
+        test_results = evaluate_code_with_tests(ai_response, test_code)
+        print("Il codice generato dal sistema LLM multi-agente ha passato tutti i test!" if test_results[
+            "passed"] else "Il codice generato dal sistema LLM multi-agente non ha passato tutti i test")
+
+    # Salvare i risultati in un file csv
+    cognitive_complexity = get_cognitive_complexity(ai_response)
+    time_complexity = extract_time_complexity(ai_response)
+    docs = extract_documentation(ai_response)
+    if user_prompt_mode == 1:
+        save_task_data_to_csv("single-agent_csv_results.csv", frame_no, instruct_prompt_list[frame_no],
+                              canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity,
+                              time_complexity, evaluation, 1,
+                              f"programmer = evaluator = : {type_model}", MAX_EVAL_ROUNDS,
+                              elapsed_single, test_results["tests_passed"], test_results["tests_failed"])
+        print("I dati sono stati salvati nel file single-agent_csv_results.csv")
+
+
+    # USO SONARQUBE
+    project_key, all_metrics = analyze_code_sonarqube(ai_response)
+
+    print("Altre metriche SonarQube:")
+    for metric, value in all_metrics.items():
+        print(f"{metric}: {value}")

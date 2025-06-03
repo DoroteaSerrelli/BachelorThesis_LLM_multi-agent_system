@@ -344,6 +344,7 @@ def save_task_data_to_csv(
         type_models,
         max_rounds,
         time,
+        debate_strategy,
         tests_success,
         test_fails
 ):
@@ -364,6 +365,7 @@ def save_task_data_to_csv(
             'type_models',
             'max_rounds',
             'time',
+            'debate_strategy',
             'tests_success',
             'test_fails'
         ]
@@ -387,6 +389,7 @@ def save_task_data_to_csv(
             'type_models': type_models,
             'max_rounds': max_rounds,
             'time': time,
+            'debate_strategy': debate_strategy,
             'tests_success': tests_success,
             'test_fails': test_fails
         })

@@ -105,13 +105,13 @@ CODE GENERATION TASK
 
 """
 
-print("Choose strategy debate (0, 1, 2): ")
+print("Choose strategy debate (self-refinement: 0, instant runoff voting: 1, mixed: 2): ")
 strategy_debate = input()
 sys.stdin.buffer.flush() # flush buffer stdin
 print("User prompt from stdin (insert 0) or user prompt from BigCodeBench (insert 1): ")
 user_prompt_mode = int(input())
 user_prompt = ""
-frame_no = 7
+frame_no = 1
 if user_prompt_mode == 0:
     sys.stdin.buffer.flush() # flush buffer stdin
     user_prompt = input("Insert user prompt: ")
@@ -191,7 +191,7 @@ else:
     end = time.time()
     elapsed_multi = end - start
 
-    print(f"Tempo multi-agente: {elapsed_multi:.2f}s")
+    print(f"Tempo di esecuzione per sistema multi-agente: {elapsed_multi:.2f}s")
 
     # Esecuzione code snippet
 
@@ -213,8 +213,9 @@ else:
     time_complexity = extract_time_complexity(debate_response)
     docs = extract_documentation(debate_response)
     if user_prompt_mode == 1:
-        save_task_data_to_csv("csv_results.csv", frame_no, instruct_prompt_list[frame_no], canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity, time_complexity, evaluation, AGENTS_NO, f"programmers: {types_model[0]}; evaluator: {type_evaluator_model}", MAXROUNDS_NO, elapsed_multi, test_results["tests_passed"], test_results["tests_failed"])
-        print("I dati sono stati salvati nel file csv_results.csv")
+        save_task_data_to_csv("multi-agent_csv_results.csv", frame_no, instruct_prompt_list[frame_no], canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity, time_complexity, evaluation, AGENTS_NO, f"programmers: {types_model[0]}; evaluator: {type_evaluator_model}", MAXROUNDS_NO, elapsed_multi, strategy_debate, test_results["tests_passed"], test_results["tests_failed"])
+        print("I dati sono stati salvati nel file multi-agent_csv_results.csv")
+
 
     # USO SONARQUBE
     project_key, all_metrics = analyze_code_sonarqube(ai_response)
