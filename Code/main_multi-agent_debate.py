@@ -2,18 +2,21 @@
 
 import sys
 
-from Code.utility_function import analyze_code_sonarqube, get_all_sonar_metrics
+from Code.utility_function import analyze_code_sonarqube
 from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list, test_list
 
 from metrics import extract_time_complexity, get_cognitive_complexity
 
 # Import core modules used for debate simulation, agent creation, and code evaluation
 
-from Debate_strategies import AGENTS_NO, after_evaluation_debate, developers_debate, developers_debate_mixed_strategy
+from Debate_strategies import AGENTS_NO, after_evaluation_debate, developers_debate, developers_debate_mixed_strategy, \
+    MAXROUNDS_NO
 from LLM_definition import get_clone_agent
 from utility_function import get_formatted_code_solution, save_and_test_code, evaluate_code_with_tests, \
     save_task_data_to_csv, extract_documentation
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
+
+import time
 
 # Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
 # It includes multiple examples of correct outputs for different types of coding tasks
@@ -31,7 +34,7 @@ lms.configure_default_client(SERVER_API_HOST)
 
 # Maximum number of refinement response rounds allowed based on evaluator feedback, before ending the debate
 # with a partial solution.
-MAX_EVAL_ROUNDS = 3
+MAX_EVAL_ROUNDS = 4
 
 role_programmer_prompt = """You are an AI expert programmer that writes code or helps to review code for bugs,
 based on the user request. Given a code generation task, inserted in **CODE GENERATION TASK** section, provide a response structured in the following JSON schema:
@@ -118,7 +121,7 @@ else:
 print(f"User prompt: {user_prompt}\n")
 
 # Initialize the list of agents using the selected model
-types_model = ['qwen2.5-coder-3b-instruct'] * AGENTS_NO # You can switch to a different model, e.g., 'codellama-7b-instruct', 'deepseek-coder-v2-lite-instruct'
+types_model = ['qwen2.5-coder-3b-instruct'] * AGENTS_NO # You can switch to a different model, e.g., 'codellama-13b-instruct', 'codellama-7b-instruct', 'deepseek-coder-v2-lite-instruct', 'qwen2.5-coder-3b-instruct'
 
 type_evaluator_model = 'qwen2.5-coder-3b-instruct' #'deepseek-coder-v2-lite-instruct'
 agents = []
@@ -129,6 +132,8 @@ for i in range(0, AGENTS_NO):
     agents.append(get_clone_agent(types_model[i]))
 
 debate_response = ""
+
+start = time.time() # calcolare il tempo di esecuzione del task
 
 # Simulate a multi-agent debate round with the user prompt and the few-shot examples
 if strategy_debate == "0":
@@ -146,13 +151,14 @@ else:
 if debate_response == "-1":
     print("End debate with failure!")
 else:
-    i = 0
+    counts = 0
     final_score = 0
     ai_response = ""
     evaluation = ""
     # Evaluate the final proposed solution from the agents
     for i in range(0, MAX_EVAL_ROUNDS):
-        print("Evaluation")
+        counts = i
+        print(f"Evaluation - Round {counts}" )
 
         # Extract the candidate response (code+imports) to evaluate
         ai_response = get_formatted_code_solution(debate_response)
@@ -171,16 +177,21 @@ else:
 
         # If the score is below the acceptable threshold (e.g., 85), trigger another debate round
         if final_score < 85:
-            debate_response = str(after_evaluation_debate(user_prompt, role_programmer_prompt, evaluation_feedback, ai_response, agents, strategy_debate))
+            debate_response = str(after_evaluation_debate(user_prompt, evaluation_feedback, ai_response, agents, strategy_debate))
         else:
             print("================OUTPUT LLM MULTI-AGENT SYSTEM================\n" + ai_response)  # print the accepted final response
             if user_prompt_mode == 1:
                 print("================CANONICAL SOLUTION================\n" + canonical_solution_list[frame_no])
             break
 
-    if i == MAX_EVAL_ROUNDS:   # solution provided has a score lower than 90
+    if counts + 1 == MAX_EVAL_ROUNDS:   # solution provided has a score lower than 90
         print(f"End debate with a partial solution with overall score: {final_score}")
         print(ai_response)
+
+    end = time.time()
+    elapsed_multi = end - start
+
+    print(f"Tempo multi-agente: {elapsed_multi:.2f}s")
 
     # Esecuzione code snippet
 
@@ -202,13 +213,13 @@ else:
     time_complexity = extract_time_complexity(debate_response)
     docs = extract_documentation(debate_response)
     if user_prompt_mode == 1:
-        save_task_data_to_csv("csv_results.csv", frame_no, instruct_prompt_list[frame_no], canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity, time_complexity, evaluation, test_results["tests_passed"], test_results["tests_failed"])
+        save_task_data_to_csv("csv_results.csv", frame_no, instruct_prompt_list[frame_no], canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity, time_complexity, evaluation, AGENTS_NO, f"programmers: {types_model[0]}; evaluator: {type_evaluator_model}", MAXROUNDS_NO, elapsed_multi, test_results["tests_passed"], test_results["tests_failed"])
         print("I dati sono stati salvati nel file csv_results.csv")
 
-    project_key, complexity, all_metrics = analyze_code_sonarqube(ai_response)
-
-    print("Cognitive_complexity SONARQUBE: " + str(complexity))
+    # USO SONARQUBE
+    project_key, all_metrics = analyze_code_sonarqube(ai_response)
 
     print("Altre metriche SonarQube:")
     for metric, value in all_metrics.items():
         print(f"{metric}: {value}")
+

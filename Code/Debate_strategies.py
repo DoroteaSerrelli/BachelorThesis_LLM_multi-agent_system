@@ -21,10 +21,10 @@ from utility_function import equals_cognitive_complexity, equals_time_complexity
     get_random_element, get_k_responses, get_feedback_value, get_formatted_code_solution
 
 # Number of LLM agents participating in the debate
-AGENTS_NO = 3
+AGENTS_NO = 2
 
 # Maximum number of allowed debate rounds before falling back to majority voting
-MAXROUNDS_NO = 3
+MAXROUNDS_NO = 4
 
 
 def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choosen, max_rounds=MAXROUNDS_NO):
