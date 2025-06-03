@@ -176,6 +176,7 @@ def get_feedback_value(json_data):
 
 
 # Token counts
+
 from transformers import AutoTokenizer
 
 # Usa il tokenizer adatto al tuo modello
@@ -232,74 +233,9 @@ def save_and_test_code(full_code_str):
     # os.unlink(tmp_filepath)
 
 
-# FUNZIONE PER AUTOMATIZZARE L'ESECUZIONE DI TEST UNITARI
-'''
-import subprocess
+
 import tempfile
-import os
-import shutil
-
-def evaluate_code_with_tests(code: str, test_code: str) -> bool:
-    """Valuta se il codice dell'agente passa tutti i test di BigCodeBench."""
-    print("[*] Inizio valutazione codice con test...")
-    temp_dir = tempfile.mkdtemp(prefix="agent_eval_")
-    print(f"[*] Cartella temporanea creata: {temp_dir}")
-    passed = False
-
-    try:
-        # Scrivi la soluzione dell'agente in submission.py
-        submission_path = os.path.join(temp_dir, "submission.py")
-        with open(submission_path, "w") as f:
-            f.write(code)
-        print(f"[*] Codice scritto in {submission_path}")
-
-        # Scrivi i test in test_case.py
-        test_with_import = "from submission import task_func\n" + test_code
-        test_path = os.path.join(temp_dir, "test_case.py")
-        with open(test_path, "w") as f:
-            f.write(test_with_import)
-        print(f"[*] Test scritto in {test_path}")
-
-        # Esegui i test con unittest
-        print("[*] Esecuzione test con unittest...")
-        result = subprocess.run(
-            ["python3", "-m", "unittest", "test_case.py"],
-            cwd=temp_dir,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            timeout=10
-        )
-        print("[*] Test eseguiti.")
-
-        passed = result.returncode == 0
-        if passed:
-            print("[✅] Tutti i test sono passati.")
-        else:
-            print("[❌] Test falliti:")
-            print(result.stdout.decode())
-            print(result.stderr.decode())
-
-    except subprocess.TimeoutExpired:
-        print("[!] Timeout nei test")
-        passed = False
-
-    except Exception as e:
-        print(f"[!] Errore durante l'esecuzione dei test: {e}")
-        passed = False
-
-    finally:
-        shutil.rmtree(temp_dir)
-        print(f"[*] Cartella temporanea {temp_dir} rimossa.")
-
-    return passed
-'''
-
-import subprocess
-import tempfile
-import os
-import shutil
 import re
-
 
 def evaluate_code_with_tests(code: str, test_code: str) -> dict:
     """Valuta se il codice dell'agente passa tutti i test e conta successi e fallimenti."""
@@ -382,10 +318,6 @@ def evaluate_code_with_tests(code: str, test_code: str) -> dict:
 
 # FUNZIONE PER SALVARE I RISULTATI IN UN FILE CSV
 
-import csv
-import os
-
-
 def save_task_data_to_csv(
         filepath: str,
         task_id,
@@ -447,9 +379,9 @@ import shutil
 
 # === CONFIGURAZIONE ===
 SONAR_HOST = "http://localhost:9000"
-SONAR_TOKEN = "SONAR_TOKEN_PROJECT_UNIQUE"
+SONAR_TOKEN = "MY_SONAR_TOKEN"
 SONAR_SCANNER_CMD = "C:\\sonar-scanner-7.1.0.4889-windows-x64\\bin\\sonar-scanner.bat"
-project_key = "PROJECT_KEY_BACHELOR_THESIS"
+project_key = "MY_PROJECT_KEY"
 
 # === CREA TEMP DIR + ANALIZZA CODICE CON SONARQUBE ===
 def analyze_code_sonarqube(code: str) -> tuple[str, int]:
