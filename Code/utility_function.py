@@ -232,13 +232,13 @@ def save_and_test_code(full_code_str):
     # Elimina il file temporaneo (<=== DA VEDERE)
     # os.unlink(tmp_filepath)
 
-
-
-import tempfile
+import os
 import re
+import subprocess
+import tempfile
+import shutil
 
 def evaluate_code_with_tests(code: str, test_code: str) -> dict:
-    """Valuta se il codice dell'agente passa tutti i test e conta successi e fallimenti."""
     print("[*] Inizio valutazione codice con test...")
     temp_dir = tempfile.mkdtemp(prefix="agent_eval_")
     print(f"[*] Cartella temporanea creata: {temp_dir}")
@@ -246,25 +246,23 @@ def evaluate_code_with_tests(code: str, test_code: str) -> dict:
     passed = False
     tests_run = 0
     tests_failed = 0
+    tests_passed = 0
 
     try:
-        # Scrivi la soluzione dell'agente in submission.py
         submission_path = os.path.join(temp_dir, "submission.py")
-        with open(submission_path, "w") as f:
+        with open(submission_path, "w", encoding="utf-8") as f:
             f.write(code)
         print(f"[*] Codice scritto in {submission_path}")
 
-        # Scrivi i test in test_case.py
         test_with_import = "from submission import task_func\n" + test_code
         test_path = os.path.join(temp_dir, "test_case.py")
-        with open(test_path, "w") as f:
+        with open(test_path, "w", encoding="utf-8") as f:
             f.write(test_with_import)
         print(f"[*] Test scritto in {test_path}")
 
-        # Esegui i test con unittest
         print("[*] Esecuzione test con unittest...")
         result = subprocess.run(
-            ["python3", "-m", "unittest", "test_case.py"],
+            ["python3", "-m", "unittest", "test_case"],
             cwd=temp_dir,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -273,37 +271,50 @@ def evaluate_code_with_tests(code: str, test_code: str) -> dict:
         print("[*] Test eseguiti.")
 
         output = result.stdout.decode() + result.stderr.decode()
-        # Estrarre il numero di test eseguiti (es: Ran 3 tests in ...)
-        match_run = re.search(r"Ran (\d+) tests?", output)
-        if match_run:
-            tests_run = int(match_run.group(1))
+        print("OUTPUT TESTS\n\n---" + str(output))
 
-        # Estrarre fallimenti/ errori (es: FAILED (failures=1, errors=0))
-        match_failed = re.search(r"FAILED \(failures=(\d+)(?:, errors=(\d+))?", output)
-        if match_failed:
-            failures = int(match_failed.group(1))
-            errors = int(match_failed.group(2)) if match_failed.group(2) else 0
-            tests_failed = failures + errors
-        else:
-            # Se non è presente FAILED, assumiamo 0 fallimenti
+        # Se il processo è terminato con errore, significa che il codice non è importabile o ha errori
+        if result.returncode != 0:
+            print("[❌] Errore nel codice, test non eseguiti.")
+            passed = False
+            tests_run = 0
             tests_failed = 0
-
-        tests_passed = tests_run - tests_failed
-        passed = tests_failed == 0
-
-        if passed:
-            print(f"[✅] Tutti i test sono passati ({tests_passed}/{tests_run}).")
+            tests_passed = 0
         else:
-            print(f"[❌] Test falliti: {tests_failed} su {tests_run}")
-            print(output)
+            # parse output normalmente
+            match_run = re.search(r"Ran (\d+) tests?", output)
+            if match_run:
+                tests_run = int(match_run.group(1))
+
+            match_failed = re.search(r"FAILED \(failures=(\d+)(?:, errors=(\d+))?", output)
+            if match_failed:
+                failures = int(match_failed.group(1))
+                errors = int(match_failed.group(2)) if match_failed.group(2) else 0
+                tests_failed = failures + errors
+            else:
+                tests_failed = 0
+
+            tests_passed = tests_run - tests_failed
+            passed = tests_failed == 0
+
+            if passed:
+                print(f"[✅] Tutti i test sono passati ({tests_passed}/{tests_run}).")
+            else:
+                print(f"[❌] Test falliti: {tests_failed} su {tests_run}")
 
     except subprocess.TimeoutExpired:
         print("[!] Timeout nei test")
         passed = False
+        tests_run = 0
+        tests_failed = 0
+        tests_passed = 0
 
     except Exception as e:
         print(f"[!] Errore durante l'esecuzione dei test: {e}")
         passed = False
+        tests_run = 0
+        tests_failed = 0
+        tests_passed = 0
 
     finally:
         shutil.rmtree(temp_dir)
@@ -312,9 +323,10 @@ def evaluate_code_with_tests(code: str, test_code: str) -> dict:
     return {
         "passed": passed,
         "tests_run": tests_run,
-        "tests_passed": tests_passed if 'tests_passed' in locals() else 0,
-        "tests_failed": tests_failed if 'tests_failed' in locals() else 0
+        "tests_passed": tests_passed,
+        "tests_failed": tests_failed
     }
+
 
 # FUNZIONE PER SALVARE I RISULTATI IN UN FILE CSV
 
@@ -328,6 +340,10 @@ def save_task_data_to_csv(
         cognitive_complexity,
         time_complexity,
         evaluation,
+        no_agents,
+        type_models,
+        max_rounds,
+        time,
         tests_success,
         test_fails
 ):
@@ -344,6 +360,10 @@ def save_task_data_to_csv(
             'cognitive_complexity',
             'time_complexity',
             'evaluation',
+            'no_agents',
+            'type_models',
+            'max_rounds',
+            'time',
             'tests_success',
             'test_fails'
         ]
@@ -363,6 +383,10 @@ def save_task_data_to_csv(
             'cognitive_complexity': cognitive_complexity,
             'time_complexity': time_complexity,
             'evaluation': evaluation,
+            'no_agents': no_agents,
+            'type_models': type_models,
+            'max_rounds': max_rounds,
+            'time': time,
             'tests_success': tests_success,
             'test_fails': test_fails
         })
@@ -383,8 +407,9 @@ SONAR_TOKEN = "MY_SONAR_TOKEN"
 SONAR_SCANNER_CMD = "C:\\sonar-scanner-7.1.0.4889-windows-x64\\bin\\sonar-scanner.bat"
 project_key = "MY_PROJECT_KEY"
 
+
 # === CREA TEMP DIR + ANALIZZA CODICE CON SONARQUBE ===
-def analyze_code_sonarqube(code: str) -> tuple[str, int]:
+def analyze_code_sonarqube(code: str) -> tuple[str, dict]:
     #project_key = f"multiagent-{uuid.uuid4().hex[:8]}"
     tmp_dir = f"./temp_sonar_{uuid.uuid4().hex[:6]}"
     os.makedirs(tmp_dir, exist_ok=True)
@@ -409,9 +434,8 @@ sonar.login={SONAR_TOKEN}
         print(f"[!] Errore analisi Sonar: {e}")
         return project_key, -1
 
-    complexity = get_cognitive_complexity_sonarqube(project_key)
     other_measures = get_all_sonar_metrics(project_key)
-    return project_key, complexity, other_measures
+    return project_key, other_measures
 
 # === RECUPERA COGNITIVE COMPLEXITY VIA API ===
 def get_cognitive_complexity_sonarqube(project_key: str) -> int:
