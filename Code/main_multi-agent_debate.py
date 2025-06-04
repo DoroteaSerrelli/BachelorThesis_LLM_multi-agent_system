@@ -1,41 +1,43 @@
-"""MAIN"""
+# === MAIN ENTRY POINT ===
+# This script runs a multi-agent debate system to solve code generation tasks.
+# It supports three debate strategies, dynamically evaluates the output using another LLM,
+# and logs metrics and test results using SonarQube and BigCodeBench.
 
 import sys
 
+# === MODULE IMPORTS ===
+# Core utility and evaluation functions for code analysis and benchmarking
 from Code.utility_function import analyze_code_sonarqube
-from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list, test_list
-
+from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list, test_list, libs_list
 from metrics import extract_time_complexity, get_cognitive_complexity
 
-# Import core modules used for debate simulation, agent creation, and code evaluation
-
+# Debate strategy definitions and multi-agent configurations
 from Debate_strategies import AGENTS_NO, after_evaluation_debate, developers_debate, developers_debate_mixed_strategy, \
     MAXROUNDS_NO
 from LLM_definition import get_clone_agent
+
+# Helpers for formatting, execution, saving results, and documentation extraction
 from utility_function import get_formatted_code_solution, save_and_test_code, evaluate_code_with_tests, \
     save_task_data_to_csv, extract_documentation
+
+# Evaluation logic: scoring, feedback extraction, and result explanation
 from evaluator import eval_code, get_evaluator, extract_criteria_scores, calculate_score_code, extract_explanation
 
 import time
 
-# Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
-# It includes multiple examples of correct outputs for different types of coding tasks
-
+# === MODEL CONFIGURATION ===
+# Configure local inference server (LMStudio or compatible) for LLM agents
 import lmstudio as lms
 SERVER_API_HOST = "localhost:1234"  #server lmstudio port <--- 2345
-
-# This must be the *first* convenience API interaction (otherwise the SDK
-# implicitly creates a client that accesses the default server API host)
 lms.configure_default_client(SERVER_API_HOST)
 
-# Note: the dedicated configuration API was added in lmstudio-python 1.3.0
-# For compatibility with earlier SDK versions, it is still possible to use
-# lms.get_default_client(SERVER_API_HOST) to configure the default client
-
+# === CONSTANTS ===
 # Maximum number of refinement response rounds allowed based on evaluator feedback, before ending the debate
 # with a partial solution.
 MAX_EVAL_ROUNDS = 4
 
+# Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
+# It includes multiple examples of correct outputs for different types of coding tasks
 role_programmer_prompt = """You are an AI expert programmer that writes code or helps to review code for bugs,
 based on the user request. Given a code generation task, inserted in **CODE GENERATION TASK** section, provide a response structured in the following JSON schema:
 
@@ -105,15 +107,16 @@ CODE GENERATION TASK
 
 """
 
+# === USER INTERACTION SECTION ===
 print("Choose strategy debate (self-refinement: 0, instant runoff voting: 1, mixed: 2): ")
 strategy_debate = input()
-sys.stdin.buffer.flush() # flush buffer stdin
+sys.stdin.buffer.flush()  # flush buffer stdin
 print("User prompt from stdin (insert 0) or user prompt from BigCodeBench (insert 1): ")
 user_prompt_mode = int(input())
 user_prompt = ""
-frame_no = 1
+frame_no = 0
 if user_prompt_mode == 0:
-    sys.stdin.buffer.flush() # flush buffer stdin
+    sys.stdin.buffer.flush()  # flush buffer stdin
     user_prompt = input("Insert user prompt: ")
 else:
     user_prompt = instruct_prompt_list[frame_no]
@@ -188,39 +191,46 @@ else:
         print(f"End debate with a partial solution with overall score: {final_score}")
         print(ai_response)
 
+    # Measure execution time
     end = time.time()
     elapsed_multi = end - start
 
-    print(f"Tempo di esecuzione per sistema multi-agente: {elapsed_multi:.2f}s")
+    print(f"Execution time for multi-agent system: {elapsed_multi:.2f}s")
 
-    # Esecuzione code snippet
-
-    print("\n--- Test di compilazione ed esecuzione del codice generato ---")
+    # === COMPILATION + EXECUTION TEST ===
+    print("\n--- Compilation and execution test ---")
     success = save_and_test_code(ai_response)
 
+    # === UNIT TEST VALIDATION ===
+    test_results = {}
     if user_prompt_mode == 1:
 
-        print("\n--- Esecuzione test codice output del sistema con i test unitari di BigCodeBenchmark --- ")
+        print("\n--- Running BigCodeBenchmark unit tests on output code ---")
+        imports_str = ""
+        import ast
 
-        test_code = test_list[frame_no]
+        libs = ast.literal_eval(libs_list[frame_no])  # From string to list
+        for value in libs:
+            imports_str += "import " + value + "\n"
 
-        # Valutazione
+        test_code = imports_str + test_list[frame_no]
         test_results = evaluate_code_with_tests(ai_response, test_code)
-        print("Il codice generato dal sistema LLM multi-agente ha passato tutti i test!" if test_results["passed"] else "Il codice generato dal sistema LLM multi-agente non ha passato tutti i test")
+        print("All tests passed!" if test_results["passed"] else "Some tests failed.")
 
-    # Salvare i risultati in un file csv
+    # === METRICS COLLECTION ===
     cognitive_complexity = get_cognitive_complexity(debate_response)
     time_complexity = extract_time_complexity(debate_response)
     docs = extract_documentation(debate_response)
-    if user_prompt_mode == 1:
-        save_task_data_to_csv("multi-agent_csv_results.csv", frame_no, instruct_prompt_list[frame_no], canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity, time_complexity, evaluation, AGENTS_NO, f"programmers: {types_model[0]}; evaluator: {type_evaluator_model}", MAXROUNDS_NO, elapsed_multi, strategy_debate, test_results["tests_passed"], test_results["tests_failed"])
-        print("I dati sono stati salvati nel file multi-agent_csv_results.csv")
 
-
-    # USO SONARQUBE
+    # === SONARQUBE STATIC ANALYSIS ===
     project_key, all_metrics = analyze_code_sonarqube(ai_response)
-
-    print("Altre metriche SonarQube:")
+    metrics_sq_str = ""
+    print("#======= SonarQube metrics ==========")
     for metric, value in all_metrics.items():
         print(f"{metric}: {value}")
+        metrics_sq_str += f"{metric}: {value}\n"
 
+    # === LOG RESULTS TO CSV ===
+    if user_prompt_mode == 1:
+        save_task_data_to_csv("multi-agent_csv_results.csv", frame_no, instruct_prompt_list[frame_no], canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity, time_complexity, evaluation, metrics_sq_str, AGENTS_NO, f"programmers: {types_model[0]}; evaluator: {type_evaluator_model}", MAXROUNDS_NO, elapsed_multi, strategy_debate, test_results["tests_passed"], test_results["tests_failed"])
+        print("Results saved to multi-agent_csv_results.csv.")

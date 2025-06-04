@@ -18,21 +18,20 @@
     will serve as a baseline for performance comparison.
 """
 
-# Few-shot prompt to guide the LLM agents on how to structure their responses in JSON format
-# It includes multiple examples of correct outputs for different types of coding tasks
+# === IMPORTS ===
 
+# LLM configuration (using LMStudio or compatible backend)
 import lmstudio as lms
 
-from Code.Debate_strategies import AGENTS_NO
+# Code quality metrics
 from Code.metrics import get_cognitive_complexity, extract_time_complexity
 
+# Set up the local inference server for LMStudio
 SERVER_API_HOST = "localhost:2345"  #server lmstudio port <--- 1234
-
-# This must be the *first* convenience API interaction (otherwise the SDK
-# implicitly creates a client that accesses the default server API host)
 lms.configure_default_client(SERVER_API_HOST)
 
-from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list, test_list
+# Benchmark data from BigCodeBench (prompts, canonical solutions, tests, etc.)
+from evaluation_bigcodebench import instruct_prompt_list, canonical_solution_list, test_list, libs_list
 
 # Import the function to get the first response from the LLM
 from LLM_definition import get_programmer_first_response
@@ -53,19 +52,25 @@ import time
 # with a partial solution.
 MAX_EVAL_ROUNDS = 5
 
-# Generate a response according to the user prompt in schema_complexity JSON schema
 
+# === FUNCTION DEFINITIONS ===
 
 def get_response_unique(model, user_prompt):
+    """
+        Sends a single prompt to the LLM and requests a structured JSON response conforming to schema_complexity.
+    """
+
     messages = [{"role": "user", "content": user_prompt}]
     response = model.respond({"messages": messages}, response_format=schema_complexity)
     return response.content
 
 
-# Constructs a refinement prompt using previous code, evaluator feedback, and the user request
-# Sends the prompt to the LLM agent to generate an improved solution in structured JSON format
-
 def self_refinement_unique(user_prompt, feedback_evaluator, previous_code):
+    """
+        Constructs a refinement prompt using previous code, evaluator feedback, and the original prompt.
+        Requests the LLM to return a revised version of the code in JSON format.
+        """
+
     refinement_instruction_prompt = \
         '''# Instruction
             Your task is to refine the previous solution to the code generation task based on the feedback provided by the evaluator.
@@ -187,6 +192,7 @@ CODE GENERATION TASK
 {user_prompt}
 
 """
+
 # Prompt input from the user for the coding task
 
 print("User prompt from stdin (insert 0) or user prompt from BigCodeBench (insert 1): ")
@@ -259,42 +265,51 @@ else:
         print(f"End debate with a solution with overall score: {final_score}")
         print(ai_response)
 
+    # === EXECUTION TIME LOGGING ===
     end = time.time()
     elapsed_single = end - start
+    print(f"Execution time for LLM: {elapsed_single:.2f}s")
 
-    print(f"Tempo di esecuzione per LLM: {elapsed_single:.2f}s")
-
-    # Esecuzione code snippet
-
-    print("\n--- Test di compilazione ed esecuzione del codice generato ---")
+    # === RUNTIME TESTING ===
+    print("\n--- Compilation and execution test ---")
     success = save_and_test_code(ai_response)
 
     if user_prompt_mode == 1:
-        print("\n--- Esecuzione test codice output del sistema con i test unitari di BigCodeBenchmark --- ")
+        # === UNIT TESTING (BIGCODEBENCH) ===
+        print("\n--- Run BigCodeBench unit tests ---")
 
-        test_code = test_list[frame_no]
+        imports_str = ""
+        import ast
+
+        # Convert list of required libraries into import statements
+        libs = ast.literal_eval(libs_list[frame_no]) # From string to list
+        for value in libs:
+            imports_str += "import " + value + "\n"
+
+        test_code = imports_str + test_list[frame_no]
 
         # Valutazione
         test_results = evaluate_code_with_tests(ai_response, test_code)
-        print("Il codice generato dal sistema LLM multi-agente ha passato tutti i test!" if test_results[
-            "passed"] else "Il codice generato dal sistema LLM multi-agente non ha passato tutti i test")
+        print("All tests passed!" if test_results["passed"] else "Some tests failed.")
 
-    # Salvare i risultati in un file csv
+    # === STATIC ANALYSIS AND METRICS ===
     cognitive_complexity = get_cognitive_complexity(ai_response)
     time_complexity = extract_time_complexity(ai_response)
     docs = extract_documentation(ai_response)
+
+    # Collect SonarQube metrics (e.g., maintainability, security issues, duplication, etc.)
+    project_key, all_metrics = analyze_code_sonarqube(ai_response)
+    metrics_sq_str = ""
+    print("#==== SonarQube metrics =====")
+    for metric, value in all_metrics.items():
+        print(f"{metric}: {value}")
+        metrics_sq_str += f"{metric} : {value}\n"
+
+    # === SAVE FINAL OUTPUT AND METRICS TO CSV ===
     if user_prompt_mode == 1:
         save_task_data_to_csv("single-agent_csv_results.csv", frame_no, instruct_prompt_list[frame_no],
                               canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity,
-                              time_complexity, evaluation, 1,
+                              time_complexity, evaluation, metrics_sq_str, 1,
                               f"programmer = evaluator = : {type_model}", MAX_EVAL_ROUNDS,
                               elapsed_single, test_results["tests_passed"], test_results["tests_failed"])
-        print("I dati sono stati salvati nel file single-agent_csv_results.csv")
-
-
-    # USO SONARQUBE
-    project_key, all_metrics = analyze_code_sonarqube(ai_response)
-
-    print("Altre metriche SonarQube:")
-    for metric, value in all_metrics.items():
-        print(f"{metric}: {value}")
+        print("Results saved to single-agent_csv_results.csv")
