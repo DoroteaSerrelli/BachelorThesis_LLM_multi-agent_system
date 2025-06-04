@@ -436,9 +436,9 @@ import shutil
 
 # === CONFIGURAZIONE ===
 SONAR_HOST = "http://localhost:9000"
-SONAR_TOKEN = "squ_1331a2be1e44dcd7bcd2919206dbb273264c3303"
+SONAR_TOKEN = "MY_TOKEN"
 SONAR_SCANNER_CMD = "C:\\sonar-scanner-7.1.0.4889-windows-x64\\bin\\sonar-scanner.bat"
-project_key = "DoroteaSerrelli_BachelorThesis_LLM_multi-agent_system_21c39682-dc54-4666-9c26-07489460bbbf"
+project_key = "MY_PROJECT_KEY"
 
 
 def analyze_code_sonarqube(code: str) -> tuple[str, dict]:
