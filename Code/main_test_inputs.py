@@ -1,12 +1,12 @@
 '''Complete Python code'''
 from tabulate import tabulate
 
-from metrics import extract_input_values, calulate_time_complexity, get_cognitive_complexity
+from metrics import extract_input_values, calculate_time_complexity, get_cognitive_complexity
 
 AGENTS_NO = 2
 MAXROUNDS_NO = 5
 
-from LLM_definition import get_clone_agent, get_first_response, get_response, get_discussion_prompt, get_agreement, \
+from LLM_definition import get_clone_agent, get_programmer_first_response, get_response, get_discussion_prompt, get_agreement, \
     get_discussion_feedback_prompt, get_first_response_test_inputs, \
     get_discussion_feedback_prompt_test_inputs, get_response_test_inputs
 from utility_function import get_formatted_code_solution
@@ -39,7 +39,7 @@ def simulate_round(user_prompt, few_shot_prompt, agents, max_rounds):
         for i in range(0, AGENTS_NO):
             response_json = json.loads(response[i])  # 🔁 parsing della stringa JSON
             input_values = extract_input_values(response_json)
-            time_complexity.append(calulate_time_complexity(response_json, input_values))
+            time_complexity.append(calculate_time_complexity(response_json, input_values))
 
         for i in range(0, AGENTS_NO):
             print(f"Tempo per risposta {i}: {time_complexity[i]}")

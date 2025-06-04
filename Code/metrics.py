@@ -1,95 +1,104 @@
-''' This file contains functions to calculate the following metrics about code:
-    - time complexity
-    - readability
+'''
+This file contains functions to calculate the following metrics about Python code:
+    - Time complexity (based on execution time)
+    - Readability (based on cognitive complexity)
 '''
 
-from tabulate import tabulate
+from tabulate import tabulate  # Used for nicely formatted table output
+import json
+import timeit
+
+# ----------------------------- Input Extraction -----------------------------
 
 
 def extract_input_values(response_json):
+    """
+    Extracts the input arguments from the test cases in the response JSON.
+
+    Args:
+        response_json (dict): A dictionary that contains 'test_inputs' with a list of test case arguments.
+
+    Returns:
+        list: A list of input argument tuples (preserving their full structure).
+    """
     test_inputs = response_json["test_inputs"]
     n_values = []
 
     for test_case in test_inputs:
         args = test_case["args"]
-        n_values.append((args))  # Preserve full structure
+        n_values.append((args))  # Preserves the full tuple structure
 
     print(n_values)
     return n_values
 
-import json
+
+# ----------------------------- Time Complexity -----------------------------
+
 
 def extract_time_complexity(response_json):
+    """
+    Extracts the declared time complexity string from a JSON-formatted response.
+
+    Args:
+        response_json (str): A JSON-formatted string containing the "time_complexity" key.
+
+    Returns:
+        str: The time complexity description (e.g., "O(n log n)") in lowercase.
+    """
     str_json = json.loads(response_json)
     time_compl = str_json["time_complexity"]
-
     return time_compl.lower()
 
 
-'''
-    Time complexity (used in main_test_inputs.py)
-    
-    This script estimates the average time complexity of a Python function by measuring its execution 
-    time over a range of input sizes, using the timeit module.
-    
-'''
-import timeit
-
-def calulate_time_complexity(code_response_json: str, n_values: list):
+def calculate_time_complexity(code_response_json: str, n_values: list):
     """
-    Calculates the average time complexity (i.e., average execution time) of a function
-    provided as a string of code.
+    Dynamically executes a provided function and calculates its average execution time
+    over a set of input values using the timeit module.
 
     Args:
-        code_response_json (str): A dictionary-like string (should contain 'imports' and 'code') with the necessary imports and function definition.
-        n_values (list): A list of input values to test the function with.
+        code_response_json (str): A dictionary-like string containing 'imports' and 'code' keys.
+        n_values (list): A list of input argument tuples to test the function against.
 
     Returns:
-        float: The average execution time of the function across all input sizes.
+        float: The average execution time across all input sets.
     """
 
-    # Extract the imports and code from the response
+    # Check for keys and extract the relevant code and imports
     if "imports" and "code" in code_response_json:
         imports = code_response_json["imports"]
         code = code_response_json["code"]
 
-    # Replace the '\\n' sequences with real newlines '\n'
+    # Replace escaped newline characters with actual newlines
     code = code.replace("\\n", "\n")
 
-    str_code = imports + "\n\n" + code # Code to execute
+    # Combine the imports and code into one executable string
+    str_code = imports + "\n\n" + code
 
-    # Dynamically execute the code string, defining the function and any required imports
+    # Execute the code to define the function and prepare it for testing
     local_ns = {}
     exec(str_code, globals(), local_ns)
 
+    # Automatically detect the function name (assuming there's only one)
     func_name = [name for name in local_ns if callable(local_ns[name])][0]
     func = local_ns[func_name]
 
-    # Accumulates the total execution time across all input values
-    total_times = 0
+    total_times = 0  # Accumulator for total execution time
 
-    # Iterate through each input size and measure how long the function takes to run
+    # Measure the execution time of the function for each input
     for args in n_values:
         timed_call = lambda: func(*args)
-        # Measure execution time over n iterations
         time = timeit.timeit(timed_call, setup=imports, number=100)
         total_times += time
         print(f'Execution time for {func_name}{args} run 100 times: {time:.6f} s')
 
-    # Calculate and return the average time
+    # Compute the average time per input case
     average_time = total_times / len(n_values)
     print(f'\n\nAverage time across {len(n_values)} input values: {average_time :.6f} s')
 
     return average_time
 
 
-
-'''
-    Readability
-    This script calculates the cognitive complexity of a Python function.
-    Cognitive complexity is a metric that reflects how difficult code is to understand,
-    based on factors like nesting, conditionals, recursion, and control flow.
-'''
+# ----------------------------- Readability (Cognitive Complexity) -----------------------------
 
 import ast
 import astunparse
@@ -97,61 +106,70 @@ from inspect import getsource
 from cognitive_complexity.api import get_cognitive_complexity_for_node
 from cognitive_complexity.utils.ast import is_decorator
 
-
 def get_cognitive_complexity(func):
     """
-        Calculates the cognitive complexity of a Python function, including per-node details.
+    Calculates the cognitive complexity of a Python function, including per-node breakdown.
 
-        Args:
-            func (function or str): The function to analyze (can be a function object or a string of code).
+    Args:
+        func (function or str): The function to analyze (can be either a function object or a string of code).
 
-        Returns:
+    Returns:
+        tuple:
+            - int: Total cognitive complexity score of the function.
+            - list: Per-node complexity breakdown as [complexity, code snippet].
 
-            tuple:
-                - complexity (int): The total cognitive complexity score.
-                - details (list): A list of [node_complexity, node_code] pairs for each top-level statement.
-
-        Returns (-1, []) in case of syntax or parsing errors.
+        Returns (-1, [[-1, <error message>]]) in case of parsing or syntax errors.
     """
 
-    """
-    Calculates the cognitive complexity of a Python function, including per-node details.
-    
-    """
-
+    # Convert function to source code if it's a function object
     func = func if isinstance(func, str) else getsource(func)
 
     try:
-        tree = ast.parse(func)
+        tree = ast.parse(func)  # Parse the code into an AST
     except (SyntaxError, IndentationError) as e:
         return -1, [[-1, f"Syntax error: {e}"]]
 
+    # Get the first FunctionDef node
     funcdef = next((node for node in tree.body if isinstance(node, ast.FunctionDef)), None)
     if funcdef is None:
         return -1, [[-1, "No function definition found"]]
 
+    # Skip decorators if present
     if is_decorator(funcdef):
         return get_cognitive_complexity(funcdef.body[0])
 
-    details = []
-    complexity = 0
+    details = []  # List to hold per-node complexity
+    complexity = 0  # Total cognitive complexity
+
+    # Analyze each top-level node in the function body
     for node in funcdef.body:
         node_complexity = get_cognitive_complexity_for_node(node)
         complexity += node_complexity
+
         node_code = astunparse.unparse(node)
+
+        # Slightly increase complexity if a recursive call is detected
         if f"{funcdef.name}(" in node_code:
             node_complexity += 1
             complexity += 1
+
         details.append([node_complexity, node_code])
 
+    # Add a final row for the total complexity
     details.append([complexity, "Total"])
     return complexity, details
 
 
-''' Print details related to cognitive complexity per-node'''
+# ----------------------------- Print Readability Results -----------------------------
 
 def print_cognitive_complexity_details(details_readability_complexity, AGENTS_NO):
-    for i in range(0, AGENTS_NO):
-        # Stampa in formato tabellare
-        print("\nDettagli della complessità:")
+    """
+    Prints a formatted cognitive complexity breakdown for each agent's function.
+
+    Args:
+        details_readability_complexity (list): A list of per-agent complexity details.
+        AGENTS_NO (int): Number of agents (functions) analyzed.
+    """
+    for i in range(AGENTS_NO):
+        print("\nCognitive Complexity Details:")
         print(tabulate(details_readability_complexity[i], headers=["Complexity", "Code"], tablefmt="grid"))

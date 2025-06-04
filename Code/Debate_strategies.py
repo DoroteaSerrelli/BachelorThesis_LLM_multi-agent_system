@@ -106,9 +106,8 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
                     return solution  # Return the agreed-upon solution
                 print("VOTING ERROR FOR SOLUTION NUMBER " + str(var))
 
-        if strategy_choosen == 0:
+        if strategy_choosen == "0":
             # SI PASSA AL SELF-REFINEMENT
-
             responses = do_self_refinement(programmers, responses, readability_complexity, user_prompt)
             debate_response.clear()
             readability_complexity.clear()
@@ -119,29 +118,11 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
                 print(f"Response self-refined developer {i}: {response}")
                 i += 1
 
-        if strategy_choosen == 1:
+        if strategy_choosen == "1":
             # SI PASSA ALL'INSTANT RUNOFF VOTING
-            responses = do_instant_runoff_voting(debate_response, responses_allowed)
-
-            if len(responses) == 1:
-                for var in responses:
-
-                    print("Agreement")
-                    print("\nFinal answer:")
-
-                    solution = responses[int(var)]
-                    print(solution)
-                    return solution  # Return the agreed-upon solution
-
-
-            debate_response.clear()
-            readability_complexity.clear()
-            details_readability_complexity.clear()
-
-            i = 0
-            for response in responses:
-                print(f"Response instant_runoff_voting developer {i}: {response}")
-                i += 1
+            response = do_instant_runoff_voting(debate_response, responses_allowed)
+            print(f"Response instant_runoff_voting : {response}")
+            return response
 
         current_round += 1
 
@@ -300,8 +281,8 @@ def do_self_refinement(agents, responses, readability_complexity, user_prompt):
 
         other_responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
 
-        for i in range(0, AGENTS_NO):
-            if readability_complexity[i] != -1:
+        for i in range(0, AGENTS_NO-1):
+            if readability_complexity[i] != -1 :
                 other_responses_allowed[i] = other_responses[i]
 
 
