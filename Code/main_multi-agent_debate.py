@@ -230,6 +230,9 @@ else:
         print(f"{metric}: {value}")
         metrics_sq_str += f"{metric}: {value}\n"
 
+    real_correctness = (100 * test_results["tests_passed"]) / test_results["tests_run"]
+    print(f"Real correctness: {real_correctness}")
+
     # === LOG RESULTS TO CSV ===
     if user_prompt_mode == 1:
         save_task_data_to_csv("multi-agent_csv_results.csv", frame_no, instruct_prompt_list[frame_no], canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity, time_complexity, evaluation, metrics_sq_str, AGENTS_NO, f"programmers: {types_model[0]}; evaluator: {type_evaluator_model}", MAXROUNDS_NO, elapsed_multi, strategy_debate, test_results["tests_passed"], test_results["tests_failed"])

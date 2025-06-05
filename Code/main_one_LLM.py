@@ -305,6 +305,9 @@ else:
         print(f"{metric}: {value}")
         metrics_sq_str += f"{metric} : {value}\n"
 
+    real_correctness = (100*test_results["tests_passed"]) / test_results["tests_run"]
+    print(f"Real correctness: {real_correctness}")
+
     # === SAVE FINAL OUTPUT AND METRICS TO CSV ===
     if user_prompt_mode == 1:
         save_task_data_to_csv("single-agent_csv_results.csv", frame_no, instruct_prompt_list[frame_no],
