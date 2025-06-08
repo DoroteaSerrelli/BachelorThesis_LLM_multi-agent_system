@@ -1406,3 +1406,199 @@ ncloc: 9
 vulnerabilities: 1
 sqale_rating: 1.0
 ",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,82.81345629692078,2,3,0
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+def task_func(length=100):
+    if length < 0:
+        raise ValueError('Length must be a non-negative integer.')
+    # Generate a random string of the specified length
+    random_string = ''.join(random.choices(string.ascii_letters, k=length))
+    # Count the occurrence of each character
+    char_count = collections.Counter(random_string)
+    return dict(char_count)","The function 'task_func' generates a random string of uppercase and lowercase letters with a specified length. If the length is negative, it raises a ValueError. It then counts the occurrences of each character in the generated string using the collections.Counter class from Python's standard library. The result is returned as a dictionary.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 100,
+    ""Security"": 70
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,82.73229265213013,2,3,0
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","
+import collections
+import random
+import string
+
+
+import collections
+import random
+import string
+
+def task_func(length=100):
+    if length < 0:
+        raise ValueError('Length cannot be negative')
+
+    # Generate a random string of the specified length composed of uppercase and lowercase letters
+    random_string = ''.join(random.choices(string.ascii_letters, k=length))
+
+    # Count the occurrence of each character in the generated string
+    char_count = collections.Counter(random_string)
+
+    return dict(char_count)","The `task_func` function generates a random string of the specified length consisting of uppercase and lowercase letters. It checks for a negative length by raising a `ValueError`. The function then counts the occurrence of each character in the generated string using Python's `collections.Counter`. Finally, it returns a dictionary where each key is a character from the string and the value is the count of how many times that character appears.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 80,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 100
+    ,""Security"": 95
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,97.82931852340698,2,3,0
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+
+import collections
+import random
+import string
+def task_func(length=100):
+    if length < 0:
+        raise ValueError('Length must be a non-negative number')
+    # Generate a random string of the specified length
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+
+    # Count occurrences of each character using collections.Counter
+    char_count = dict(collections.Counter(random_string))
+
+    return char_count","The function 'task_func' generates a random string of the specified length composed of uppercase and lowercase letters and digits. The string is then processed to count the occurrence of each character using Python's `collections.Counter`. If the input length is negative, the function raises a `ValueError` with an appropriate message.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 96,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+    ,""Security"": 80
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,77.76853466033936,2,0,3
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+def task_func(length=100):
+    if length < 0:
+        raise ValueError('Length must be a non-negative number.')
+    # Generate a random string of the specified length using uppercase and lowercase letters
+    random_string = ''.join(random.choices(string.ascii_letters, k=length))
+    
+    # Count the occurrence of each character in the generated string
+    char_count = collections.Counter(random_string)
+    
+    # Return the dictionary with character counts
+    return dict(char_count)","The `task_func` function generates a random string of a specified length composed of uppercase and lowercase letters. It ensures that the length is non-negative by raising a `ValueError` if it is negative. The function then uses the `random.choices` function to create a string of the desired length, selecting characters from the set of all ASCII letters (both uppercase and lowercase). After generating the random string, the function uses `collections.Counter` to count the occurrences of each character in the string and returns this count as a dictionary. If a negative length is provided, the function raises a `ValueError`.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 95
+  ,""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,87.04752397537231,2,3,0
