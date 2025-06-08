@@ -44,7 +44,16 @@ def task_func(numbers=list(range(1, 3))):
     ""Maintainability"": 0,
     ""Reliability"": 100,
     ""Security"": 80
-}",1,,programmer = evaluator = : codellama-13b-instruct,3,11.395467281341553,self-refinement,9,1
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0",programmer = evaluator = : codellama-13b-instruct,3,11.395467281341553,self-refinement,9,1
 0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
 The function should output with:
     float: The average of the sums of absolute differences for each shuffled permutation of the list.
@@ -96,7 +105,16 @@ o(n^2)
     ""Reliability"": 95
     ,
     ""Security"": 75
-}",1,,programmer = evaluator = : codellama-13b-instruct,3,11.81747555732727,self-refinement,0,10
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 15
+vulnerabilities: 1
+sqale_rating: 1.0",programmer = evaluator = : codellama-13b-instruct,3,11.81747555732727,self-refinement,0,10
 0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
 The function should output with:
     float: The average of the sums of absolute differences for each shuffled permutation of the list.
@@ -138,7 +156,16 @@ The function should output with:
   ""Reliability"": 25,
   ""Security"": 75
 }
-",1,,programmer = evaluator = : codellama-13b-instruct,3,27.46335196495056,self-refinement,0,10
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0",programmer = evaluator = : codellama-13b-instruct,3,27.46335196495056,self-refinement,0,10
 0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
 The function should output with:
     float: The average of the sums of absolute differences for each shuffled permutation of the list.
@@ -182,7 +209,16 @@ def task_func(numbers=list(range(1, 3))):
     ""Reliability"": 70,
     ""Security"": 60
 }
-",1,,programmer = evaluator = : codellama-13b-instruct,3,6.480161666870117,self-refinement,0,10
+",1,"coverage: 0.0
+bugs: 1
+reliability_rating: 5.0
+code_smells: 3
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 3.0",programmer = evaluator = : codellama-13b-instruct,3,6.480161666870117,self-refinement,0,10
 0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
 The function should output with:
     float: The average of the sums of absolute differences for each shuffled permutation of the list.
@@ -234,7 +270,16 @@ The function takes as input a list of numbers. If no number is provided, then th
   ""Maintainability"": 90,
   ""Reliability"": 60,
   ""Security"": 100
-}",1,,programmer = evaluator = : codellama-13b-instruct,3,14.120546102523804,self-refinement,1,9
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 15
+vulnerabilities: 1
+sqale_rating: 1.0",programmer = evaluator = : codellama-13b-instruct,3,14.120546102523804,self-refinement,1,9
 1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
 The function should raise the exception for: ValueError if the length is a negative number
 The function should output with:
@@ -258,7 +303,16 @@ def task_func(length=100):
   ""Explanation"": """",
   ""Maintainability"": 100,
   ""Reliability"": 100,
-  ""Security"": 100 }",1,,programmer = evaluator = : codellama-13b-instruct,3,14.262531995773315,self-refinement,0,1
+  ""Security"": 100 }",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 2
+security_rating: 5.0
+ncloc: 14
+vulnerabilities: 1
+sqale_rating: 1.0",programmer = evaluator = : codellama-13b-instruct,3,14.262531995773315,self-refinement,0,1
 1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
 The function should raise the exception for: ValueError if the length is a negative number
 The function should output with:
@@ -297,7 +351,17 @@ dict: A dictionary where each key is a character from the generated string and t
   ""Reliability"": 45,
   ""Security"": 67
 }
-",1,,programmer = evaluator = : codellama-13b-instruct,3,5.3191235065460205,self-refinement,0,1
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,3,5.3191235065460205,self-refinement,0,1
 1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
 The function should raise the exception for: ValueError if the length is a negative number
 The function should output with:
@@ -328,7 +392,17 @@ def task_func(length=100):
 ""Maintainability"": 40,
 ""Reliability"": 75,
 ""Security"": 85
-}",1,,programmer = evaluator = : codellama-13b-instruct,3,4.119713306427002,self-refinement,0,1
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,3,4.119713306427002,self-refinement,0,1
 1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
 The function should raise the exception for: ValueError if the length is a negative number
 The function should output with:
@@ -366,7 +440,17 @@ It returns a dictionary where each key is a character from the generated string 
   ""Reliability"": 80,
   ""Security"": 80
 }
-",1,,programmer = evaluator = : codellama-13b-instruct,3,4.970341682434082,self-refinement,3,0
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 4
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,3,4.970341682434082,self-refinement,3,0
 1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
 The function should raise the exception for: ValueError if the length is a negative number
 The function should output with:
@@ -403,7 +487,17 @@ is the count of how many times that character appears in the string.","(1, [[1, 
   ""Reliability"":90,
   ""Security"":85
 }
-",1,,programmer = evaluator = : codellama-13b-instruct,3,10.638417720794678,self-refinement,3,0
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,3,10.638417720794678,self-refinement,3,0
 2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
 The function should output with:
     dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
@@ -427,7 +521,17 @@ import statistics
     ""Maintainability"": 54,
     ""Reliability"": 56,
     ""Security"": 72
-}",1,,programmer = evaluator = : codellama-13b-instruct,3,13.727614402770996,self-refinement,0,1
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,3,13.727614402770996,self-refinement,0,1
 2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
 The function should output with:
     dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
@@ -456,7 +560,17 @@ def get_sorted_dict(LETTERS):
     ""Reliability"": 98,
     ""Security"": 54
 }
-",1,,programmer = evaluator = : codellama-13b-instruct,3,9.330982208251953,self-refinement,0,1
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 2
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,3,9.330982208251951,self-refinement,0,1
 2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
 The function should output with:
     dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
@@ -480,7 +594,17 @@ def task_func(LETTERS):
   ""Maintainability"": 90,
   ""Reliability"": 60,
   ""Security"": 100
-}",1,,programmer = evaluator = : codellama-13b-instruct,3,3.1374318599700928,self-refinement,0,5
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,3,3.1374318599700928,self-refinement,0,5
 2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
 The function should output with:
     dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
@@ -500,7 +624,7 @@ def task_func(LETTERS):
     for i in range(0, LETTERS):
         mykey = chr(random.randint(65, 90))
         myvalue = []
-        for j in range(0, random.randint(3, 10)): 
+        for j in range(0, random.randint(3, 10)):
             myvalue.append(random.randint(-20, 20))
         mydict[mykey] = myvalue
     return {k: statistics.mean(v) for k, v in sorted(mydict.items(), key=lambda item: item[1], reverse=True)}
@@ -512,7 +636,17 @@ def task_func(LETTERS):
   ""Maintainability"": 90,
   ""Reliability"": 70,
   ""Security"": 100
-}",1,,programmer = evaluator = : codellama-13b-instruct,3,12.224528074264526,self-refinement,0,5
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 5
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,3,12.224528074264526,self-refinement,0,5
 2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
 The function should output with:
     dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
@@ -532,7 +666,17 @@ def task_func(LETTERS):
         numbers = random.sample(range(100), 5)
         data[letter] = numbers
     return data","Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.","(1, [[0, '\ndata = {}\n'], [1, '\nfor _ in range(LETTERS):\n    letter = chr(random.randint(97, 123))\n    numbers = random.sample(range(100), 5)\n    data[letter] = numbers\n'], [0, '\nreturn data\n'], [1, 'Total']])",o(n),"{
-""Compilation Errors"": 0, ""Correctness"": 97, ""Execution Errors"": 0, ""Explanation"": """", ""Maintainability"": 42, ""Reliability"": 63, ""Security"": 58}",1,,programmer = evaluator = : codellama-13b-instruct,3,12.821549415588379,self-refinement,0,5
+""Compilation Errors"": 0, ""Correctness"": 97, ""Execution Errors"": 0, ""Explanation"": """", ""Maintainability"": 42, ""Reliability"": 63, ""Security"": 58}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 3
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,3,12.82154941558838,self-refinement,0,5
 3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
 The function should output with:
     dict: A dictionary where each key is a letter from the input list and the value is the mean of
@@ -564,7 +708,17 @@ def task_func(LETTERS):
     ""Maintainability"": 80,
     ""Reliability"": 85,
     ""Security"": 90
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,41.49191117286682,self-refinement,5,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,41.49191117286682,self-refinement,5,0
 3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
 The function should output with:
     dict: A dictionary where each key is a letter from the input list and the value is the mean of
@@ -596,7 +750,17 @@ def task_func(LETTERS):
   ""Maintainability"": 80,
   ""Reliability"": 75,
   ""Security"": 95
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,31.430558443069458,self-refinement,5,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,31.430558443069454,self-refinement,5,0
 3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
 The function should output with:
     dict: A dictionary where each key is a letter from the input list and the value is the mean of
@@ -628,7 +792,17 @@ def task_func(LETTERS):
     ""Maintainability"": 75,
     ""Reliability"": 80,
     ""Security"": 100
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,38.25075840950012,self-refinement,5,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,38.25075840950012,self-refinement,5,0
 3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
 The function should output with:
     dict: A dictionary where each key is a letter from the input list and the value is the mean of
@@ -660,7 +834,17 @@ def task_func(LETTERS):
     ""Maintainability"": 90,
     ""Reliability"": 75,
     ""Security"": 60
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,47.069475412368774,self-refinement,5,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,47.06947541236877,self-refinement,5,0
 3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
 The function should output with:
     dict: A dictionary where each key is a letter from the input list and the value is the mean of
@@ -692,7 +876,17 @@ def task_func(LETTERS):
     ""Maintainability"": 90,
     ""Reliability"": 75,
     ""Security"": 100
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,40.723766803741455,self-refinement,5,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,40.723766803741455,self-refinement,5,0
 4,"Count the occurrence of each integer in the values of the input dictionary, where each value is a list of integers, and return a dictionary with these counts. The resulting dictionary's keys are the integers, and the values are their respective counts across all lists in the input dictionary.
 The function should output with:
     dict: A dictionary where each key is an integer from any of the input lists, and the value is the count of
@@ -719,7 +913,17 @@ def task_func(d):
   ""Maintainability"": 90,
   ""Reliability"": 100,
   ""Security"": 100
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,21.456501483917236,self-refinement,8,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,21.45650148391724,self-refinement,8,0
 4,"Count the occurrence of each integer in the values of the input dictionary, where each value is a list of integers, and return a dictionary with these counts. The resulting dictionary's keys are the integers, and the values are their respective counts across all lists in the input dictionary.
 The function should output with:
     dict: A dictionary where each key is an integer from any of the input lists, and the value is the count of
@@ -753,7 +957,17 @@ def task_func(d):
     ""Maintainability"": 50,
     ""Reliability"": 60,
     ""Security"": 70
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,112.88894176483154,self-refinement,8,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,112.88894176483154,self-refinement,8,0
 4,"Count the occurrence of each integer in the values of the input dictionary, where each value is a list of integers, and return a dictionary with these counts. The resulting dictionary's keys are the integers, and the values are their respective counts across all lists in the input dictionary.
 The function should output with:
     dict: A dictionary where each key is an integer from any of the input lists, and the value is the count of
@@ -781,7 +995,17 @@ def task_func(d):
   ""Maintainability"": 90,
   ""Reliability"": 85,
   ""Security"": 100
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,32.02902913093567,self-refinement,8,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 10
+security_rating: 5.0
+ncloc: 14
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,32.02902913093567,self-refinement,8,0
 4,"Count the occurrence of each integer in the values of the input dictionary, where each value is a list of integers, and return a dictionary with these counts. The resulting dictionary's keys are the integers, and the values are their respective counts across all lists in the input dictionary.
 The function should output with:
     dict: A dictionary where each key is an integer from any of the input lists, and the value is the count of
@@ -809,7 +1033,17 @@ def task_func(d):
   ""Maintainability"": 90,
   ""Reliability"": 85,
   ""Security"": 100
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,24.017661094665527,self-refinement,8,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,24.017661094665527,self-refinement,8,0
 4,"Count the occurrence of each integer in the values of the input dictionary, where each value is a list of integers, and return a dictionary with these counts. The resulting dictionary's keys are the integers, and the values are their respective counts across all lists in the input dictionary.
 The function should output with:
     dict: A dictionary where each key is an integer from any of the input lists, and the value is the count of
@@ -838,7 +1072,17 @@ def task_func(d):
   ""Maintainability"": 90,
   ""Reliability"": 75,
   ""Security"": 100
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,57.49961018562317,self-refinement,8,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,57.49961018562317,self-refinement,8,0
 5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
 The function should output with:
     dict: A dictionary where each key corresponds to a letter from the input list and each value is the
@@ -861,7 +1105,7 @@ import math
 def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
     result = {letter: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for letter in LETTERS}
     std_devs = {
-        key: math.sqrt(sum((x - sum(values)/len(values))**2 for x in values)/(len(values))) 
+        key: math.sqrt(sum((x - sum(values)/len(values))**2 for x in values)/(len(values)))
         for key, values in result.items()
     }
     return std_devs","This function creates a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. It then calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.","(0, [[0, '\nresult = {letter: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for letter in LETTERS}\n'], [0, '\nstd_devs = {key: math.sqrt((sum((((x - (sum(values) / len(values))) ** 2) for x in values)) / len(values))) for (key, values) in result.items()}\n'], [0, '\nreturn std_devs\n'], [0, 'Total']])",o(n*m),"{
@@ -872,7 +1116,17 @@ def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
     ""Maintainability"": 60,
     ""Reliability"": 25,
     ""Security"": 100
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,120.32148170471191,self-refinement,5,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,120.32148170471191,self-refinement,5,0
 5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
 The function should output with:
     dict: A dictionary where each key corresponds to a letter from the input list and each value is the
@@ -915,7 +1169,17 @@ def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
   ""Maintainability"": 80,
   ""Reliability"": 75,
   ""Security"": 90
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,118.05120825767517,self-refinement,5,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,118.05120825767516,self-refinement,5,0
 5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
 The function should output with:
     dict: A dictionary where each key corresponds to a letter from the input list and each value is the
@@ -947,7 +1211,17 @@ def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
     ""Maintainability"": 80,
     ""Reliability"": 50,
     ""Security"": 60
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,130.48067498207092,self-refinement,3,2
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 15
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,130.48067498207092,self-refinement,3,2
 5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
 The function should output with:
     dict: A dictionary where each key corresponds to a letter from the input list and each value is the
@@ -988,7 +1262,17 @@ def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
     ""Maintainability"": 80,
     ""Reliability"": 75,
     ""Security"": 90
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,100.11063575744629,self-refinement,5,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,100.11063575744627,self-refinement,5,0
 5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
 The function should output with:
     dict: A dictionary where each key corresponds to a letter from the input list and each value is the
@@ -1024,7 +1308,17 @@ def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
     ""Maintainability"": 75,
     ""Reliability"": 80,
     ""Security"": 90
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,97.376384973526,self-refinement,5,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 6
+security_rating: 5.0
+ncloc: 17
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,97.376384973526,self-refinement,5,0
 6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
 The function should output with:
     str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
@@ -1068,7 +1362,17 @@ def task_func(pattern, log_dir='/var/log/'):
     ""Maintainability"": 90,
     ""Reliability"": 80,
     ""Security"": 75
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,53.41111779212952,self-refinement,2,3
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,53.41111779212952,self-refinement,2,3
 6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
 The function should output with:
     str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
@@ -1091,10 +1395,10 @@ def task_func(pattern, log_dir='/var/log/'):
         files = [f for f in os.listdir(log_dir) if re.search(pattern, f)]
     except FileNotFoundError:
         return None
-    
+
     if not files:
         return None
-    
+
     latest_file = max(files, key=lambda x: os.path.getmtime(os.path.join(log_dir, x)))
     return os.path.join(log_dir, latest_file)","The function task_func searches through all files in the specified directory (defaulting to '/var/log/') that match a given regex pattern. It filters the files based on the provided pattern and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.","(2, [[1, '\ntry:\n    files = [f for f in os.listdir(log_dir) if re.search(pattern, f)]\nexcept FileNotFoundError:\n    return None\n'], [1, '\nif (not files):\n    return None\n'], [0, '\nlatest_file = max(files, key=(lambda x: os.path.getmtime(os.path.join(log_dir, x))))\n'], [0, '\nreturn os.path.join(log_dir, latest_file)\n'], [2, 'Total']])","o(n * m), where n is the number of files in the directory and m is the length of the filename.","{
   ""Compilation Errors"": 0,
@@ -1104,7 +1408,17 @@ def task_func(pattern, log_dir='/var/log/'):
   ""Maintainability"": 80,
   ""Reliability"": 75,
   ""Security"": 60
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,108.48171758651733,self-refinement,5,0
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 8
+security_rating: 5.0
+ncloc: 18
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,108.48171758651732,self-refinement,5,0
 6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
 The function should output with:
     str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
@@ -1147,7 +1461,17 @@ def task_func(pattern, log_dir='/var/log/'):
   ""Maintainability"": 90,
   ""Reliability"": 85,
   ""Security"": 70
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,6.39117169380188,self-refinement,2,3
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 2
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,6.39117169380188,self-refinement,2,3
 6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
 The function should output with:
     str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
@@ -1189,7 +1513,17 @@ def task_func(pattern, log_dir='/var/log/'):
   ""Maintainability"": 90,
   ""Reliability"": 80,
   ""Security"": 75
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,13.534628629684448,self-refinement,2,3
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 8
+security_rating: 5.0
+ncloc: 18
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,13.534628629684448,self-refinement,2,3
 6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
 The function should output with:
     str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
@@ -1219,7 +1553,17 @@ def find_latest_log_file(pattern, log_dir='/var/log/'):
   ""Maintainability"": 85,
   ""Reliability"": 90,
   ""Security"": 75
-}",1,,programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,4.0009777545928955,self-refinement,0,1
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 2
+security_rating: 5.0
+ncloc: 17
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : deepseek-coder-v2-lite-instruct,3,4.000977754592896,self-refinement,0,1
 7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
 The function should output with:
     str: The name of the top-selling product based on the total quantity sold.
@@ -1278,7 +1622,17 @@ def task_func(csv_file_path):
     ""Maintainability"": 95,
     ""Reliability"": 80,
     ""Security"": 70
-}",1,,programmer = evaluator = : starcoder2-7b,3,14.417261123657227,self-refinement,2,5
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,14.417261123657228,self-refinement,2,5
 7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
 The function should output with:
     str: The name of the top-selling product based on the total quantity sold.
@@ -1325,7 +1679,17 @@ def find_top_selling_product(csv_file_path):
     ""Reliability"": 18,
     ""Security"": 60
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,11.520447015762329,self-refinement,0,1
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 4
+security_rating: 5.0
+ncloc: 14
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,11.520447015762327,self-refinement,0,1
 7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
 The function should output with:
     str: The name of the top-selling product based on the total quantity sold.
@@ -1362,7 +1726,17 @@ def task_func(csv_file_path):
    ""Reliability"": 35,
    ""Security"": 49
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,10.961922407150269,self-refinement,3,4
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 18
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,10.961922407150269,self-refinement,3,4
 7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
 The function should output with:
     str: The name of the top-selling product based on the total quantity sold.
@@ -1408,7 +1782,17 @@ def task_func(csv_file_path):
     ""Reliability"": 75,
     ""Security"": 100
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,9.631305694580078,self-refinement,7,0
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,9.631305694580078,self-refinement,7,0
 7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
 The function should output with:
     str: The name of the top-selling product based on the total quantity sold.
@@ -1444,7 +1828,17 @@ def task_func(csv_file_path):
                 products[product] = 0
             products[product] += quantity
     return max(products.items(), key=operator.itemgetter(1))[0]",We need to find the best-selling product from a given CSV file with sales data.,"(3, [[0, '\nproducts = {}\n'], [3, ""\nwith open(csv_file_path, 'r') as f:\n    reader = csv.DictReader(f)\n    for row in reader:\n        product = row['product']\n        quantity = int(row['quantity'])\n        if (product not in products):\n            products[product] = 0\n        products[product] += quantity\n""], [0, '\nreturn max(products.items(), key=operator.itemgetter(1))[0]\n'], [3, 'Total']])",o(n),"{""Compilation Errors"": 0, ""Correctness"": 50, ""Execution Errors"": 1, ""Explanation"": ""The given code \nimport collections\n\nimport csv\nimport collections\ndef task_func(csv_file_path):\n    products = {}\n    with open(csv_file_path, \""r\"") as f:\n        reader = csv.DictReader(f)\n        for row in reader:\n            product = row[\""product\""]\n            quantity = int(row[\""quantity\""])\n            if product not in products:\n                products[product] = 0\n            products[product] += quantity\n    return max(products.items(), key=operator.itemgetter(1))[0]\n\nThe line len(number) should be len(numbers). Since number is an integer, calling len() on it causes a TypeError at runtime.\nThe logic is almost correct, but this bug prevents the function from returning the correct result."", ""Maintainability"": 50, ""Reliability"": 10, ""Security"": 50}
-",1,,programmer = evaluator = : starcoder2-7b,3,13.96866750717163,self-refinement,2,5
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 16
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,13.96866750717163,self-refinement,2,5
 8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
 The function should output with:
     Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
@@ -1483,7 +1877,17 @@ def task_func(T1, RANGE=100):
   ""Reliability"": 21,
   ""Security"": 70
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,10.510231733322144,self-refinement,0,7
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 14
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,10.510231733322144,self-refinement,0,7
 8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
 The function should output with:
     Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
@@ -1517,7 +1921,17 @@ import itertools
 from random import randint
 def task_func(T1):
 ```","(0, [[0, '\nreturn None\n'], [0, 'Total']])",o(n),"{""Compilation Errors"": 2, ""Correctness"": 0, ""Execution Errors"": 0, ""Explanation"": ""The code is not self-contained and does not call the function 'task_func' in a suitable way."", ""Maintainability"": 0, ""Reliability"": 0, ""Security"": 0}
-",1,,programmer = evaluator = : starcoder2-7b,3,9.88873839378357,self-refinement,0,7
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 4
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,9.88873839378357,self-refinement,0,7
 8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
 The function should output with:
     Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
@@ -1569,7 +1983,17 @@ def task_func(T1, RANGE=100):
    ""Reliability"": 20,
    ""Security"": 90
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,14.72952151298523,self-refinement,0,7
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,14.72952151298523,self-refinement,0,7
 8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
 The function should output with:
     Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
@@ -1605,7 +2029,17 @@ Random integers are generated between 0 and `RANGE` (default is 100). Count the 
   ""Reliability"": 5,
   ""Security"": 6
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,13.010685920715332,self-refinement,1,6
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 3
+duplicated_lines_density: 0.0
+cognitive_complexity: 4
+security_rating: 5.0
+ncloc: 18
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,13.010685920715332,self-refinement,1,6
 8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
 The function should output with:
     Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
@@ -1629,9 +2063,9 @@ from random import randint
 from collections import Counter
 import itertools
 from random import randint
-def task_func(T1): 
+def task_func(T1):
   T2=list(map(int,T1))
-  T3=[randint(0,max(T2)) for i in range (sum(T2))] 
+  T3=[randint(0,max(T2)) for i in range (sum(T2))]
   return Counter(T3)","Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`.
 Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.","(0, [[0, '\nT2 = list(map(int, T1))\n'], [0, '\nT3 = [randint(0, max(T2)) for i in range(sum(T2))]\n'], [0, '\nreturn Counter(T3)\n'], [0, 'Total']])",o(n),"{
     ""Compilation Errors"": 0,
@@ -1642,7 +2076,17 @@ Random integers are generated between 0 and `RANGE` (default is 100). Count the 
     ""Reliability"": 70,
     ""Security"": 80
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,11.561501026153564,self-refinement,1,6
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,11.561501026153564,self-refinement,1,6
 9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
 The function should output with:
     tuple:
@@ -1682,7 +2126,17 @@ def task_func(list_of_pairs):
    ""Reliability"": 95,
    ""Security"": 80
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,3.4419398307800293,self-refinement,0,8
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,3.4419398307800293,self-refinement,0,8
 9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
 The function should output with:
     tuple:
@@ -1719,7 +2173,17 @@ def task_func(list_of_pairs):
   ""Reliability"":87,
   ""Security"":92
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,2.807292938232422,self-refinement,8,0
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,2.807292938232422,self-refinement,8,0
 9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
 The function should output with:
     tuple:
@@ -1744,7 +2208,7 @@ def task_func(list_of_pairs):
     df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
     ax = df.plot.bar(x='Category', y='Value')
     plt.title('Category vs Value')
-    
+
     return df, ax",,"(0, [[0, ""\ndf = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])\n""], [0, ""\nax = df.plot.bar(x='Category', y='Value')\n""], [0, ""\nplt.title('Category vs Value')\n""], [0, '\nreturn (df, ax)\n'], [0, 'Total']])",,"{
     ""Compilation Errors"": 0,
     ""Correctness"": 83,
@@ -1754,7 +2218,17 @@ def task_func(list_of_pairs):
     ""Reliability"": 62,
     ""Security"": 71
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,2.7928781509399414,self-refinement,8,0
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,2.7928781509399414,self-refinement,8,0
 9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
 The function should output with:
     tuple:
@@ -1788,7 +2262,17 @@ The title of the barplot should be set to Category vs Value","(0, [[0, '\ndf = p
   ""Reliability"": 83,
   ""Security"": 20
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,5.9943671226501465,self-refinement,0,8
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,5.9943671226501465,self-refinement,0,8
 9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
 The function should output with:
     tuple:
@@ -1826,7 +2310,17 @@ def main():
    ""Reliability"": 7,
    ""Security"": 8
 }
-",1,,programmer = evaluator = : starcoder2-7b,3,11.906690120697021,self-refinement,0,8
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 7
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : starcoder2-7b,3,11.90669012069702,self-refinement,0,8
 0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
 The function should output with:
     float: The average of the sums of absolute differences for each shuffled permutation of the list.
@@ -1845,7 +2339,7 @@ def task_func(numbers=list(range(1, 3))):
         sum_diffs += sum(diffs)
 
     avg_sum_diffs = sum_diffs / len(permutations)
-    
+
     return avg_sum_diffs","import itertools
 from random import shuffle
 
@@ -1868,7 +2362,17 @@ def task_func(numbers=list(range(1, 3))):
   ""Maintainability"":83,
   ""Reliability"":93,
   ""Security"":72
-}",1,,programmer = evaluator = : codellama-13b-instruct,4,5.093310117721558,self-refinement,0,10
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,4,5.093310117721558,self-refinement,0,10
 0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
 The function should output with:
     float: The average of the sums of absolute differences for each shuffled permutation of the list.
@@ -1887,18 +2391,28 @@ def task_func(numbers=list(range(1, 3))):
         sum_diffs += sum(diffs)
 
     avg_sum_diffs = sum_diffs / len(permutations)
-    
+
     return avg_sum_diffs","from random import shuffle
 
 def task_func(numbers=list(range(1, 3))):
     result = []
-    for _ in range(500): # shuffle the list 500 times to simulate randomness of permutation 
+    for _ in range(500): # shuffle the list 500 times to simulate randomness of permutation
         numbers_shuffled = numbers[:]
         shuffle(numbers_shuffled)
         difference_sums = [abs(x-y) for x, y in zip(numbers_shuffled[:], numbers_shuffled[1:] )]
         result.append(sum(difference_sums))
     return sum(result)/len(numbers)",The given code should be in the form of a function that takes an optional list argument numbers which defaults to numbers from 1 to 10 if not specified. It returns the average of the sums of absolute differences for each shuffled permutation of the list.,"(1, [[0, '\nresult = []\n'], [1, '\nfor _ in range(500):\n    numbers_shuffled = numbers[:]\n    shuffle(numbers_shuffled)\n    difference_sums = [abs((x - y)) for (x, y) in zip(numbers_shuffled[:], numbers_shuffled[1:])]\n    result.append(sum(difference_sums))\n'], [0, '\nreturn (sum(result) / len(numbers))\n'], [1, 'Total']])",o(n * n!),"{ ""Compilation Errors"": 0, ""Correctness"": 27, ""Execution Errors"": 0, ""Explanation"": ""The AI-generated code does not respect the correctness criterion. The task description asks for a function that calculates an average of sums of absolute differences between consecutive numbers. The code generates a list of random numbers and then shuffles it 500 times and calculates the difference between each pair of consecutive elements, resulting in a sum. Finally, it divides this sum by the length of the original number list. However, this output does not match the task description. Additionally, there are no security vulnerabilities or bugs identified."", ""Maintainability"": 0, ""Reliability"": 28, ""Security"": 26 }
-",1,,programmer = evaluator = : codellama-13b-instruct,4,27.349198818206787,self-refinement,7,3
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 2.0
+",programmer = evaluator = : codellama-13b-instruct,4,27.349198818206787,self-refinement,7,3
 0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
 The function should output with:
     float: The average of the sums of absolute differences for each shuffled permutation of the list.
@@ -1917,7 +2431,7 @@ def task_func(numbers=list(range(1, 3))):
         sum_diffs += sum(diffs)
 
     avg_sum_diffs = sum_diffs / len(permutations)
-    
+
     return avg_sum_diffs","import random
 import itertools
 
@@ -1944,7 +2458,17 @@ def task_func(numbers=list(range(1, 3))):
     ""Reliability"": 80,
     ""Security"": 100
 }
-",1,,programmer = evaluator = : codellama-13b-instruct,4,44.931846141815186,self-refinement,0,10
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,4,44.93184614181519,self-refinement,0,10
 0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
 The function should output with:
     float: The average of the sums of absolute differences for each shuffled permutation of the list.
@@ -1963,7 +2487,7 @@ def task_func(numbers=list(range(1, 3))):
         sum_diffs += sum(diffs)
 
     avg_sum_diffs = sum_diffs / len(permutations)
-    
+
     return avg_sum_diffs","import itertools
 from random import shuffle
 
@@ -1984,7 +2508,17 @@ def task_func(numbers=list(range(1, 3))):
 ""Maintainability"":95,
 ""Reliability"":80,
 ""Security"":70
-}",1,,programmer = evaluator = : codellama-13b-instruct,4,11.740886211395264,self-refinement,2,8
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 2.0
+",programmer = evaluator = : codellama-13b-instruct,4,11.740886211395264,self-refinement,2,8
 0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
 The function should output with:
     float: The average of the sums of absolute differences for each shuffled permutation of the list.
@@ -2003,7 +2537,7 @@ def task_func(numbers=list(range(1, 3))):
         sum_diffs += sum(diffs)
 
     avg_sum_diffs = sum_diffs / len(permutations)
-    
+
     return avg_sum_diffs","import itertools
 from random import shuffle
 
@@ -2022,7 +2556,17 @@ def task_func(numbers=list(range(1, 3))):
   ""Maintainability"": 75,
   ""Reliability"": 80,
   ""Security"": 90
-}",1,,programmer = evaluator = : codellama-13b-instruct,4,12.305399894714355,self-refinement,1,9
+}",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,4,12.305399894714355,self-refinement,1,9
 1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
 The function should raise the exception for: ValueError if the length is a negative number
 The function should output with:
@@ -2045,7 +2589,7 @@ import string
 def task_func(length=100):
     # generate a random string of the specified length composed of uppercase and lowercase letters
     random_string = ''.join(random.choice(string.ascii_letters) for i in range(length))
-    
+
     # count the occurrence of each character in this string
     counter = collections.Counter(random_string)
     return counter","	Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
@@ -2063,4 +2607,14 @@ is the count of how many times that character appears in the string.","(0, [[0, 
     ""Reliability"": 100,
     ""Security"": 80
 }
-",1,,programmer = evaluator = : codellama-13b-instruct,4,5.957056999206543,self-refinement,2,1
+",1,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmer = evaluator = : codellama-13b-instruct,4,5.957056999206543,self-refinement,2,1
