@@ -27,7 +27,7 @@ import lmstudio as lms
 from Code.metrics import get_cognitive_complexity, extract_time_complexity
 
 # Set up the local inference server for LMStudio
-SERVER_API_HOST = "localhost:2345"  #server lmstudio port <--- 1234
+SERVER_API_HOST = "localhost:1234"  #server lmstudio port <--- 2345
 lms.configure_default_client(SERVER_API_HOST)
 
 # Benchmark data from BigCodeBench (prompts, canonical solutions, tests, etc.)
@@ -50,7 +50,7 @@ import time
 
 # Maximum number of refinement response rounds allowed based on evaluator feedback, before ending the debate
 # with a partial solution.
-MAX_EVAL_ROUNDS = 5
+MAX_EVAL_ROUNDS = 4
 
 
 # === FUNCTION DEFINITIONS ===
@@ -198,7 +198,7 @@ CODE GENERATION TASK
 print("User prompt from stdin (insert 0) or user prompt from BigCodeBench (insert 1): ")
 user_prompt_mode = int(input())
 user_prompt = ""
-frame_no = 0
+frame_no = 7
 if user_prompt_mode == 0:
     user_prompt = input("Insert user prompt: ")
 else:
@@ -209,7 +209,7 @@ print(f"User prompt: {user_prompt}\n")
 problem_definition = role_programmer_prompt.replace("{user_prompt}", user_prompt)
 
 # Instantiate the LLM agent using a specified model type
-type_model = 'codellama-13b-instruct' #'deepseek-coder-v2-lite-instruct'
+type_model = 'starcoder2-7b' #'codellama-13b-instruct' #'deepseek-coder-v2-lite-instruct'
 agent = get_clone_agent(type_model)
 
 start = time.time() # calcolare il tempo di esecuzione del task
@@ -247,12 +247,12 @@ else:
         print(f"Final code quality score: {final_score:.2f}")
 
         # If the score is below 85%, instruct the model to refine the code based on feedback
-        if final_score < 85:
+        if final_score < 85 and counts+1 != MAX_EVAL_ROUNDS:
             response = str(
                 self_refinement_unique(user_prompt, evaluation_feedback, ai_response)
             )
             print("Response after evaluation" + "\n\n" + response)
-        else:
+        elif final_score > 85 and counts+1 != MAX_EVAL_ROUNDS:
             # Accept the final response if it meets the quality threshold
             print("=================MODEL RESPONSE=================\n" + ai_response)
             if user_prompt_mode == 1:
@@ -260,9 +260,10 @@ else:
             break
 
 
+
     # If max iterations are reached and score is still below threshold, accept the latest version
     if counts + 1 == MAX_EVAL_ROUNDS:
-        print(f"End debate with a solution with overall score: {final_score}")
+        print(f"End with a solution with overall score: {final_score}")
         print(ai_response)
 
     # === EXECUTION TIME LOGGING ===
@@ -294,16 +295,20 @@ else:
 
     # === STATIC ANALYSIS AND METRICS ===
     cognitive_complexity = get_cognitive_complexity(ai_response)
-    time_complexity = extract_time_complexity(ai_response)
-    docs = extract_documentation(ai_response)
+    time_complexity = extract_time_complexity(response)
+    docs = extract_documentation(response)
+
 
     # Collect SonarQube metrics (e.g., maintainability, security issues, duplication, etc.)
+    metrics_sq_str = ""
+
     project_key, all_metrics = analyze_code_sonarqube(ai_response)
     metrics_sq_str = ""
     print("#==== SonarQube metrics =====")
     for metric, value in all_metrics.items():
         print(f"{metric}: {value}")
         metrics_sq_str += f"{metric} : {value}\n"
+
 
     real_correctness = (100*test_results["tests_passed"]) / test_results["tests_run"]
     print(f"Real correctness: {real_correctness}")
@@ -314,5 +319,5 @@ else:
                               canonical_solution_list[frame_no], ai_response, docs, cognitive_complexity,
                               time_complexity, evaluation, metrics_sq_str, 1,
                               f"programmer = evaluator = : {type_model}", MAX_EVAL_ROUNDS,
-                              elapsed_single, test_results["tests_passed"], test_results["tests_failed"])
+                              elapsed_single, "self-refinement", test_results["tests_passed"], test_results["tests_failed"])
         print("Results saved to single-agent_csv_results.csv")
