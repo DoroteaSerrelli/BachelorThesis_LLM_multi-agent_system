@@ -3,7 +3,15 @@
 """
 
 from metrics import extract_time_complexity
+import pandas as pd
+import py_compile
+import os
 import json
+import uuid
+import csv
+import requests
+import subprocess
+import shutil
 
 
 def extract_documentation(response_json):
@@ -171,6 +179,40 @@ def get_formatted_code_solution(ai_response):
         return None
 
 
+def get_formatted_responses(responses, cognitive_complexity):
+    """
+        Formats and annotates each solution with its cognitive and time complexity,
+        producing a human-readable string block for each candidate.
+
+        Args:
+            responses: Dictionary of code responses (JSON format).
+            cognitive_complexity: Dictionary of cognitive complexity values.
+
+        Returns:
+            Dictionary mapping each solution index to its formatted string.
+        """
+    extracted_formatted_responses = {}
+    extracted_time_complexity = {}
+
+    formatted_responses = {}
+
+    string = "\n------\n"
+
+    keys = responses.keys()
+
+    for i in keys:
+        extracted_formatted_responses[i] = get_formatted_code_solution(responses[i])
+        extracted_time_complexity[i] = extract_time_complexity(responses[i])
+
+    for i in keys:
+        formatted_responses[i] = (string + "SOLUTION: \n" + extracted_formatted_responses[i] +
+                                  "\nUNIQUE NUMBER OF SOLUTION: " + str(i) +
+                                  "\nTIME COMPLEXITY: " + extracted_time_complexity[i] +
+                                  "\nCOGNITIVE COMPLEXITY: " + str(cognitive_complexity[i]))
+
+    return formatted_responses
+
+
 def get_feedback_value(json_data):
     """
         Extracts the 'response' integer value from a JSON input.
@@ -181,6 +223,7 @@ def get_feedback_value(json_data):
         Returns:
         - Integer value from the 'response' key, or None if not valid or missing.
         """
+
     if isinstance(json_data, str):
         try:
             data = json.loads(json_data)
@@ -202,13 +245,6 @@ def get_feedback_value(json_data):
 
 
 # === COMPILE & RUN CODE IN TEMP FILE ===
-
-import tempfile
-import os
-import py_compile
-import subprocess
-import sys
-
 
 def save_and_test_code(full_code_str):
     """
@@ -254,11 +290,9 @@ def save_and_test_code(full_code_str):
     # Delete temporary file
     os.unlink(tmp_filepath)
 
-import os
+
 import tempfile
-import subprocess
 import sys
-import shutil
 import re
 
 # === UNIT TEST EXECUTION & REPORTING ===
@@ -303,7 +337,7 @@ def evaluate_code_with_tests(code: str, test_code: str) -> dict:
             cwd=temp_dir,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            timeout=10
+            timeout=20
         )
 
         output = result.stdout.decode() + result.stderr.decode()
@@ -426,15 +460,7 @@ def save_task_data_to_csv(
 
 # === SONARQUBE INTEGRATION FOR CODE QUALITY ANALYSIS ===
 
-import os
-import json
-import uuid
-import csv
-import requests
-import subprocess
-import shutil
-
-# === CONFIGURAZIONE ===
+# === CONFIGURATION ===
 SONAR_HOST = "http://localhost:9000"
 SONAR_TOKEN = "MY_TOKEN"
 SONAR_SCANNER_CMD = "C:\\sonar-scanner-7.1.0.4889-windows-x64\\bin\\sonar-scanner.bat"
@@ -451,7 +477,7 @@ def analyze_code_sonarqube(code: str) -> tuple[str, dict]:
         Returns:
         - Tuple containing the project key and a dictionary of SonarQube metrics.
         """
-    #project_key = f"multiagent-{uuid.uuid4().hex[:8]}"
+
     tmp_dir = f"./temp_sonar_{uuid.uuid4().hex[:6]}"
     os.makedirs(tmp_dir, exist_ok=True)
 
@@ -546,3 +572,32 @@ def get_all_sonar_metrics(project_key: str) -> dict:
     except Exception as e:
         print(f"[!] SonarQube metrics fetch failed: {e}")
         return {}
+
+
+def update_csv_sonarqube_metrics(csv_path):
+    """
+    Updates the 'metrics_sonarqube' column in a CSV file containing code snippets.
+    Metrics are computed only if the field is null/NaN.
+
+    Args:
+        csv_path (str): Path to the CSV file.
+    """
+    # Load the CSV
+    df = pd.read_csv(csv_path)
+
+    # Check required columns
+    if 'code_multiagent_system' not in df.columns or 'metrics_sonarqube' not in df.columns:
+        raise ValueError("CSV must contain the columns 'code_multiagent_system' and 'metrics_sonarqube'.")
+
+    # Compute metrics only for rows where 'metrics_sonarqube' is null
+    for idx, row in df[df['metrics_sonarqube'].isna()].iterrows():
+        code = row['code_multiagent_system']
+        _, metrics = analyze_code_sonarqube(code)
+        metrics_sq_str = ""
+        for metric, value in metrics.items():
+            print(f"{metric}: {value}")
+            metrics_sq_str += f"{metric}: {value}\n"
+        df.at[idx, 'metrics_sonarqube'] = metrics_sq_str
+
+    # Save the updated CSV
+    df.to_csv(csv_path, index=False)

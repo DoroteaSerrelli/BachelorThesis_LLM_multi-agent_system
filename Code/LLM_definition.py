@@ -7,7 +7,7 @@ import lmstudio as lms
 
 from utility_function import get_set_number_solutions
 from metrics import extract_time_complexity
-from response_JSON_schema import schema_complexity, schema_inputs
+from response_JSON_schema import schema_complexity, schema_inputs, schema_feedback
 
 
 # ======= FUNCTIONS FOR CREATING AND MANAGING AGENTS =======
@@ -246,6 +246,71 @@ def get_self_refinement_prompt(pers_response, user_prompt, other_answers):
     return deb_prompt
 
 
+def get_refined_debate_prompt(AGENTS_NO, user_prompt, formatted_responses):
+    """
+        Builds a comprehensive debate prompt tailored for a source code evaluator agent.
+
+        It combines the user task with all AI-generated responses and their metrics
+        (cognitive and time complexity) to enable comparative evaluation.
+
+        Args:
+            AGENTS_NO: Number of participating agents.
+            user_prompt: Original code generation prompt.
+            formatted_responses: Formatted string versions of each response.
+
+        Returns:
+            A fully constructed debate prompt string for evaluation.
+        """
+
+    refine_debate = """
+    You are an expert source code evaluator. 
+
+    We will provide you with the user input (the original coding prompt) and a list of {AGENTS_NO} AI-generated code responses 
+    to the user input.
+    Each code response has following attributes:
+        - an unique number between 0 and {_AGENTS_NO-1}.
+        - a time complexity expressed in Big-O notation: it measures how the execution time of the algorithm grows 
+            as the input size increases. More lower it is (e.g., O(N) is better than O(N^2)), better the code solution is.
+        - a cognitive complexity: it quantifies the difficulty for a human to understand a piece of code or a function.
+            More lower it is (e.g., a flat structure is better than deeply nested loops), better the code solution is. 
+
+    Your task is to analyze the list of the code solutions and select the best one following these steps:
+
+    STEP 1: Read the user input carefully to understand the coding task.
+    STEP 2: Analyze each code response in terms of time complexity and cognitive complexity.
+    STEP 3: Select the best code solution in this way: 
+            - prioritize solutions with lower time complexity first. 
+            - if time complexities are equal, then prioritize lower cognitive complexity.
+    STEP 4: Answer with only a single integer which corresponds to the unique number of the best code solution choosen.
+            Your response must be a single integer with **no explanation**, **no text**, and **no punctuation**.
+            Responding with anything other than a number will be considered an error.
+
+     The instruction for the coding task is provided in the **User Input** section, while the list of code solutions 
+    is provided in the **AI-generated Responses** section.
+
+
+    # User Input
+    {user_prompt}
+
+    ## AI-generated Responses
+    {ai_responses}
+    """
+
+    prompt = refine_debate
+    prompt = prompt.replace("{AGENTS_NO}", str(AGENTS_NO))
+    prompt = prompt.replace("{_AGENTS_NO-1}", str(AGENTS_NO-1))
+    prompt = prompt.replace("{user_prompt}", user_prompt)
+    ai_responses = ""
+
+    keys = formatted_responses.keys()
+    for var in keys:
+        ai_responses += formatted_responses[var]
+
+    prompt = prompt.replace("{ai_responses}", ai_responses)
+
+    return prompt
+
+
 def get_agreement(model, user_prompt, deb_prompt):
     """
     Ask the model to choose the best solution among the given ones or validate its own.
@@ -260,4 +325,22 @@ def get_agreement(model, user_prompt, deb_prompt):
     """
     messages = [{"role": "user", "content": "User has asked: " + user_prompt + "\n" + deb_prompt}]
     response = model.respond({"messages": messages})  # Optional: define a JSON schema for validation
+    return response.content
+
+
+def get_refined_agreement(model, deb_prompt):
+    """
+        Sends a debate prompt to an agent and retrieves its agreement (selected best solution).
+
+        The response is expected in a specific schema format to extract structured feedback.
+
+        Args:
+            model: The LLM agent to query.
+            deb_prompt: The constructed debate prompt with all necessary info.
+
+        Returns:
+            The agent’s structured feedback (selected solution index).
+        """
+    messages = [{"role": "user", "content": deb_prompt}]
+    response = model.respond({"messages": messages}, response_format=schema_feedback)
     return response.content

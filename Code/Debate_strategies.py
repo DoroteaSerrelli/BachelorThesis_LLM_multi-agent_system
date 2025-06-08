@@ -7,18 +7,15 @@
 import json
 
 from tabulate import tabulate
-
-from response_JSON_schema import schema_feedback
-# Imports
 from LLM_definition import (
     get_programmer_first_response,
     get_response,
-    get_self_refinement_prompt
+    get_self_refinement_prompt, get_refined_agreement, get_refined_debate_prompt
 )
 
-from metrics import get_cognitive_complexity, extract_time_complexity
+from metrics import get_cognitive_complexity
 from utility_function import equals_cognitive_complexity, equals_time_complexity, \
-    get_random_element, get_k_responses, get_feedback_value, get_formatted_code_solution
+    get_random_element, get_k_responses, get_feedback_value, get_formatted_responses
 
 # Number of LLM agents participating in the debate
 AGENTS_NO = 2
@@ -27,9 +24,24 @@ AGENTS_NO = 2
 MAXROUNDS_NO = 4
 
 
-def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choosen, max_rounds=MAXROUNDS_NO):
-    # programmers = lista di agenti programmatori, programmer_prompt = il prompt del programmatore
-    # max_rounds = massimo numero di round di dibattito
+def developers_debate(programmers, user_prompt, programmer_prompt, strategy_chosen, max_rounds=MAXROUNDS_NO):
+    """
+    Coordinates a structured debate among multiple AI agents (programmers) to collaboratively generate and refine
+    source code in response to a user prompt.
+
+    The function supports multiple rounds of discussion and two strategies (self-refinement or instant runoff voting)
+    for resolving disagreements until convergence or max rounds are reached.
+
+    Args:
+        programmers: List of LLM agents acting as programmers.
+        user_prompt: Original coding task prompt provided by the user.
+        programmer_prompt: Template for initial model prompt with placeholder for user input.
+        strategy_chosen: Debate strategy ('0' for self-refinement, '1' for instant runoff voting).
+        max_rounds: Maximum number of debate rounds allowed.
+
+    Returns:
+        The final code solution as a string, or "-1" if no valid solution was reached.
+    """
 
     problem_definition = programmer_prompt.replace("{user_prompt}", user_prompt)
     responses = []
@@ -43,7 +55,7 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
         print(f"Response developer {i}: {response}")
         i += 1
 
-    responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
+    responses_allowed = {}  # contains responses with cognitive_complexity != -1
     current_round = 0
     while current_round <= max_rounds:
         # === Measure readability (cognitive complexity) of each response ===
@@ -57,12 +69,10 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
             readability_complexity.append(total)
             details_readability_complexity.append(details)
 
-        # I programmatori non possono ignorare la sintassi. Rimuovere le risposte con cognitive complexity pari a -1: errori sintattici
-
         counter = 0
 
         responses_allowed.clear()
-        readability_complexity_allowed = {}  # i valori di cognitive complexity delle risposte che hanno cognitive complexity != -1
+        readability_complexity_allowed = {}  # contains cognitive_complexity != -1 related to the responses
 
         for i in range(0, AGENTS_NO):
             if readability_complexity[i] != -1:
@@ -70,30 +80,28 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
                 responses_allowed[i] = responses[i]
                 readability_complexity_allowed[i] = readability_complexity[i]
 
-        # ====== Costruzione prompt dibattito ========
+        # ====== Construct debate prompt ========
 
-        # Formattazione per prompt di dibattito
         formatted_responses = get_formatted_responses(responses_allowed, readability_complexity_allowed)
         debate_prompt = get_refined_debate_prompt(counter, user_prompt, formatted_responses)
 
-        print("DEBATE_PROMPT OTTENUTO: " + debate_prompt)
+        print("DEBATE_PROMPT OBTAINED: " + debate_prompt)
 
-        # Ottengo le soluzioni votate
         # === Collect feedback from each agent (which solution they prefer) ===
         debate_response = []
         for i in range(AGENTS_NO):
             debate_response.append(get_feedback_value(get_refined_agreement(programmers[i], debate_prompt)))
 
-        # Stampa risposte
+        # Print responses
         print(f"\nRound {current_round} - Voting")
         for i in range(0, AGENTS_NO):
             print(f"Feedback model {i}: {debate_response[i]}\n")
 
-        # Si verifica se c'è convergenza
+        # All agents have chosen the same solution
         possible_solutions = set(debate_response)  # Unique solutions selected by the agents
 
-        if len(possible_solutions) == 0:  # Tutte le risposte generate dai modelli sono sintatticamente errate
-            return "-1"  # Dibattito fallito
+        if len(possible_solutions) == 0:  # All responses have syntax errors
+            return "-1"  # End debate with failure
 
         if len(possible_solutions) == 1:
             for var in possible_solutions:
@@ -106,8 +114,8 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
                     return solution  # Return the agreed-upon solution
                 print("VOTING ERROR FOR SOLUTION NUMBER " + str(var))
 
-        if strategy_choosen == "0":
-            # SI PASSA AL SELF-REFINEMENT
+        if strategy_chosen == "0":
+            # SELF-REFINEMENT
             responses = do_self_refinement(programmers, responses, readability_complexity, user_prompt)
             debate_response.clear()
             readability_complexity.clear()
@@ -118,8 +126,8 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
                 print(f"Response self-refined developer {i}: {response}")
                 i += 1
 
-        if strategy_choosen == "1":
-            # SI PASSA ALL'INSTANT RUNOFF VOTING
+        if strategy_chosen == "1":
+            # INSTANT RUNOFF VOTING
             response = do_instant_runoff_voting(debate_response, responses_allowed)
             print(f"Response instant_runoff_voting : {response}")
             return response
@@ -132,8 +140,22 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_choo
 
 
 def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt, max_rounds=MAXROUNDS_NO):
-    # programmers = lista di agenti programmatori, programmer_prompt = il prompt del programmatore
-    # max_rounds = massimo numero di round di dibattito
+    """
+    Executes a multi-agent debate process with a mixed strategy that dynamically switches
+    between self-refinement and instant runoff voting based on agreement and complexity metrics.
+
+    If disagreement persists after a few rounds, the function checks for equivalence in solutions
+    using both time and cognitive complexity before resolving via voting.
+
+    Args:
+        programmers: List of LLM agents acting as programmers.
+        user_prompt: The user-defined coding prompt.
+        programmer_prompt: Prompt template used to initialize agents.
+        max_rounds: Max number of debate iterations allowed.
+
+    Returns:
+        The final agreed-upon or selected code solution.
+    """
 
     problem_definition = programmer_prompt.replace("{user_prompt}", user_prompt)
     responses = []
@@ -149,7 +171,7 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
 
     current_round = 0
     divergence_round = 0
-    responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
+    responses_allowed = {}  # contains responses with cognitive_complexity != -1
     while current_round <= max_rounds:
         # === Measure readability (cognitive complexity) of each response ===
         readability_complexity = []  # Stores total cognitive complexity for each response
@@ -162,12 +184,10 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
             readability_complexity.append(total)
             details_readability_complexity.append(details)
 
-        # I programmatori non possono ignorare la sintassi. Rimuovere le risposte con cognitive complexity pari a -1: errori sintattici
-
         counter = 0
 
         responses_allowed.clear()
-        readability_complexity_allowed = {}  # i valori di cognitive complexity delle risposte che hanno cognitive complexity != -1
+        readability_complexity_allowed = {}  # contains cognitive_complexity != -1 related to the allowed solution
 
         for i in range(0, AGENTS_NO):
             if readability_complexity[i] != -1:
@@ -175,30 +195,28 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
                 responses_allowed[i] = responses[i]
                 readability_complexity_allowed[i] = readability_complexity[i]
 
-        # ====== Costruzione prompt dibattito ========
+        # ====== Construct debate prompt ========
 
-        # Formattazione per prompt di dibattito
         formatted_responses = get_formatted_responses(responses_allowed, readability_complexity_allowed)
         debate_prompt = get_refined_debate_prompt(counter, user_prompt, formatted_responses)
 
-        print("DEBATE_PROMPT OTTENUTO: " + debate_prompt)
+        print("# ============= DEBATE_PROMPT OBTAINED =================\n" + debate_prompt)
 
-        # Ottengo le soluzioni votate
         # === Collect feedback from each agent (which solution they prefer) ===
         debate_response = []
         for i in range(AGENTS_NO):
             debate_response.append(get_feedback_value(get_refined_agreement(programmers[i], debate_prompt)))
 
-        # Stampa risposte
+        # Print responses
         print(f"\nRound {current_round} - Voting")
         for i in range(0, AGENTS_NO):
             print(f"Feedback model {i}: {debate_response[i]}\n")
 
-        # Si verifica se c'è convergenza
+        # All agents have chosen the same solution
         possible_solutions = set(debate_response)  # Unique solutions selected by the agents
 
-        if len(possible_solutions) == 0:  # Tutte le risposte generate dai modelli sono sintatticamente errate
-            return "-1"  # Dibattito fallito
+        if len(possible_solutions) == 0:  # All responses have syntax errors
+            return "-1"  # End debate with failure
 
         if len(possible_solutions) == 1:
             for var in possible_solutions:
@@ -214,15 +232,15 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
         divergence_round += 1
 
         if divergence_round >= 2:
-            # Verifico se tutte le soluzioni hanno uguale complessità di tempo e uguale complessità di leggibilità
+            # All solutions have same time complexity and cognitive complexity
             k_responses = get_k_responses(responses, debate_response)
             k_readability_complexity = {}
 
-            #Inserisco le chiavi
+            # Insert keys
 
-            for var in k_responses:
-                if var not in k_readability_complexity:
-                    k_readability_complexity[int(var)] = 0
+            for index in k_responses:
+                if index not in k_readability_complexity:
+                    k_readability_complexity[int(index)] = 0
 
             # Inserisco i valori di cognitive complexity
 
@@ -238,12 +256,12 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
                 print(solution)
                 return solution  # Return the agreed-upon solution
             else:
-                # SI PASSA ALL'INSTANT RUNOFF VOTING
+                # INSTANT RUNOFF VOTING
                 response = do_instant_runoff_voting(debate_response, responses_allowed)
                 return response
 
         else:
-            # SI PASSA AL SELF-REFINEMENT
+            # SELF-REFINEMENT
             responses = do_self_refinement(programmers, responses, readability_complexity, user_prompt)
             debate_response.clear()
             readability_complexity.clear()
@@ -261,14 +279,23 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
     return responses[int(vote_index)]
 
 
-
 # === Self-refinement ===
 
 def do_self_refinement(agents, responses, readability_complexity, user_prompt):
     """
-        Allows each agent to refine its own response based on the others' answers.
+    Allows each agent to refine its own initial solution based on the responses of other agents,
+    facilitating convergence through improvement.
 
-        This is used when agents disagree, encouraging evolution of solutions toward consensus.
+    Agents receive others' valid solutions and attempt to generate a new, improved response.
+
+    Args:
+        agents: List of LLM agent instances.
+        responses: Current code responses from each agent.
+        readability_complexity: Cognitive complexity values of current responses.
+        user_prompt: Original coding prompt provided by the user.
+
+    Returns:
+        A list of refined code responses.
     """
 
     debate_prompts = [None] * AGENTS_NO
@@ -277,14 +304,13 @@ def do_self_refinement(agents, responses, readability_complexity, user_prompt):
         # Provide each agent with all other responses except its own
         other_responses = [r for j, r in enumerate(responses) if j != i]
 
-        # Rimuovere le risposte con cognitive complexity pari a -1: errori sintattici
+        # Remove responses with cognitive_complexity= -1 because they contain syntax errore
 
-        other_responses_allowed = {}  # le risposte che hanno cognitive complexity != -1
+        other_responses_allowed = {}  # contains answers with cognitive_complexity != -1
 
         for i in range(0, AGENTS_NO-1):
-            if readability_complexity[i] != -1 :
+            if readability_complexity[i] != -1:
                 other_responses_allowed[i] = other_responses[i]
-
 
         # Construct the prompt to trigger self-refinement
 
@@ -292,7 +318,7 @@ def do_self_refinement(agents, responses, readability_complexity, user_prompt):
             debate_prompts[i] = get_self_refinement_prompt(responses[i], user_prompt, other_responses_allowed)
             print(f"SELF_REFINEMENT DEBATE PER AGENTE {i}: {debate_prompts[i]}")
             responses[i] = get_response(agents[i], debate_prompts[i])
-        else:# se ha dato nessuna risposta
+        else:  # no answer given
             debate_prompts[i] = get_self_refinement_prompt("", user_prompt, other_responses_allowed)
             print(f"SELF_REFINEMENT DEBATE PER AGENTE {i}: {debate_prompts[i]}")
             responses[i] = get_response(agents[i], debate_prompts[i])
@@ -303,16 +329,20 @@ def do_self_refinement(agents, responses, readability_complexity, user_prompt):
     return responses
 
 
-
-
-
 # === Fallback: Majority Voting ===
+
 def majority_voting(feedback):
     """
-        Fallback strategy that selects the most popular response when no agreement is reached.
+    Performs a fallback resolution strategy based on majority voting.
 
-        - Tallies votes for each solution.
-        - In case of a tie or invalid votes, returns failure indicator (-1).
+    If no convergence is reached during the debate, this function selects the solution
+    with the most votes. Returns -1 in case of tie or invalid inputs.
+
+    Args:
+        feedback: Dictionary of agent vote responses.
+
+    Returns:
+        Index of the most voted solution or "-1" if a tie or invalid input occurs.
     """
 
     votes = {}
@@ -345,8 +375,6 @@ def majority_voting(feedback):
         return str(-1)  # Tie
 
 
-
-
 '''
     Initiates a post-evaluation debate phase based on prior feedback.
     
@@ -359,7 +387,25 @@ def majority_voting(feedback):
     identify problems to fix collaboratively.
 '''
 
+
 def after_evaluation_debate(user_prompt, feedback_evaluator, previous_code, programmers, strategy_debate):
+    """
+        Starts a post-evaluation debate process among agents to improve a previously generated solution.
+
+        Combines the original prompt, the evaluator's feedback, and the prior code to prompt agents
+        to refine the solution according to correctness, time, and cognitive complexity.
+
+        Args:
+            user_prompt: The original code generation task.
+            feedback_evaluator: Feedback text from an external evaluator.
+            previous_code: The code previously generated that needs refinement.
+            programmers: List of LLM agents for refinement debate.
+            strategy_debate: Strategy to apply (standard, mixed, or specific voting mechanism).
+
+        Returns:
+            The final refined solution after the debate process.
+        """
+
     refinement_instruction_prompt = \
         '''# Instruction
             Your task is to refine the previous solution to the code generation task based on the feedback provided by the evaluator.
@@ -445,10 +491,22 @@ def after_evaluation_debate(user_prompt, feedback_evaluator, previous_code, prog
     return debate_response
 
 
-import random
-
+# === INSTANT RUNOFF VOTING ===
 def do_instant_runoff_voting(debate_response, responses_allowed):
-    # Apply instant runoff voting to break disagreement
+    """
+        Resolves disagreement among agents using instant runoff voting (IRV).
+
+        If no consensus is reached during debates, IRV ranks and eliminates the least preferred
+        solutions in rounds until a winner emerges or a tie is declared.
+
+        Args:
+            debate_response: List of votes from agents for preferred solutions.
+            responses_allowed: Dictionary of syntactically valid solutions.
+
+        Returns:
+            The winning solution string, or one randomly selected in case of a tie.
+        """
+    import random
     winner = instant_runoff_voting(debate_response, responses_allowed.keys())
 
     if isinstance(winner, int):
@@ -458,7 +516,7 @@ def do_instant_runoff_voting(debate_response, responses_allowed):
             print(solution)
             return solution
 
-    elif isinstance(winner, list): #tie
+    elif isinstance(winner, list):  # Tie
         print("Tie between the following candidates (Instant Runoff Voting):")
         for w in winner:
             print(f"Candidate {w}: {responses_allowed[w]}")
@@ -471,15 +529,19 @@ def do_instant_runoff_voting(debate_response, responses_allowed):
     return None
 
 
-
 def instant_runoff_voting(votes, valid_candidates):
     """
-    votes: list of primary preferences (e.g., [1, 0, 2, 1]) from the agents.
-    valid_candidates: set or list of valid candidate indices (with syntactically correct code).
+    Executes the instant runoff voting algorithm to select a winner among candidates.
+
+    Candidates are progressively eliminated based on least votes until one with
+    majority is found or a tie remains.
+
+    Args:
+        votes: List of agents’ primary vote indices.
+        valid_candidates: List or set of indices corresponding to valid solutions.
 
     Returns:
-        - a single winning candidate index (int), or
-        - a list of tied candidates (list of int) if no clear winner.
+        The winning candidate index, or list of tied candidates if no majority is found.
     """
     from collections import Counter
 
@@ -514,132 +576,3 @@ def instant_runoff_voting(votes, valid_candidates):
             active_candidates.remove(cand)
 
     return list(active_candidates) if len(active_candidates) > 1 else next(iter(active_candidates))
-
-
-
-refine_debate_attempt = """
-You are an expert source code evaluator. 
-
-We will provide you with the user input (the original coding prompt) and a list of {AGENTS_NO} AI-generated code responses 
-to the user input.
-Each code response has following attributes:
-    - an unique number between 0 and {_AGENTS_NO-1}.
-    - a time complexity expressed in Big-O notation: it measures how the execution time of the algorithm grows 
-        as the input size increases. More lower it is (e.g., O(N) is better than O(N^2)), better the code solution is.
-    - a cognitive complexity: it quantifies the difficulty for a human to understand a piece of code or a function.
-        More lower it is (e.g., a flat structure is better than deeply nested loops), better the code solution is. 
-
-Your task is to analyze the list of the code solutions and select the best one following these steps:
-
-STEP 1: Read the user input carefully to understand the coding task.
-STEP 2: Analyze each code response in terms of time complexity and cognitive complexity.
-STEP 3: Select the best code solution in this way: 
-        - prioritize solutions with lower time complexity first. 
-        - if time complexities are equal, then prioritize lower cognitive complexity.
-STEP 4: Answer with only a single integer which corresponds to the unique number of the best code solution choosen.
-        Your response must be a single integer with **no explanation**, **no text**, and **no punctuation**.
-        Responding with anything other than a number will be considered an error.
-
- The instruction for the coding task is provided in the **User Input** section, while the list of code solutions 
-is provided in the **AI-generated Responses** section.
-
-
-# User Input
-{user_prompt}
-
-## AI-generated Responses
-{ai_responses}
-"""
-
-
-
-example_refined_debate_prompt = """
-# Instruction
-You are an expert source code evaluator. Your task is to analyze a list of the source code generated by AI models
-and select the best one.
-We will provide you with the user input (the original coding prompt) and a list of {AGENTS_NO} AI-generated code response.
-You should first read the user input carefully to understand the coding task, and then select the best code 
-response based on the **Evaluation** section below.
-
-# Evaluation
-## Metric Definition
-Each code solution has:
-    - an unique number between 0 and {_AGENTS_NO-1};
-    - a time complexity expressed in Big-O notation;
-    - a cognitive complexity. 
-
-You will be assessing each code solution according the following aspects: time complexity and cognitive complexity.
-The definition of each criteria is described in Criteria section.
-According these criteria, you will generate an integer which is the unique number related to the best code solution. 
-Prioritize solutions with lower time complexity first. If time complexities are equal, then prioritize lower cognitive complexity.
-The instruction for the coding task is provided in the **User Input** section, while the list of code solutions 
-is provided in the **AI-generated Responses** section.
-
-
-## Criteria
-- Time complexity: it measures how the execution time of the algorithm grows as the input size increases. 
-Big-O notation is the standard for expressing time complexity. More lower it is (e.g., O(N) is better than O(N^2)), better the code solution is.
-- Cognitive complexity: it quantifies the difficulty for a human to understand a piece of code or a function.
-More lower it is (e.g., a flat structure is better than deeply nested loops), better the code solution is.
-
-# Output Format
-Return only a single integer which corresponds to the unique number of the best code solution choosen.
-Your response must be a single integer with **no explanation**, **no text**, and **no punctuation**.
-Responding with anything other than a number will be considered an error.
-
-
-## Evaluation Steps
-STEP 1: Analyze each code response in terms of time complexity and cognitive complexity.
-STEP 2: Based on the defined criteria and prioritization in **Metric Definition** section, select the best code solution.
-STEP 3: Provide your answer as described in **Output Format** section.
-
-
-# User Input
-{user_prompt}
-
-## AI-generated Responses
-{ai_responses}
-"""
-
-def get_formatted_responses(responses, cognitive_complexity): #responses = JSON responses
-    extracted_formatted_responses = {}
-    extracted_time_complexity = {}
-
-    formatted_responses = {}
-
-    string = "\n------\n"
-
-    keys = responses.keys()
-
-    for i in keys:
-        extracted_formatted_responses[i] = get_formatted_code_solution(responses[i])
-        extracted_time_complexity[i] = extract_time_complexity(responses[i])
-
-    for i in keys:
-        formatted_responses[i] = (string + "SOLUTION: \n" + extracted_formatted_responses[i] +
-                                  "\nUNIQUE NUMBER OF SOLUTION: " + str(i) +
-                                  "\nTIME COMPLEXITY: " + extracted_time_complexity[i] +
-                                  "\nCOGNITIVE COMPLEXITY: " + str(cognitive_complexity[i]))
-
-    return formatted_responses
-
-def get_refined_debate_prompt(AGENTS_NO, user_prompt, formatted_responses):
-
-    prompt = refine_debate_attempt
-    prompt = prompt.replace("{AGENTS_NO}", str(AGENTS_NO))
-    prompt = prompt.replace("{_AGENTS_NO-1}", str(AGENTS_NO-1))
-    prompt = prompt.replace("{user_prompt}", user_prompt)
-    ai_responses = ""
-
-    keys = formatted_responses.keys()
-    for var in keys:
-        ai_responses += formatted_responses[var]
-
-    prompt = prompt.replace("{ai_responses}", ai_responses)
-
-    return prompt
-
-def get_refined_agreement(model, deb_prompt):
-    messages = [{"role": "user", "content": deb_prompt}]
-    response = model.respond({"messages": messages}, response_format=schema_feedback)
-    return response.content
