@@ -5851,3 +5851,1465 @@ ncloc: 16
 vulnerabilities: 1
 sqale_rating: 1.0
 ",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,409.51478147506714,0,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter
+import random
+
+from collections import Counter
+import random
+
+def task_func(T1, RANGE=100):
+    # Convert elements in 'T1' to integers if they are strings
+    T1 = [int(item) for item in T1]
+
+    # Calculate the sum of integers in 'T1'
+    total_sum = sum(T1)
+
+    # Generate a list of random integers, each between 0 and RANGE
+    random_integers = [random.randint(0, RANGE) for _ in range(total_sum)]
+
+    # Count occurrences of each number in the generated list using a Counter
+    counter = Counter(random_integers)
+
+    return counter","The task function converts elements in `T1` to integers if they are strings, calculates their sum, and generates a list of random integers with the same length. It counts the occurrences of each number in the generated list using the `Counter` class.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+  ,""Security"": 60
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,238.9575071334839,0,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter
+import itertools
+from random import randint
+
+from collections import Counter
+import itertools
+from random import randint
+
+def task_func(T1, RANGE=100):
+    # Convert elements in 'T1' to integers
+    T1_ints = [int(x) for x in T1]
+
+    # Calculate the sum of the integers in T1
+    total_sum = sum(T1_ints)
+
+    # Check if total_sum exceeds RANGE, and truncate if necessary
+    total_sum = min(total_sum, RANGE)
+
+    # Generate a list of random integers with length equal to total_sum, each between 0 and RANGE
+    random_integers = [randint(0, RANGE) for _ in range(total_sum)]
+
+    # Count occurrences of each number in the generated list
+    counts = Counter(random_integers)
+
+    return counts","The function `task_func` takes a list of strings `T1`, converts them to integers, calculates their sum, and generates a list of random integers up to a specified range. It then uses a counter from the collections module to count the occurrences of each integer in the generated list.","(-1, [[-1, 'No function definition found']])",o(n + m) where n is the length of `t1` and m is the number of integers generated.,"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 95
+   , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,449.49415707588196,0,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+    # Convert elements in T1 to integers if possible
+    try:
+        T1 = [int(x) for x in T1]
+    except ValueError:
+        raise ValueError('All elements in T1 must be convertible to integers.')
+
+    # Calculate the total number of integers in the list of generated random integers
+    num_integers = sum(T1)
+
+    # Generate a list of random integers between 0 and RANGE (default is 100)
+    random_integers = [randint(0, RANGE) for _ in range(num_integers)]
+
+    # Count the occurrences of each number in the generated list
+    counter = Counter(random_integers)
+
+    return counter","The function `task_func` converts elements in `T1` to integers (if possible). It calculates the total number of integers by summing the elements in `T1`. Using this count, it generates a list of random integers between 0 and `RANGE` (default is 100) with the same total number of integers. Finally, it uses `Counter` from the `collections` module to count the occurrences of each number in the generated list and returns the result as a Counter object.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 96,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+  , ""Security"": 90
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 3
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,104.543621301651,0,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","
+from collections import Counter
+import itertools
+import random
+
+from collections import Counter
+import itertools
+from random import randint
+
+def task_func(T1, RANGE=100):
+    # Convert elements in 'T1' to integers if they are not already
+    T1 = list(map(int, T1))
+
+    # Calculate the sum of the integers in 'T1'
+    total_sum = sum(T1)
+
+    # Generate a list of random integers between 0 and RANGE with length equal to the total sum
+    random_integers = [randint(0, RANGE) for _ in range(total_sum)]
+
+    # Count the occurrences of each number in the generated list using Counter
+    counter = Counter(random_integers)
+
+    return counter","The function `task_func` converts elements in `T1` to integers and generates a list of random integers where the length of the list is determined by the sum of the integers in `T1`. The random integers are generated between 0 and `RANGE`, which defaults to 100. The function then counts the occurrences of each number in this list using Python's `Counter` class and returns a `Counter` object.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 100
+  , ""Security"": 85
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,210.840674161911,0,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter
+import itertools
+import random
+
+from collections import Counter
+import itertools
+import random
+
+def task_func(T1, RANGE=100):
+    # Convert elements in 'T1' to integers
+    T1 = [int(i) for i in T1]
+
+    # Calculate the sum of the integers in 'T1'
+    total_sum = sum(T1)
+
+    # Generate a list of random integers with length 'total_sum'
+    random_integers = [random.randint(0, RANGE) for _ in range(total_sum)]
+
+    # Count occurrences of each number in the generated list using a Counter
+    result = Counter(random_integers)
+
+    return result","The function `task_func` takes a list `T1`, converts its elements to integers, calculates the sum of these integers, and generates a list of random integers with that sum. Each random integer is generated between 0 and the specified `RANGE` (default is 100). The function then counts the occurrences of each number in this generated list using the `Counter` class from the `collections` module and returns the result.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 90
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,100.38775181770325,1,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter
+import itertools
+import random
+
+from collections import Counter
+import itertools
+import random
+def task_func(T1, RANGE=100):
+    # Convert elements in T1 to integers
+    T1 = [int(x) for x in T1 if isinstance(x, int)]
+    
+    # Calculate the number of random integers needed
+    total_random_numbers = sum(T1)
+    
+    # Generate a list of random integers between 0 and RANGE
+    random_integers = [randint(0, RANGE) for _ in range(total_random_numbers)]
+    
+    # Count the occurrences of each number using Counter
+    result = Counter(random_integers)
+    return result","The function `task_func` takes a list `T1` of elements (which can be integers or non-integer values) and generates a list of random integers between 0 and a specified range (`RANGE`, default is 100). The number of random integers generated is determined by the sum of all integer values in `T1`. After generating the list, it counts the occurrences of each number using the `Counter` class from the `collections` module. Finally, it returns the `Counter` object representing the count of each number.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 100
+    , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,93.64124727249146,1,2,5
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+    # Convert elements in 'T1' to integers
+    T1 = list(map(int, T1))
+
+    # Calculate the sum of integers in 'T1'
+    total_sum = sum(T1)
+
+    # Generate a list of random integers based on the sum and RANGE
+    random_integers = [randint(0, RANGE) for _ in range(total_sum)]
+
+    # Count occurrences of each number using Counter
+    count_of_numbers = Counter(random_integers)
+
+    return count_of_numbers","The function 'task_func' takes a list `T1` and an optional integer `RANGE`. It converts the elements of `T1` to integers, calculates the sum of these integers, generates a list of random integers where the length is equal to this sum (and each integer is between 0 and `RANGE`), and then counts the occurrences of each number in the generated list. The function returns a Counter object representing the count of each number.","(-1, [[-1, 'No function definition found']])","o(n + m) - n for converting elements to integers, m for generating random integers","{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 100
+  , ""Security"": 100
+}",2,"bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+security_rating: 5.0
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,101.985032081604,1,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter
+import itertools
+from random import randint
+
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+    # Convert elements in 'T1' to integers if necessary
+    T1 = [int(x) for x in T1]
+    
+    # Calculate the sum of elements in 'T1'
+    total_sum = sum(T1)
+    
+    # Generate a list of random integers with length equal to the total sum of 'T1'
+    random_integers = [randint(0, RANGE) for _ in range(total_sum)]
+    
+    # Count occurrences of each number in the generated list
+    counter = Counter(random_integers)
+    
+    return counter","The function 'task_func' takes a list 'T1', converts its elements to integers if necessary, and generates a list of random integers. The length of this new list is equal to the sum of the integers in 'T1'. Random integers are generated between 0 and `RANGE` (default is 100). The function then counts the occurrences of each number in the generated list using the Counter class from the collections module and returns this count.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 100,
+    ""Reliability"": 100
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,100.01277041435242,1,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter
+import random
+
+from collections import Counter
+import random
+
+def task_func(T1, RANGE=100):
+    if not T1:
+        # Handle the case where T1 is empty
+        return Counter()  # or you could return a default message or count
+
+    # Convert elements in T1 to integers, ensuring all are valid
+    try:
+        T1_int = [int(item) for item in T1]
+    except ValueError as e:
+        raise ValueError(f""Error: All elements in T1 must be integers. {e}"")
+
+    # Calculate the sum of integers in T1
+    total_sum = sum(T1_int)
+
+    # Generate a list of unique random numbers within the range 0 to RANGE
+    random_numbers = random.sample(range(RANGE + 1), total_sum)
+
+    # Count the occurrences of each number in the generated list
+    count = Counter(random_numbers)
+
+    return count",This function converts elements in `T1` to integers and generates a list of random integers where the number of integers is determined by the sum of the integers in `T1`. The random integers are generated between 0 and `RANGE` (default is 100). It then counts the occurrences of each number in the generated list using a `Counter` object.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 75,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 80
+  , ""Security"": 85
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,601.7767233848572,1,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter, defaultdict
+import itertools
+from random import randint
+
+from collections import Counter, defaultdict
+import itertools
+from random import randint
+
+def task_func(T1, RANGE=100):
+    # Convert elements in T1 to integers and calculate the sum of these integers
+    int_sum = sum(map(int, T1))
+
+    # Generate a list of random integers where the number of integers is int_sum
+    random_integers = [randint(0, RANGE) for _ in range(int_sum)]
+
+    # Count the occurrences of each number using Counter
+    count_of_numbers = Counter(random_integers)
+
+    return count_of_numbers",This function takes a list T1 containing elements that can be converted to integers and generates a random list of integers where the number of integers is equal to the sum of the integers in T1. It then counts the occurrences of each number in the generated list using the Counter class.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+  ,""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 3
+duplicated_lines_density: 0.0
+cognitive_complexity: 2
+security_rating: 5.0
+ncloc: 15
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,359.8350658416748,2,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","import collections
+import itertools
+from random import randint
+
+from collections import Counter
+import itertools
+from random import randint
+
+def task_func(T1, RANGE=100):
+    # Convert elements in 'T1' to integers
+    T1 = [int(x) for x in T1]
+
+    # Calculate the sum of integers in 'T1'
+    sum_of_T1 = sum(T1)
+
+    # Generate a list of random integers between 0 and RANGE (default is 100)
+    random_integers = [randint(0, RANGE) for _ in range(sum_of_T1)]
+
+    # Count the occurrences of each number in the generated list
+    counter = Counter(random_integers)
+
+    return counter","The function 'task_func' converts elements in the input list `T1` to integers. It then calculates the sum of these integers and generates a list of random integers between 0 and `RANGE` (default is 100). The generated list is used to create a Counter object that counts the occurrences of each number appearing in the list. Finally, the function returns this Counter.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 75,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 100
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,100.52270460128784,2,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","
+from collections import Counter
+import itertools
+from random import randint
+
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+    # Convert elements in T1 to integers
+    T1 = list(map(int, T1))
+
+    # Calculate the number of random integers based on the sum of T1
+    total_count = sum(T1)
+
+    # Generate a list of random integers between 0 and RANGE
+    random_integers = [randint(0, RANGE) for _ in range(total_count)]
+
+    # Count occurrences of each number using Counter
+    result_counter = Counter(random_integers)
+
+    return result_counter","The function `task_func` takes a list of elements (T1), converts them to integers, calculates the total number of random integers needed based on the sum of T1, generates a list of random integers between 0 and the specified range (default is 100), and then counts the occurrences of each number in the generated list using `Counter`. The function returns the resulting `Counter` object.","(-1, [[-1, 'No function definition found']])",o(n + m) - where n is the length of t1 and m is the total count of random integers generated,"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 98
+    ,
+    ""Security"": 95
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 3
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,108.37281250953674,2,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+    # Convert elements in T1 to integers
+    T1_int = [int(item) for item in T1]
+
+    # Calculate the sum of integers in T1
+    total_sum = sum(T1_int)
+
+    # Generate a list of random integers with length equal to the total sum
+    random_numbers = [randint(0, RANGE) for _ in range(total_sum)]
+
+    # Count occurrences of each number using Counter
+    result_counter = Counter(random_numbers)
+
+    return result_counter","The function 'task_func' takes a list `T1` and an optional parameter `RANGE` (defaulting to 100). It first converts all elements in `T1` to integers. The sum of these integers is calculated. Then, it generates a list of random integers with a length equal to this sum. These random integers are generated between 0 and the specified `RANGE`. Finally, it uses `Counter` from the collections module to count how many times each number appears in the generated list of random numbers and returns this count.","(-1, [[-1, 'No function definition found']])",o(n),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 100,
+  ""Execution Errors"": 0,
+  ""Explanation"": """",
+  ""Maintainability"": 90,
+  ""Reliability"": 95
+  ,""Security"": 85
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,101.13254165649414,2,1,6
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter
+import itertools
+import random
+
+from collections import Counter
+import itertools
+import random
+
+def task_func(T1, RANGE=100):
+    # Convert elements in 'T1' to integers
+    T1 = list(map(int, T1))
+
+    # Calculate the sum of the integers in 'T1'
+    total_sum = sum(T1)
+
+    # Generate a list of random integers between 0 and RANGE
+    random_integers = [randint(0, RANGE) for _ in range(total_sum)]
+
+    # Count the occurrences of each number in the generated list
+    count_result = Counter(random_integers)
+
+    return count_result",Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 75,
+    ""Reliability"": 95
+  , ""Security"": 60
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 3
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,334.80363750457764,2,1,6
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Create a bar plot
+    fig, ax = plt.subplots()
+    sns.barplot(x='Category', y='Value', data=df)
+
+    # Set the title of the barplot
+    ax.set_title('Category vs Value')
+
+    return df, ax","The function `task_func` takes a list of pairs, where each pair is a tuple containing a 'category' and its corresponding 'value'. It creates a pandas DataFrame from these pairs. The DataFrame has two columns: 'Category' and 'Value'. Then, it uses seaborn to create a bar plot with categories on the x-axis and values on the y-axis. The title of the bar plot is set to 'Category vs Value'. Finally, it returns the created DataFrame and the matplotlib Axes object for further customization.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 2
+security_rating: 5.0
+ncloc: 15
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,89.92952704429626,0,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+    
+    # Set the title of the barplot to 'Category vs Value'
+    plt.title('Category vs Value')
+    
+    # Plot the data as a bar chart using seaborn
+    sns.barplot(x='Category', y='Value', data=df)
+    
+    # Return the DataFrame and the Axes object
+    return df, plt.gca()
+","The function `task_func` takes a list of pairs (each pair is a tuple containing a category and its corresponding value) as input. It creates a pandas DataFrame from this list, sets the title of the barplot to 'Category vs Value', and visualizes the data using a bar chart created with seaborn. The function returns both the DataFrame and the Axes object for further manipulation or display.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 80,
+    ""Execution Errors"": 0,
+    ""Explanation"": ""The AI-generated code is mostly correct and follows the requirements. However, there are a few improvements that can be made for better maintainability and reliability. Here's an explanation of the issues and suggested fixes:\n\n1. **Duplicate Imports**: The `import pandas as pd` line appears twice in the generated code. This is unnecessary duplication and can be removed.\n\n2. **Function Definition**: The function definition is correctly set up with the parameters and return type specified.\n\n3. **Dataframe Creation**: The DataFrame is created using the correct list of pairs and column names, which is good.\n\n4. **Plotting**: The bar plot is created using Seaborn's `barplot`, which is a recommended way to create bar charts in Python. This ensures that the code is clean and follows best practices.\n\n5. **Return Statement**: The function returns both the DataFrame and the Axes object, which are correctly named as `df` and `plt.gca()` respectively.\n\nOverall, the code is well-structured and meets all the specified requirements. However, removing the duplicate imports would make it slightly more efficient and maintainable."",
+    ""Maintainability"": 90,
+    ""Reliability"": 100,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,135.42475843429565,0,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+    # Convert the list of pairs into a DataFrame
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Create a bar chart using Seaborn
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.barplot(x='Category', y='Value', data=df)
+
+    # Set the title of the bar plot
+    ax.set_title('Category vs Value')
+
+    # Return the DataFrame and Axes objects
+    return df, ax","The function `task_func` takes a list of pairs as input. Each pair is a tuple containing a category and a corresponding value. The function converts this list into a Pandas DataFrame with columns 'Category' and 'Value'. It then creates a bar chart using Seaborn to visualize the categories vs their values. The title of the bar plot is set to 'Category vs Value'. Finally, it returns the DataFrame and the Axes objects.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 85
+  , ""Security"": 70
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,93.57321619987488,0,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def task_func(list_of_pairs):
+    # Convert the list of pairs into a DataFrame
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Create a bar chart
+    fig, ax = plt.subplots()
+    ax.bar(df['Category'], df['Value'])
+
+    # Set the title of the barplot
+    ax.set_title('Category vs Value')
+
+    return df, ax",This function takes a list of pairs and converts it into a Pandas DataFrame with two columns: 'Category' and 'Value'. It then creates a bar chart using matplotlib and seaborn to visualize the data. The title of the barplot is set to 'Category vs Value'. The function returns both the DataFrame and the Axes object used for plotting.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 98,
+  ""Execution Errors"": 0,
+  ""Explanation"": """",
+  ""Maintainability"": 96,
+  ""Reliability"": 100
+  ,""Security"": 95
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 15
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,98.04507517814636,0,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Visualize the data using a bar chart
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.barplot(x='Category', y='Value', data=df)
+
+    # Set the title of the bar plot
+    ax.set_title('Category vs Value')
+
+    # Return the DataFrame and the Axes object
+    return df, ax","The function `task_func` takes a list of pairs (as tuples) where each tuple contains a 'Category' and a 'Value'. It creates a Pandas DataFrame from this list of pairs. Then, it uses Seaborn to create a bar chart where the x-axis represents categories and the y-axis represents values. The title of the bar plot is set to 'Category vs Value'. Finally, it returns both the DataFrame and the Axes object.","(-1, [[-1, 'No function definition found']])",o(n),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 100,
+  ""Execution Errors"": 0,
+  ""Explanation"": """",
+  ""Maintainability"": 95,
+  ""Reliability"": 100
+  ,""Security"": 85
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,169.6958348751068,0,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Set the title of the barplot
+    plt.title('Category vs Value')
+
+    # Visualize the data using a bar chart
+    sns.barplot(x='Category', y='Value', data=df)
+
+    # Return the DataFrame and Axes
+    return df, plt.gca()",The function `task_func` takes a list of pairs (where each pair is a tuple containing a category and a value) as input. It creates a pandas DataFrame from this list with columns 'Category' and 'Value'. The title of the barplot is set to 'Category vs Value'. The function then visualizes the data using a bar chart and returns both the DataFrame and the matplotlib Axes object displaying the plot.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 75,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 100
+    , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,91.98840856552124,1,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+    # Convert the list of pairs into a DataFrame
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Create a bar plot
+    fig, ax = plt.subplots()
+    sns.barplot(x='Category', y='Value', data=df)
+
+    # Set the title of the bar chart
+    ax.set_title('Category vs Value')
+
+    return df, ax",The function `task_func` takes a list of pairs and creates a Pandas DataFrame with columns 'Category' and 'Value'. It then generates a bar chart using Seaborn and Matplotlib to visualize the data. The title of the bar plot is set to 'Category vs Value'. The function returns both the DataFrame and the Axes object for the matplotlib figure.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 100,
+  ""Execution Errors"": 0,
+  ""Explanation"": """",
+  ""Maintainability"": 95,
+  ""Reliability"": 80
+  , ""Security"": 70
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,90.05832362174988,1,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Plot the data using a bar chart
+    fig, ax = plt.subplots()
+    sns.barplot(x='Category', y='Value', data=df)
+
+    # Set the title of the bar plot
+    ax.set_title('Category vs Value')
+
+    return df, ax",This function takes a list of pairs and creates a Pandas DataFrame from them. It then plots this data using a bar chart and returns both the DataFrame and the Axes object.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 82,
+    ""Reliability"": 100
+    ,""Security"": 70
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,188.61560130119324,1,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Plot the data as a bar chart
+    ax = plt.bar(df['Category'], df['Value'])
+
+    # Set the title of the barplot
+    ax.set_title('Category vs Value')
+
+    # Return the DataFrame and Axes objects
+    return df, ax
+","The function `task_func` takes a list of pairs as input, creates a Pandas DataFrame with 'Category' and 'Value' columns, plots this data using a bar chart, and returns both the DataFrame and the Axes object for further customization or rendering.","(-1, [[-1, 'No function definition found']])",o(1),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 92,
+    ""Reliability"": 85,
+    ""Security"": 97
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,387.38798809051514,1,0,8
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Set the title of the bar plot
+    plt.title('Category vs Value')
+
+    # Plotting using seaborn for better aesthetics
+    sns.barplot(x='Category', y='Value', data=df)
+
+    # Return the DataFrame and Axes objects
+    return df, plt.gca()
+",The function `task_func` takes a list of pairs (each pair is a tuple containing 'Category' and 'Value') and returns a pandas DataFrame with columns 'Category' and 'Value'. It then creates a bar chart using Seaborn's `barplot` function and sets the title to 'Category vs Value'. The function returns both the DataFrame and the matplotlib Axes object for further customization or display.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 85,
+    ""Security"": 65
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,108.90340518951416,1,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def task_func(list_of_pairs):
+    # Convert the list of pairs into a DataFrame
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Create a bar chart using Seaborn
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.barplot(x='Category', y='Value', data=df)
+
+    # Set the title of the plot
+    ax.set_title('Category vs Value')
+
+    # Return both the DataFrame and Axes
+    return df, ax","The function `task_func` takes a list of pairs where each pair is a tuple containing a category and a value. It converts this list into a Pandas DataFrame with two columns: 'Category' and 'Value'. Then, it creates a bar chart using Seaborn to visualize the data. The x-axis represents categories, and the y-axis represents values. Finally, it sets the title of the plot to 'Category vs Value' and returns both the DataFrame and the Axes object.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 75,
+    ""Reliability"": 100,
+    ""Security"": 80
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 14
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,227.99336695671082,2,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Visualize the data using a bar chart
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.barplot(data=df, x='Category', y='Value', palette='viridis')
+    ax.set_title('Category vs Value')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    # Return the DataFrame and Axes
+    return df, ax","This function takes a list of pairs as input, where each pair is a tuple containing a category and its corresponding value. The function creates a pandas DataFrame from these pairs and visualizes the data using a bar chart with 'Category' on the x-axis and 'Value' on the y-axis. The title of the barplot is set to 'Category vs Value'. It returns both the DataFrame and the Axes object.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 90
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,210.41260313987732,2,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Plotting the data using a bar chart
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.barplot(x='Category', y='Value', data=df)
+
+    # Set the title of the barplot
+    ax.set_title('Category vs Value')
+
+    # Show the plot
+    plt.tight_layout()
+
+    return df, ax","The `task_func` function takes a list of pairs (tuples), where each pair consists of a category and a value. It creates a pandas DataFrame from these pairs, with columns 'Category' and 'Value'. The function then plots this data using a bar chart with the title 'Category vs Value'. The function returns a tuple containing the DataFrame and the matplotlib Axes object used for the plot.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 75,
+    ""Reliability"": 100
+    ,""Security"": 80
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,109.22984552383423,2,8,0
