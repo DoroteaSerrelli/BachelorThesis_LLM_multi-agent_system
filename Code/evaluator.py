@@ -6,7 +6,7 @@ import lmstudio as lms
 
 from response_JSON_schema import evaluation_schema
 from evaluation_prompt import instruct_prompt, refined_instruct_prompt
-
+'''
 # Weights in percentage (total = 100)
 CORRECTNESS_WEIGHT = 40
 SECURITY_WEIGHT = 10
@@ -18,7 +18,7 @@ EXEC_ERR_WEIGHT = 15
 # Maximum number of errors before score reaches 0
 MAX_ERRORS = 10
 
-
+'''
 def get_evaluator(type_model, temperature=0.2):
     """
     Initializes and returns an LLM evaluator instance based on the given model type.
@@ -98,7 +98,7 @@ def extract_criteria_scores(json_evaluation):
 
     return criteria_scores
 
-
+'''
 def calculate_score_code(criteria_scores: dict):
     """
     Calculates a weighted average score based on individual evaluation criteria and penalties for errors.
@@ -131,3 +131,49 @@ def calculate_score_code(criteria_scores: dict):
     ) / 100
 
     return weighted_avg
+'''
+
+# Pesi (totale 100)
+CORRECTNESS_WEIGHT = 35
+SECURITY_WEIGHT = 20
+MAINTAINABILITY_WEIGHT = 20
+RELIABILITY_WEIGHT = 25
+
+# Penalità per errore
+COMPILATION_ERROR_PENALTY = 30
+EXECUTION_ERROR_PENALTY = 15
+
+def calculate_score_code(criteria_scores: dict) -> float:
+    """
+    Calcola il punteggio finale della qualità del codice sorgente.
+
+    Args:
+        criteria_scores (dict): contiene valutazioni qualitative (0-100) e conteggi di errori.
+
+    Returns:
+        float: punteggio finale tra 0 e 100.
+    """
+    # Recupera le valutazioni
+    correctness = criteria_scores["Correctness"]
+    security = criteria_scores["Security"]
+    maintainability = criteria_scores["Maintainability"]
+    reliability = criteria_scores["Reliability"]
+    compilation_err = criteria_scores["Compilation Errors"]
+    execution_err = criteria_scores["Execution Errors"]
+
+    # Calcola punteggio qualitativo pesato
+    base_score = (
+        correctness * CORRECTNESS_WEIGHT +
+        security * SECURITY_WEIGHT +
+        maintainability * MAINTAINABILITY_WEIGHT +
+        reliability * RELIABILITY_WEIGHT
+    ) / 100
+
+    # Applica penalità
+    penalty = (COMPILATION_ERROR_PENALTY * compilation_err +
+               EXECUTION_ERROR_PENALTY * execution_err)
+
+    final_score = base_score - penalty
+
+    # Limita il punteggio tra 0 e 100
+    return max(0.0, min(100.0, final_score))

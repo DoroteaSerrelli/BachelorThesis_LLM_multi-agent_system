@@ -128,9 +128,20 @@ def developers_debate(programmers, user_prompt, programmer_prompt, strategy_chos
 
         if strategy_chosen == "1":
             # INSTANT RUNOFF VOTING
-            response = do_instant_runoff_voting(debate_response, responses_allowed)
-            print(f"Response instant_runoff_voting : {response}")
-            return response
+            if len(responses_allowed) == 0:
+                responses = do_self_refinement(programmers, responses, readability_complexity, user_prompt)
+                debate_response.clear()
+                readability_complexity.clear()
+                details_readability_complexity.clear()
+
+                i = 0
+                for response in responses:
+                    print(f"Response self-refined developer {i}: {response}")
+                    i += 1
+            else:
+                response = do_instant_runoff_voting(debate_response, responses_allowed)
+                print(f"Response instant_runoff_voting : {response}")
+                return response
 
         current_round += 1
 
@@ -232,6 +243,8 @@ def developers_debate_mixed_strategy(programmers, user_prompt, programmer_prompt
         divergence_round += 1
 
         if divergence_round >= 2:
+            if len(responses_allowed) == 0:
+                return "-1"
             # All solutions have same time complexity and cognitive complexity
             k_responses = get_k_responses(responses, debate_response)
             k_readability_complexity = {}

@@ -85,7 +85,8 @@ EXAMPLE OUTPUT:
         somma += numero
     media = somma / len(numero)
     return media```
-    The line len(number) should be len(numbers). Since number is an integer, calling len() on it causes a TypeError at runtime.
+    has the following issues and bugs:
+    - The line len(number) should be len(numbers). Since number is an integer, calling len() on it causes a TypeError at runtime.
     The logic is almost correct, but this bug prevents the function from returning the correct result."
 }
 ```
@@ -188,7 +189,8 @@ EXAMPLE OUTPUT RESPONSE:
         somma += numero
     media = somma / len(numero)
     return media```
-    The line len(number) should be len(numbers). Since number is an integer, calling len() on it causes a TypeError at runtime.
+    has the following issues and bugs:
+    - The line len(number) should be len(numbers). Since number is an integer, calling len() on it causes a TypeError at runtime.
     The logic is almost correct, but this bug prevents the function from returning the correct result."
 }
 ```

@@ -114,7 +114,7 @@ sys.stdin.buffer.flush()  # flush buffer stdin
 print("User prompt from stdin (insert 0) or user prompt from BigCodeBench (insert 1): ")
 user_prompt_mode = int(input())
 user_prompt = ""
-frame_no = 1
+frame_no = 7
 if user_prompt_mode == 0:
     sys.stdin.buffer.flush()  # flush buffer stdin
     user_prompt = input("Insert user prompt: ")
