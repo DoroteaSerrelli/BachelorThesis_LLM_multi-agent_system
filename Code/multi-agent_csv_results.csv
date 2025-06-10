@@ -5192,3 +5192,662 @@ ncloc: 16
 vulnerabilities: 1
 sqale_rating: 1.0
 ",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,105.07524800300598,0,7,0
+7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
+The function should output with:
+    str: The name of the top-selling product based on the total quantity sold.
+You should write self-contained code starting with:
+```
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+```","    with open(csv_file_path, 'r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip the header row
+        sales_data = collections.defaultdict(int)
+        for row in reader:
+            product, quantity = row[0], int(row[1])
+            sales_data[product] += quantity
+
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","import csv
+import collections
+
+
+def task_func(csv_file_path):
+    # Initialize a dictionary to store the total sales for each product
+    sales_by_product = collections.defaultdict(int)
+
+    # Open the CSV file and read its contents
+    with open(csv_file_path, mode='r', newline='') as file:
+        reader = csv.DictReader(file)
+
+        # Iterate over each row in the CSV file
+        for row in reader:
+            product = row['product']
+            quantity = int(row['quantity'])
+
+            # Update the sales for the corresponding product
+            sales_by_product[product] += quantity
+
+    # Find the product with the highest total sales
+    top_selling_product = max(sales_by_product.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","The function 'task_func' takes a CSV file path as input, where each row contains two columns: 'product' and 'quantity'. It reads the file, calculates the total sales for each product, and determines which product has the highest cumulative sales. The function returns the name of the top-selling product.","(-1, [[-1, 'No function definition found']])",o(n),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 100,
+  ""Execution Errors"": 0,
+  ""Explanation"": """",
+  ""Maintainability"": 95,
+  ""Reliability"": 98
+  ,
+  ""Security"": 95
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 14
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,125.27340650558472,1,2,5
+7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
+The function should output with:
+    str: The name of the top-selling product based on the total quantity sold.
+You should write self-contained code starting with:
+```
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+```","    with open(csv_file_path, 'r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip the header row
+        sales_data = collections.defaultdict(int)
+        for row in reader:
+            product, quantity = row[0], int(row[1])
+            sales_data[product] += quantity
+
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","import csv
+import collections
+import operator
+def task_func(csv_file_path):
+    sales_data = collections.defaultdict(int)
+    with open(csv_file_path, mode='r', newline='') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip the header row
+        for product, quantity in reader:
+            sales_data[product] += int(quantity)
+    # Find the product with the highest total sales
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+    return top_selling_product","This function reads a CSV file containing sales data, calculates the total quantity sold for each product, and determines the product with the highest cumulative sales. The function uses the `csv` module to parse the file, `collections.defaultdict` to accumulate sales totals, and `operator.itemgetter` to find the maximum value.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 98,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 75,
+    ""Reliability"": 95
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,122.1425130367279,1,7,0
+7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
+The function should output with:
+    str: The name of the top-selling product based on the total quantity sold.
+You should write self-contained code starting with:
+```
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+```","    with open(csv_file_path, 'r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip the header row
+        sales_data = collections.defaultdict(int)
+        for row in reader:
+            product, quantity = row[0], int(row[1])
+            sales_data[product] += quantity
+
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","import csv
+import collections
+import operator
+
+import csv
+import collections
+def task_func(csv_file_path):
+    # Dictionary to store the total sales for each product
+    sales = collections.defaultdict(int)
+
+    # Open and read the CSV file
+    with open(csv_file_path, mode='r') as file:
+        reader = csv.DictReader(file)
+        
+        # Iterate over each row in the CSV
+        for row in reader:
+            product = row['product']
+            quantity = int(row['quantity'])
+            
+            # Update the total sales for the product
+            sales[product] += quantity
+
+    # Find the product with the highest cumulative sales
+    if not sales:
+        return None  # Return None if no data is found
+
+    # Use the max function to find the product with maximum sales
+    best_selling_product = max(sales.items(), key=operator.itemgetter(1))[0]
+
+    return best_selling_product",The `task_func` function reads a CSV file containing sales data and determines the product that has the highest cumulative sales. It uses a dictionary to store the total sales for each product and then finds the product with the maximum sales by using Python's built-in `max` function with the `operator.itemgetter(1)` to compare the values in the dictionary.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 85,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,127.6944305896759,1,6,1
+7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
+The function should output with:
+    str: The name of the top-selling product based on the total quantity sold.
+You should write self-contained code starting with:
+```
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+```","    with open(csv_file_path, 'r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip the header row
+        sales_data = collections.defaultdict(int)
+        for row in reader:
+            product, quantity = row[0], int(row[1])
+            sales_data[product] += quantity
+
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","import csv
+import collections
+import operator
+
+import csv
+
+import collections
+
+import operator
+def task_func(csv_file_path):
+    # Read the CSV file
+    with open(csv_file_path, mode='r') as file:
+        reader = csv.DictReader(file)
+
+        # Create a dictionary to store total sales per product
+        sales_per_product = collections.defaultdict(int)
+
+        # Iterate over each row in the CSV file
+        for row in reader:
+            # Update the total sales for each product
+            sales_per_product[row['product']] += int(row['quantity'])
+
+    # Find the product with the highest cumulative sales
+    top_selling_product = max(sales_per_product.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product",The function 'task_func' reads a CSV file containing sales data with columns 'product' and 'quantity'. It calculates the total sales for each product using a dictionary. The function then determines and returns the name of the product with the highest cumulative sales.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 90,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 2
+security_rating: 5.0
+ncloc: 17
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,126.27370715141296,1,7,0
+7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
+The function should output with:
+    str: The name of the top-selling product based on the total quantity sold.
+You should write self-contained code starting with:
+```
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+```","    with open(csv_file_path, 'r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip the header row
+        sales_data = collections.defaultdict(int)
+        for row in reader:
+            product, quantity = row[0], int(row[1])
+            sales_data[product] += quantity
+
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","import csv
+import collections
+import operator
+
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+    # Initialize a counter to keep track of total sales per product
+    sales_counter = collections.Counter()
+
+    # Open the CSV file and read its contents
+    with open(csv_file_path, mode='r') as file:
+        reader = csv.DictReader(file)
+
+        # Iterate over each row in the CSV file
+        for row in reader:
+            product = row['product']
+            quantity_sold = int(row['quantity'])
+
+            # Update the total sales counter for this product
+            sales_counter[product] += quantity_sold
+
+    # Find the product with the highest cumulative sales
+    top_selling_product = max(sales_counter.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product",The function 'task_func' takes a CSV file path as an argument and reads it to find the best-selling product based on total sales. It uses a dictionary counter to keep track of the cumulative sales for each product. The CSV file is assumed to have a header followed by rows with columns 'product' and 'quantity'. The function returns the name of the top-selling product.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 95,
+  ""Execution Errors"": 0,
+  ""Explanation"": """",
+  ""Maintainability"": 93,
+  ""Reliability"": 97
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 14
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,131.6218912601471,1,7,0
+7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
+The function should output with:
+    str: The name of the top-selling product based on the total quantity sold.
+You should write self-contained code starting with:
+```
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+```","    with open(csv_file_path, 'r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip the header row
+        sales_data = collections.defaultdict(int)
+        for row in reader:
+            product, quantity = row[0], int(row[1])
+            sales_data[product] += quantity
+
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","import csv
+import collections
+import operator
+
+def task_func(csv_file_path):
+    # Read the CSV file and calculate total sales per product
+    with open(csv_file_path, mode='r') as file:
+        reader = csv.DictReader(file)
+        sales_data = collections.defaultdict(int)
+        for row in reader:
+            product = row['product']
+            quantity_sold = int(row['quantity'])
+            sales_data[product] += quantity_sold
+
+    # Determine the product with the highest cumulative sales
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","The function `task_func` reads a CSV file containing sales data, calculates the total sales for each product, and determines which product has the highest cumulative sales. It uses a dictionary to store the total sales per product and the `max` function with `operator.itemgetter(1)` to find the product with the maximum sales. The function returns the name of the top-selling product.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 95,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 16
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,118.91631746292114,2,7,0
+7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
+The function should output with:
+    str: The name of the top-selling product based on the total quantity sold.
+You should write self-contained code starting with:
+```
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+```","    with open(csv_file_path, 'r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip the header row
+        sales_data = collections.defaultdict(int)
+        for row in reader:
+            product, quantity = row[0], int(row[1])
+            sales_data[product] += quantity
+
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","import csv
+import collections
+import operator
+def task_func(csv_file_path):
+    # Initialize a dictionary to store the total sales for each product
+    sales = collections.defaultdict(int)
+    
+    # Open and read the CSV file
+    with open(csv_file_path, mode='r') as csvfile:
+        reader = csv.DictReader(csvfile)
+        # Iterate over each row in the CSV file
+        for row in reader:
+            product = row['product']
+            quantity = int(row['quantity'])
+            
+            # Add the quantity to the total sales for that product
+            sales[product] += quantity
+    
+    # Determine the product with the highest cumulative sales
+    top_selling_product = max(sales.items(), key=operator.itemgetter(1))[0]
+    
+    return top_selling_product","The function `task_func` processes a CSV file to find the best-selling product based on the total quantity sold. It reads the file, calculates the total sales for each product, and identifies the product with the highest cumulative sales.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 98,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 93,
+    ""Reliability"": 100
+  ,""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,120.6823627948761,2,7,0
+7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
+The function should output with:
+    str: The name of the top-selling product based on the total quantity sold.
+You should write self-contained code starting with:
+```
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+```","    with open(csv_file_path, 'r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip the header row
+        sales_data = collections.defaultdict(int)
+        for row in reader:
+            product, quantity = row[0], int(row[1])
+            sales_data[product] += quantity
+
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","import csv
+from collections import Counter
+
+import csv
+from collections import Counter
+def task_func(csv_file_path):
+    # Initialize a dictionary to keep track of total sales per product
+    sales_data = Counter()
+    # Open the CSV file and read its contents
+    with open(csv_file_path, mode='r') as file:
+        reader = csv.DictReader(file)
+        # Iterate over each row in the CSV file
+        for row in reader:
+            # Extract the product name and quantity sold from the row
+            product_name = row['product']
+            quantity_sold = int(row['quantity'])
+            # Update the total sales for this product
+            sales_data[product_name] += quantity_sold
+    # Determine the product with the highest cumulative sales
+    top_selling_product, _ = sales_data.most_common(1)[0]
+    return top_selling_product","The function `task_func` reads a CSV file containing sales data and identifies the product with the highest total quantity sold. It uses the `csv.DictReader` to parse the CSV file, which assumes that the first row contains column headers. The `collections.Counter` is used to efficiently count the cumulative sales for each product. After processing all rows, it retrieves the product with the highest sales using `most_common(1)`, which returns a list of tuples with the most common elements and their counts. Finally, it returns the name of the top-selling product.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": ""The AI-generated code has been thoroughly reviewed and meets the requirements as specified in the user input. It correctly implements the functionality described, computes total sales per product, determines the top-selling product, and handles edge cases such as missing columns or empty files gracefully. The code follows best practices for readability, maintainability, and reliability. There are no compilation errors, and execution is successful without any logical issues.""
+    ,
+    ""Maintainability"": 90,
+    ""Reliability"": 100
+    ,
+    ""Security"": 80
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,131.15697026252747,2,6,1
+7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
+The function should output with:
+    str: The name of the top-selling product based on the total quantity sold.
+You should write self-contained code starting with:
+```
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+```","    with open(csv_file_path, 'r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip the header row
+        sales_data = collections.defaultdict(int)
+        for row in reader:
+            product, quantity = row[0], int(row[1])
+            sales_data[product] += quantity
+
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","import csv
+import collections
+import operator
+def task_func(csv_file_path):
+    # Initialize a dictionary to store the total sales for each product
+    sales = collections.defaultdict(int)
+
+    # Read the CSV file and calculate the total sales for each product
+    with open(csv_file_path, mode='r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            product = row['product']
+            quantity_sold = int(row['quantity'])
+            sales[product] += quantity_sold
+
+    # Find the product with the highest cumulative sales
+    top_selling_product = max(sales.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","The function `task_func` reads a CSV file containing sales data and calculates the total quantity sold for each product. It then determines which product has the highest cumulative sales. The function uses a dictionary to store the sales totals and iterates through the CSV file to populate it. Finally, it identifies and returns the top-selling product.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 80,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 14
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,120.52184915542603,2,7,0
+7,"Find the best-selling product from a given CSV file with sales data. This function parses a CSV file assumed to have a header followed by rows containing two columns: 'product' and 'quantity'. It computes the total sales per product and determines the product with the highest cumulative sales. The CSV file must include at least these two columns, where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer. Args: csv_file_path (str): The file path to the CSV file containing sales data.
+The function should output with:
+    str: The name of the top-selling product based on the total quantity sold.
+You should write self-contained code starting with:
+```
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+```","    with open(csv_file_path, 'r') as f:
+        reader = csv.reader(f)
+        next(reader)  # Skip the header row
+        sales_data = collections.defaultdict(int)
+        for row in reader:
+            product, quantity = row[0], int(row[1])
+            sales_data[product] += quantity
+
+    top_selling_product = max(sales_data.items(), key=operator.itemgetter(1))[0]
+
+    return top_selling_product","import csv
+import collections
+import operator
+
+import csv
+import collections
+import operator
+def task_func(csv_file_path):
+    # Initialize a dictionary to store the total sales for each product
+    sales = collections.defaultdict(int)
+
+    # Open the CSV file and read its contents
+    with open(csv_file_path, mode='r') as file:
+        csv_reader = csv.DictReader(file)
+
+        # Iterate over each row in the CSV file
+        for row in csv_reader:
+            # Extract the product and quantity from the current row
+            product = row['product']
+            quantity = int(row['quantity'])
+
+            # Update the total sales for the product
+            sales[product] += quantity
+
+    # Find the product with the highest cumulative sales
+    top_selling_product, _ = max(sales.items(), key=operator.itemgetter(1))
+
+    # Return the name of the top-selling product
+    return top_selling_product","The 'task_func' function reads a CSV file containing sales data and calculates the total sales per product. It then determines the product with the highest cumulative sales. The function assumes that the CSV file has a header followed by rows with columns 'product' and 'quantity', where 'product' is the name of the product as a string and 'quantity' is the number of units sold as an integer.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": ""The AI-generated code is correct and meets all the requirements. It correctly reads a CSV file, calculates the total sales for each product, finds the product with the highest cumulative sales, and returns its name. The implementation follows best practices and is easy to understand.""
+    ,
+    ""Maintainability"": 90,
+    ""Reliability"": 95
+    ,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,119.96294689178467,2,7,0
+8,"Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.
+The function should output with:
+    Counter: A Counter object representing the count of each number appearing in the list of generated random integers.
+You should write self-contained code starting with:
+```
+from collections import Counter
+import itertools
+from random import randint
+def task_func(T1, RANGE=100):
+```","    int_list = [list(map(int, x)) for x in T1]
+    flattened_list = list(itertools.chain(*int_list))
+    total_nums = sum(flattened_list)
+
+    random_nums = [randint(0, RANGE) for _ in range(total_nums)]
+    counts = Counter(random_nums)
+
+    return counts","from collections import Counter
+import itertools
+import random
+
+def task_func(T1, RANGE=100):
+    # Convert elements in T1 to integers
+    try:
+        T1 = list(map(int, T1))
+    except ValueError:
+        raise ValueError(""All elements in T1 must be integers"")
+
+    # Calculate the total number of random integers needed
+    total_random_integers = sum(T1)
+
+    # Generate random integers between 0 and RANGE
+    random_integers = [random.randint(0, RANGE) for _ in range(total_random_integers)]
+
+    # Count occurrences of each number using Counter
+    counter = Counter(random_integers)
+
+    return counter",Convert elements in 'T1' to integers and create a list of random integers where the number of integers is determined by the sum of the integers in `T1`. Random integers are generated between 0 and `RANGE` (default is 100). Count the occurrences of each number in the generated list using a Counter.,"(-1, [[-1, 'No function definition found']])",o(n + m),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 90,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 95
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 16
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,4,409.51478147506714,0,1,6
