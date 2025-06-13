@@ -8417,3 +8417,1235 @@ ncloc: 12
 vulnerabilities: 1
 sqale_rating: 1.0
 ",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,87.34089589118958,0,0,3
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+def task_func(length=100):
+    if length < 0:
+        raise ValueError('Length must be a non-negative integer.')
+
+    # Generate a random string of the specified length
+    random_string = ''.join(random.choices(string.ascii_letters, k=length))
+
+    # Count the occurrence of each character in the string
+    char_count = collections.Counter(random_string)
+
+    return dict(char_count)","The function `task_func` generates a random string of specified length using uppercase and lowercase letters. It raises a `ValueError` if the length is negative. The function returns a dictionary where each key is a character from the generated string, and the value is the count of how many times that character appears in the string.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 98,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 100,
+    ""Security"": 100
+}",2,"bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+security_rating: 5.0
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,79.72695112228394,0,3,0
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+
+def task_func(length=100):
+    if not isinstance(length, int) or length < 0:
+        raise ValueError('Length must be a non-negative integer')
+
+    # Generate a random string of the specified length using uppercase and lowercase letters
+    random_string = ''.join(random.choices(string.ascii_letters, k=length))
+
+    # Count the occurrence of each character in the generated string
+    char_count_dict = dict(collections.Counter(random_string))
+
+    return char_count_dict",The task_func function generates a random string of the specified length and counts the frequency of each character. It raises a ValueError if the input length is negative.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 85,
+  ""Execution Errors"": 0,
+  ""Explanation"": """",
+  ""Maintainability"": 90,
+  ""Reliability"": 100
+  ,""Security"": 75
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,314.88892889022827,0,3,0
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+
+def task_func(length=100):
+    if length < 0:
+        raise ValueError('Length cannot be negative')
+
+    # Generate a random string of the specified length
+    random_string = ''.join(random.choices(string.ascii_letters, k=length))
+
+    # Count the occurrence of each character in the string
+    char_count = collections.Counter(random_string)
+
+    return dict(char_count)","The function `task_func` generates a random string of specified length composed of uppercase and lowercase letters. It then counts the occurrences of each character in this string, returning a dictionary with each character as a key and its count as the value. The function raises a ValueError if the input length is negative.","(-1, [[-1, 'No function definition found']])",o(n),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 95,
+  ""Execution Errors"": 0,
+  ""Explanation"": """",
+  ""Maintainability"": 80,
+  ""Reliability"": 100
+  , ""Security"": 80
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 2
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,173.63369703292847,1,3,0
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+def task_func(length=100):
+    if length < 0:
+        raise ValueError('Length cannot be negative')
+    # Generate a random string of the specified length composed of uppercase and lowercase letters
+    random_string = ''.join(random.choices(string.ascii_letters, k=length))
+    # Count the occurrence of each character in this string
+    char_count = collections.Counter(random_string)
+    return dict(char_count)",This function generates a random string of the specified length composed of uppercase and lowercase letters. It then counts the occurrences of each character in this string and returns a dictionary with the results.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 85,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 75,
+    ""Reliability"": 100
+    , ""Security"": 90
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,170.20640659332275,1,3,0
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+
+import collections
+import random
+import string
+
+def task_func(length=100):
+    # Validate the length parameter
+    if length < 0:
+        raise ValueError('Length cannot be negative')
+
+    # Generate a random string of uppercase and lowercase letters
+    characters = string.ascii_letters
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+
+    # Count the occurrence of each character in the string
+    char_count = collections.Counter(random_string)
+
+    return dict(char_count)","The function 'task_func' generates a random string of uppercase and lowercase letters with a specified length. It checks if the length is negative and raises an exception if it is. The function then uses a list comprehension to generate the random string and the `collections.Counter` class to count the occurrences of each character in the string. Finally, it returns a dictionary where each key is a character from the generated string and the value is the count of how many times that character appears.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 85,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 100
+    , ""Security"": 85
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,91.48411560058594,1,3,0
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+
+import random
+import string
+def task_func(length=100):
+    # Check if the length is a negative number
+    if length < 0:
+        raise ValueError('Length must be non-negative.')
+
+    # Generate a random string of the specified length
+    random_string = ''.join(random.choices(string.ascii_letters, k=length))
+
+    # Count the occurrence of each character in the string
+    char_count = collections.Counter(random_string)
+
+    return dict(char_count)",This function generates a random string of uppercase and lowercase letters of a specified length and returns a dictionary containing the count of each character.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 75,
+    ""Execution Errors"": 0,
+    ""Explanation"": ""The AI-generated code is mostly correct and follows the requirements specified in the user input. Here are some minor issues that need to be addressed for completeness and robustness:\n\n1. **Function Naming**: The function name `task_func` should be more descriptive, such as `generate_and_count_string`, to better reflect its purpose.\n2. **Variable Name**: The variable `numbers` in the `len(number)` line is not defined, so it should be replaced with `random_string`.\n3. **Return Value Type**: The function currently returns a dictionary, which is correct according to the requirements. However, if there were any plans for additional output or modifications, it would be good to clarify this in the code comments.\n\nOverall, the code is well-structured and follows Python best practices. The error handling for negative lengths is also correctly implemented."",
+    ""Maintainability"": 80,
+    ""Reliability"": 95
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,369.11036348342896,1,3,0
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+
+import collections
+import random
+import string
+def task_func(length=100):
+    # Raise ValueError if length is a negative number
+    if length < 0:
+        raise ValueError('Length must be non-negative')
+
+    # Generate a random string of the specified length
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+
+    # Count the occurrence of each character in the generated string
+    char_count = collections.Counter(random_string)
+
+    return dict(char_count)","The function 'task_func' generates a random string of uppercase and lowercase letters, each appearing at least once, and then counts the occurrence of each character. It raises a `ValueError` if the provided length is negative. The function returns a dictionary where each key is a character from the generated string and the value is the count of that character in the string.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 85,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 70,
+    ""Reliability"": 90
+    ,""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,103.00958371162415,1,0,3
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+
+import collections
+import random
+import string
+
+def task_func(length=100):
+    if length <= 0:
+        raise ValueError('Length must be a non-negative number')
+
+    # Generate a random string of the specified length composed of uppercase and lowercase letters
+    random_string = ''.join(random.choices(string.ascii_letters, k=length))
+
+    # Count the occurrence of each character in the generated string
+    char_count = collections.Counter(random_string)
+
+    return dict(char_count)","Generates a random string of a specified length composed of uppercase and lowercase letters. The function raises a ValueError if the length is negative, and returns a dictionary with the count of each character.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 80,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 75,
+    ""Reliability"": 95
+  , ""Security"": 80
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,453.9494595527649,2,2,1
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+
+import collections
+import random
+import string
+
+def task_func(length=100):
+    if length < 0:
+        raise ValueError('Length must be a non-negative integer.')
+    # Generate a random string of the specified length
+    char_set = string.ascii_letters + string.digits
+    random_string = ''.join(random.choice(char_set) for _ in range(length))
+
+    # Count the occurrence of each character in the string
+    char_count = collections.Counter(random_string)
+    return dict(char_count)","The `task_func` function generates a random string of specified length composed of uppercase and lowercase letters, digits, and then counts the occurrence of each character in this string.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 85,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 100
+    , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,298.3379259109497,2,0,3
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+def task_func(length=100):
+    if length < 0:
+        raise ValueError('Length cannot be negative')
+
+    # Generate a random string of the specified length composed of uppercase and lowercase letters
+    random_string = ''.join(random.choice(string.ascii_letters) for _ in range(length))
+
+    # Count the occurrence of each character in the generated string using a dictionary
+    char_count = collections.Counter(random_string)
+
+    return dict(char_count)","The function 'task_func' generates a random string of specified length composed of uppercase and lowercase letters. It raises a ValueError if the provided length is negative. The function returns a dictionary where each key is a character from the generated string, and the value is the count of how many times that character appears in the string.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 100
+  , ""Security"": 85
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,77.37337374687195,2,3,0
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+
+def task_func(length=100):
+    if length < 0:
+        raise ValueError('Length must be a non-negative integer')
+
+    # Generate a random string of the specified length using uppercase and lowercase letters
+    random_string = ''.join(random.choices(string.ascii_letters, k=length))
+
+    # Count the occurrence of each character in the string
+    char_count = collections.Counter(random_string)
+
+    return dict(char_count)",The task_func function generates a random string of a specified length composed of uppercase and lowercase letters. It then counts the occurrences of each character in this string and returns a dictionary with the characters as keys and their respective counts as values. The function raises a ValueError if the length is negative.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": ""The AI-generated code is correct and meets all the specified requirements. It generates a random string of the given length, counts the occurrences of each character using `collections.Counter`, and returns the result as a dictionary.""
+    ,
+    ""Maintainability"": 85,
+    ""Reliability"": 90
+    , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,171.60109043121338,2,3,0
+1,"Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.
+The function should raise the exception for: ValueError if the length is a negative number
+The function should output with:
+    dict: A dictionary where each key is a character from the generated string and the value
+    is the count of how many times that character appears in the string.
+You should write self-contained code starting with:
+```
+import collections
+import random
+import string
+def task_func(length=100):
+```","    if length < 0:
+        raise ValueError
+    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))
+    char_counts = collections.Counter(random_string)
+    return dict(char_counts)","import collections
+import random
+import string
+
+import collections
+import random
+import string
+
+def task_func(length=100):
+    if length < 0:
+        raise ValueError('Length must be a non-negative integer.')
+
+    # Generate a random string of the specified length
+    random_string = ''.join(random.choices(string.ascii_letters, k=length))
+
+    # Count occurrences of each character in the string
+    char_count = collections.Counter(random_string)
+
+    return dict(char_count)","The function 'task_func' generates a random string of a specified length composed of uppercase and lowercase letters. It raises a ValueError if the length is negative. The function then counts the occurrence of each character in this string using the `collections.Counter` class. Finally, it returns a dictionary where each key is a character from the generated string and the value is the count of how many times that character appears.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 95
+   ,""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,79.4725730419159,2,3,0
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","
+import random
+from statistics import mean
+
+import random
+import statistics
+def task_func(LETTERS):
+    # Initialize the dictionary with random letters and lists of random integers
+    dict = {letter: [random.randint(1, 100) for _ in range(random.randint(5, 15))] for letter in LETTERS}
+
+    # Sort the dictionary by the mean of the values in descending order
+    sorted_dict = dict(sorted(dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+
+    return sorted_dict","The task_func function creates a dictionary where keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order using the statistics library, demonstrating how to use this library to calculate means.","(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 75,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 85
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,420.7730257511139,0,0,5
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+def task_func(LETTERS):
+    # Create a dictionary with random letters and lists of random integers
+    result = {letter: [random.randint(1, 100) for _ in range(random.randint(5, 20))] for letter in LETTERS}
+
+    # Calculate the mean of each list of integers using a generator expression
+    means = {letter: statistics.mean(numbers) for letter, numbers in result.items()}
+
+    # Sort the dictionary by the mean values in descending order
+    sorted_dict = dict(sorted(means.items(), key=lambda item: item[1], reverse=True))
+
+    return sorted_dict","The function `task_func` generates a dictionary where each key is a random letter and each value is a list of 5 to 20 randomly generated integers between 1 and 100. It then calculates the mean of each list of integers using a generator expression, sorts the dictionary by these means in descending order, and returns the sorted dictionary.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 87,
+    ""Reliability"": 96
+    ,
+    ""Security"": 92
+}",2,"coverage: 0.0
+bugs: 1
+reliability_rating: 5.0
+code_smells: 2
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,234.94465565681458,0,3,2
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+
+
+import random
+import statistics
+
+def task_func(LETTERS):
+    # Create a dictionary with random letters as keys and lists of random integers as values
+    result = {letter: [random.randint(1, 50) for _ in range(random.randint(1, 10))] for letter in LETTERS}
+
+    # Calculate the mean of each list of integers
+    means = {key: statistics.mean(value) for key, value in result.items()}
+
+    # Sort the dictionary by the mean values in descending order
+    sorted_dict = dict(sorted(means.items(), key=lambda x: x[1], reverse=True))
+
+    return sorted_dict",The task_func function generates a random dictionary of letters and their corresponding lists of integers. The dictionary is then sorted based on the mean value of each list in descending order.,"(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 75
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 7
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,178.07858991622925,0,3,2
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+
+import random
+import statistics
+
+def task_func(LETTERS):
+    # Create a dictionary where keys are letters and values are lists of random integers
+    random_dict = {letter: [random.randint(1, 10) for _ in range(random.randint(3, 5))] for letter in LETTERS}
+
+    # Calculate the mean of each list of integers in the dictionary
+    means = {k: statistics.mean(v) for k, v in random_dict.items()}
+
+    # Sort the dictionary by the mean values in descending order
+    sorted_dict = dict(sorted(means.items(), key=lambda item: item[1], reverse=True))
+
+    return sorted_dict","This function creates a dictionary where keys are randomly selected letters from the input list `LETTERS`, and values are lists of random integers. Each list contains between 3 and 5 integers (inclusive). The dictionary is then sorted by the mean value of each list in descending order.","(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 75,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 100
+    ,""Security"": 80
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,211.34838318824768,0,3,2
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+
+
+import random
+import statistics
+def task_func(LETTERS):
+    # Create a dictionary with keys as random letters and values as lists of random integers
+    data = {letter: [random.randint(1, 100) for _ in range(random.randint(5, 15))] for letter in LETTERS}
+    
+    # Calculate the mean of each list of integers in the dictionary
+    means = {letter: statistics.mean(values) for letter, values in data.items()}
+    
+    # Sort the dictionary by the mean values in descending order
+    sorted_data = dict(sorted(means.items(), key=lambda item: item[1], reverse=True))
+    
+    return sorted_data","The function 'task_func' generates a dictionary where keys are random letters and values are lists of random integers. The list lengths vary from 5 to 15 elements, and the numbers in each list range from 1 to 100. After creating the dictionary, it calculates the mean of each list of integers and sorts the dictionary by these means in descending order.","(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 100
+  ,""Security"": 70
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,135.65903186798096,0,3,2
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+
+import random
+import statistics
+def task_func(LETTERS):
+    # Create a dictionary with keys as random letters and values as lists of random integers
+    result = {letter: [random.randint(1, 50) for _ in range(random.randint(3, 5))] for letter in LETTERS}
+    
+    # Calculate the mean of each list and sort the dictionary by these means in descending order
+    sorted_result = dict(sorted(result.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_result","The function `task_func` creates a dictionary with random letters as keys and lists of random integers as values. Each list contains between 3 and 5 integers ranging from 1 to 50. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the `statistics` library.","(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 100
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 9
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,129.247976064682,1,5,0
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+
+import random
+import statistics
+def task_func(LETTERS):
+    # Create a dictionary with random letters and lists of random integers
+    random_dict = {letter: [random.randint(1, 100) for _ in range(random.randint(5, 15))] for letter in LETTERS}
+    
+    # Calculate the mean of each list and sort the dictionary by these means in descending order
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    
+    return sorted_dict","The function `task_func` takes a list of random letters as input. It creates a dictionary where each letter is associated with a list of random integers between 1 and 100, with the length of each list determined randomly between 5 and 15. The function then calculates the mean of the values in each list and sorts the dictionary by these means in descending order. The sorted dictionary is returned.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 90
+    ,""Security"": 90
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,121.50919771194458,1,5,0
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+
+import random
+import statistics
+def task_func(LETTERS):
+    # Initialize an empty dictionary to store the letters and their mean values
+    mean_dict = {}
+
+    # Generate random integers for each letter and populate the dictionary
+    for letter in LETTERS:
+        # Generate a list of random integers
+        random_list = [random.randint(1, 100) for _ in range(random.randint(5, 20))]
+        # Calculate the mean of the list
+        mean_value = statistics.mean(random_list)
+        # Store the letter and its mean value in the dictionary
+        mean_dict[letter] = mean_value
+
+    # Sort the dictionary by the mean values in descending order
+    sorted_dict = dict(sorted(mean_dict.items(), key=lambda item: item[1], reverse=True))
+
+    return sorted_dict","The function `task_func` takes a set of random letters as input. For each letter, it generates a list of random integers between 1 and 100, calculates the mean of these integers, and stores this in a dictionary with the letter as the key. Finally, it sorts the dictionary by the mean values in descending order and returns the sorted dictionary.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 90
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,123.33217716217041,1,3,2
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+
+import random
+import statistics
+def task_func(LETTERS):
+    # Create a dictionary with random letters and lists of random integers
+    random_dict = {letter: [random.randint(1, 50) for _ in range(10)] for letter in LETTERS}
+
+    # Calculate the mean of each list of values
+    means = {key: statistics.mean(value) for key, value in random_dict.items() if key != 'mean'}
+
+    # Create a new dictionary with means as keys and original lists as values
+    combined_dict = {value: {key: val} for key, value in means.items()}
+
+    # Sort the dictionary by means in descending order
+    sorted_dict = dict(sorted(combined_dict.items(), key=lambda item: item[1][0], reverse=True))
+
+    return sorted_dict","Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.","(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 85,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 95
+  ,
+""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,410.3522889614105,1,0,5
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+
+import random
+import statistics
+def task_func(LETTERS):
+    # Create a dictionary with random letters as keys and lists of random integers as values
+    random_dict = {letter: [random.randint(1, 10) for _ in range(random.randint(2, 5))] for letter in LETTERS}
+    # Calculate the mean of values for each key and sort the dictionary by these means in descending order
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","The function `task_func` creates a random dictionary with random letters as keys and lists of random integers as values. Each list contains between 2 to 5 random integers. Then, it calculates the mean of each list's values and sorts the dictionary by these means in descending order.","(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": ""The AI-generated code is correct, as it meets the specified requirements. The function `task_func` creates a dictionary with random letters as keys and lists of random integers as values, then sorts this dictionary by the mean of its values in descending order using the `statistics.mean` function. This implementation correctly processes the input and produces the expected output.""
+    ,
+    ""Maintainability"": 90,
+    ""Reliability"": 100
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,131.3527228832245,1,5,0
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+
+import random
+import statistics
+def task_func(LETTERS):
+    # Create a dictionary with keys as random letters and values as lists of random integers
+    result_dict = {letter: [random.randint(1, 100) for _ in range(random.randint(5, 20))] for letter in LETTERS}
+
+    # Sort the dictionary by the mean of the values in descending order
+    sorted_dict = dict(sorted(result_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+
+    return sorted_dict",This function generates a dictionary where keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of each list in descending order.,"(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 90
+    , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,283.9246790409088,2,5,0
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+
+import random
+import statistics
+def task_func(LETTERS):
+    # Generate a dictionary with letters as keys and lists of random integers as values
+    result_dict = {letter: [random.randint(1, 100) for _ in range(5)] for letter in LETTERS}
+
+    # Sort the dictionary by the mean of the values in descending order
+    sorted_dict = dict(sorted(result_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+
+    return sorted_dict","The function `task_func` generates a dictionary where each letter is mapped to a list of random integers. The lists contain 5 integers between 1 and 100. After generating the dictionary, it sorts this dictionary by the mean value of the lists in descending order. Finally, it returns the sorted dictionary.","(-1, [[-1, 'No function definition found']])",o(n log n),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 85,
+  ""Execution Errors"": 0,
+  ""Explanation"": ""The AI-generated code is correct and meets the specified requirements. It successfully generates a dictionary with random letters as keys and lists of random integers as values. The function then sorts this dictionary by the mean of the values in descending order using the statistics library. The code handles edge cases gracefully, such as generating lists of random integers, and follows best practices for secure coding. It is well-structured, readable, and easy to understand and modify. There are no compilation or execution errors.""
+  ,
+  ""Maintainability"": 90,
+  ""Reliability"": 85
+   , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,103.3715467453003,2,5,0
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+def task_func(LETTERS):
+    # Create a dictionary where keys are random letters and values are lists of random integers
+    result_dict = {letter: [random.randint(1, 10) for _ in range(random.randint(3, 5))] for letter in LETTERS}
+
+    # Calculate the mean of each list of integers in the dictionary
+    means = {key: statistics.mean(value) for key, value in result_dict.items()}
+
+    # Sort the dictionary by the mean values in descending order
+    sorted_dict = dict(sorted(means.items(), key=lambda item: item[1], reverse=True))
+
+    return sorted_dict",The function 'task_func' generates a random dictionary with letters as keys and lists of random integers. It calculates the mean of each list and sorts the dictionary by these means in descending order. The sorted dictionary is then returned.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 95,
+  ""Execution Errors"": 0,
+  ""Explanation"": """",
+  ""Maintainability"": 80,
+  ""Reliability"": 90
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,101.07765436172485,2,3,2
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+def task_func(LETTERS):
+    # Create a dictionary where each letter is associated with a list of random integers
+    my_dict = {letter: [random.randint(1, 100) for _ in range(random.randint(5, 20))] for letter in LETTERS}
+
+    # Calculate the mean of values for each key and sort the dictionary by these means in descending order
+    sorted_dict = dict(sorted(my_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+
+    return sorted_dict",The function `task_func` generates a random dictionary with keys as random letters and values as lists of random integers. Each list contains between 5 and 20 integers ranging from 1 to 100. The function then sorts this dictionary by the mean value of each list in descending order and returns the sorted dictionary.,"(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 98
+    ,""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 7
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,89.4154052734375,2,5,0
+2,"Create a dictionary in which keys are random letters and values are lists of random integers. The dictionary is then sorted by the mean of the values in descending order, demonstrating the use of the statistics library.
+The function should output with:
+    dict: The sorted dictionary with letters as keys and lists of integers as values, sorted by their mean values.
+You should write self-contained code starting with:
+```
+import random
+import statistics
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sorted_dict = dict(sorted(random_dict.items(), key=lambda item: statistics.mean(item[1]), reverse=True))
+    return sorted_dict","import random
+import statistics
+def task_func(LETTERS):
+    # Create a dictionary with keys as random letters and values as lists of random integers
+    result_dict = {letter: [random.randint(1, 100) for _ in range(random.randint(5, 15))] for letter in LETTERS}
+
+    # Sort the dictionary by the mean of the values in descending order
+    sorted_result_dict = dict(sorted(result_dict.items(), key=lambda x: statistics.mean(x[1]), reverse=True))
+
+    return sorted_result_dict",The function `task_func` takes a string `LETTERS` containing random letters. It creates a dictionary where each letter is associated with a list of random integers. The lists have varying lengths between 5 and 15 elements. The function then sorts this dictionary based on the mean of the values in descending order using the `statistics.mean` function from the `statistics` library.,"(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 95,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 6
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,110.9501576423645,2,5,0
