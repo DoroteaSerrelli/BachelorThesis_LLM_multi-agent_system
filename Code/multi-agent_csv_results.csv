@@ -9649,3 +9649,653 @@ ncloc: 6
 vulnerabilities: 1
 sqale_rating: 1.0
 ",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,110.9501576423645,2,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+
+def task_func(LETTERS):
+    means = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length 1 to 10
+        random_numbers = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the list
+        means[letter] = np.mean(random_numbers)
+    return means",The task is to create a dictionary where keys are specified letters and values are lists of random integers. The function generates each list with a number between 1 and 10 randomly selected integers ranging from 0 to 100. It then calculates the mean for each key-value pair in the resulting dictionary.,"(-1, [[-1, 'No function definition found']])",o(n * m),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 95
+  , ""Security"": 60
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 6
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,387.1396827697754,0,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+def task_func(LETTERS):
+    result = {}
+    for letter in LETTERS:
+        # Generate a random list of integers between 0 and 100 with length between 1 and 10
+        numbers = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the generated list
+        mean_value = np.mean(numbers)
+        # Store the result in the dictionary
+        result[letter] = mean_value
+    return result","This function, 'task_func', takes a list of letters as input. For each letter in the list, it generates a random list of integers between 0 and 100 with a length ranging from 1 to 10. It then calculates the mean of these randomly generated integers and stores the result in a dictionary where the keys are the input letters and the values are their respective mean values.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+  ,""Security"": 90
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,121.4977068901062,0,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+def task_func(LETTERS):
+    means = {}
+    for letter in LETTERS:
+        # Generate a list of 1 to 10 random integers between 0 and 100
+        random_list = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the list using numpy
+        means[letter] = np.mean(random_list)
+    return means",The function 'task_func' takes a list of letters as input. It generates a random list of integers (with each list having 1 to 10 integers ranging from 0 to 100) for each letter and calculates the mean of these integers. The result is returned as a dictionary where each key is a letter from the input list and the value is the corresponding mean.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+  , ""Security"": 92
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,103.89577913284302,0,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+def task_func(LETTERS):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length between 1 and 10
+        random_list = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the list
+        mean_value = np.mean(random_list)
+        # Store the result as a dictionary with letter as key and mean value as value
+        result[letter] = mean_value
+    return result","The function 'task_func' takes a list of letters as input. For each letter, it generates a random list of integers between 0 and 100 with a length ranging from 1 to 10. It calculates the mean of these integers and stores the result in a dictionary where the keys are the letters and the values are the corresponding means.","(-1, [[-1, 'No function definition found']])",o(n*m),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 100
+    , ""Security"": 97
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,114.46942639350891,0,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","
+import random
+import numpy as np
+
+
+
+import random
+import numpy as np
+def task_func(LETTERS):
+    means = {}
+    for letter in LETTERS:
+        # Generate a list of 1 to 10 random integers between 0 and 100
+        numbers = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean using numpy.mean
+        mean = np.mean(numbers)
+        means[letter] = mean
+    return means",The function `task_func` takes a list of letters as input and generates random integers for each letter. It calculates the mean of these integers and stores them in a dictionary with the letter as the key.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 85,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 95
+   ,""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,180.11105489730835,0,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+def task_func(LETTERS):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length 1 to 10
+        random_integers = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the list
+        result[letter] = np.mean(random_integers)
+    return result",This function generates a dictionary where each key is a letter from the input list and the value is the mean of a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100). The function returns this dictionary.,"(-1, [[-1, 'No function definition found']])",o(n^2),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+    , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,1872.5640959739685,1,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+def task_func(LETTERS):
+    means_dict = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length ranging from 1 to 10
+        random_list = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the generated list
+        means_dict[letter] = np.mean(random_list)
+    return means_dict","The function `task_func` takes a list of letters as input. For each letter, it generates a random list of integers between 0 and 100 with a length ranging from 1 to 10. It then calculates the mean of these integers for each list and returns a dictionary where keys are the input letters and values are their corresponding means.","(-1, [[-1, 'No function definition found']])",o(n * m) where n is the number of letters and m is the average length of the generated lists.,"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 90
+    ,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,106.02982592582703,1,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+def task_func(LETTERS):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with 1 to 10 integers
+        rand_list = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the list
+        mean_value = np.mean(rand_list)
+        # Store the result in the dictionary
+        result[letter] = mean_value
+    return result","The function `task_func` takes a list of letters as input. For each letter, it generates a random list of integers (between 0 and 100) with a length between 1 and 10. It then calculates the mean of these integers using NumPy's `mean` function. The result is stored in a dictionary where each key is a letter from the input list and the value is the corresponding mean value.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 90,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+  , ""Security"": 70
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,116.71208834648132,1,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+def task_func(LETTERS):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers from 0 to 100 with length between 1 and 10
+        numbers = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean using numpy
+        mean_value = np.mean(numbers)
+        # Store the result in the dictionary with the letter as key and the mean as value
+        result[letter] = mean_value
+    return result","The function `task_func` takes a list of letters as input. For each letter, it generates a random list of integers between 0 and 100, where the length of the list is randomly chosen between 1 and 10. It then calculates the mean of these integers using numpy and stores the result in a dictionary with the letter as the key.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+    , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,368.13138580322266,1,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+
+def task_func(LETTERS):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100, with lengths ranging from 1 to 10
+        random_integers = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the generated list
+        mean_value = sum(random_integers) / len(random_integers)
+        # Store the result in the dictionary
+        result[letter] = mean_value
+    return result",Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 85,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 100
+  , ""Security"": 75
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,282.0310170650482,1,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+def task_func(LETTERS):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length between 1 and 10
+        numbers = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the generated list using numpy's mean function
+        mean_value = np.mean(numbers)
+        result[letter] = round(mean_value, 2)  # Round to two decimal places for better readability
+    return result","The `task_func` function takes a list of letters as input. For each letter, it generates a random list of integers (between 1 and 10 integers ranging from 0 to 100). It calculates the mean of these integers using numpy's `mean` function and rounds the result to two decimal places for clarity. The result is stored in a dictionary with the letter as the key and the mean as the value.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 85,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 95
+    ,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,168.9031367301941,2,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+def task_func(LETTERS):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers with each list having 1 to 10 integers ranging from 0 to 100
+        random_list = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the generated integers
+        mean_value = np.mean(random_list)
+        result[letter] = mean_value
+    return result","The function `task_func` takes a list of letters as input and generates a dictionary where each key is a letter from the input list. For each key, it creates a randomly generated list of integers with 1 to 10 integers ranging from 0 to 100. It then calculates the mean of these integers using the `np.mean` function from the `numpy` library and stores the result in the dictionary. Finally, it returns the dictionary containing the means for each letter.","(-1, [[-1, 'No function definition found']])",o(n * m),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,107.94412851333618,2,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+def task_func(LETTERS):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers with length between 1 and 10
+        num_list = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the generated integers
+        mean_value = np.mean(num_list)
+        # Store the letter as a key and its mean as the value in the result dictionary
+        result[letter] = mean_value
+    return result","The function `task_func` takes a list of letters (`LETTERS`) as input. For each letter, it generates a random list of integers with a length between 1 and 10, ensuring each integer is in the range from 0 to 100. It then calculates the mean of these integers using NumPy's `mean` function and stores this mean value in a dictionary with the letter as the key. Finally, it returns the dictionary containing all calculated means.","(-1, [[-1, 'No function definition found']])",o(n * m + k),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 70,
+    ""Reliability"": 85
+    ,""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,104.23843669891357,2,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+
+import random
+import numpy as np
+def task_func(LETTERS):
+    means = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length between 1 and 10
+        random_list = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the list
+        mean = np.mean(random_list)
+        # Store the mean in the dictionary with the letter as the key
+        means[letter] = mean
+    return means","The function `task_func` takes a list of letters as input. For each letter, it generates a random list of integers ranging from 0 to 100 with lengths between 1 and 10. It then calculates the mean of each generated list using NumPy's `mean` function. The function returns a dictionary where each key is a letter from the input list and the value is the mean of the corresponding randomly generated list.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 75,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 85,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,89.97507166862488,2,5,0
+3,"Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.
+The function should output with:
+    dict: A dictionary where each key is a letter from the input list and the value is the mean of
+    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).
+You should write self-contained code starting with:
+```
+import random
+import numpy as np
+def task_func(LETTERS):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}
+    return mean_dict","import random
+import numpy as np
+def task_func(LETTERS):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length 1 to 10
+        random_list = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the mean of the generated list
+        mean_value = np.mean(random_list)
+        # Store the result in the dictionary with the letter as the key and the mean value as the value
+        result[letter] = mean_value
+    return result","The function `task_func` takes a list of letters as input. For each letter, it generates a random list of integers between 0 and 100 with lengths ranging from 1 to 10. It then calculates the mean of these integers using NumPy's `mean` function. The results are stored in a dictionary where each key is a letter and the value is its corresponding mean.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 90,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+  , ""Security"": 75
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,95.80957555770874,2,5,0
