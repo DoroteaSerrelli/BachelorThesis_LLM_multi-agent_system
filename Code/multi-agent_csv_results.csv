@@ -11083,3 +11083,538 @@ ncloc: 12
 vulnerabilities: 1
 sqale_rating: 1.0
 ",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,111.79640650749207,0,5,0
+5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
+The function should output with:
+    dict: A dictionary where each key corresponds to a letter from the input list and each value is the
+    population standard deviation of a list of random integers associated with that key.
+You should write self-contained code starting with:
+```
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sd_dict = {
+        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))
+        for k, v in random_dict.items()
+    }
+    return sd_dict","import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length between 1 and 10
+        data = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        
+        # Calculate the population standard deviation
+        if len(data) == 0:
+            result[letter] = None
+        else:
+            mean = sum(data) / len(data)
+            variance = sum((x - mean) ** 2 for x in data) / (len(data) - 1)
+            std_deviation = math.sqrt(variance)
+            
+            # Store the result in the dictionary
+            result[letter] = std_deviation
+    return result","The function `task_func` creates a dictionary where each key corresponds to a letter from the predefined list of letters and each value is the population standard deviation of a list of random integers associated with that letter. If the list has zero elements, it stores `None` for that letter. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 90,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 75,
+    ""Reliability"": 95
+  ,""Security"": 80}
+  ",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 14
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,279.9913794994354,0,3,2
+5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
+The function should output with:
+    dict: A dictionary where each key corresponds to a letter from the input list and each value is the
+    population standard deviation of a list of random integers associated with that key.
+You should write self-contained code starting with:
+```
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sd_dict = {
+        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))
+        for k, v in random_dict.items()
+    }
+    return sd_dict","import random
+import math
+
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length between 1 and 10
+        random_list = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        result[letter] = calculate_population_stddev(random_list)
+    return result
+def calculate_population_stddev(data):
+    if len(data) == 0:
+        raise ValueError(""Data list is empty."")
+    mean = sum(data) / len(data)
+    variance = sum((x - mean) ** 2 for x in data) / (len(data) - 1)
+    return math.sqrt(variance)","This function generates a dictionary where keys are letters from the predefined list LETTERS and values are lists of random integers. For each letter, it calculates the population standard deviation of the associated list of integers and returns a dictionary with these values.","(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 98,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 93,
+    ""Reliability"": 95
+    , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 4
+security_rating: 5.0
+ncloc: 14
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,209.35250091552734,1,3,2
+5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
+The function should output with:
+    dict: A dictionary where each key corresponds to a letter from the input list and each value is the
+    population standard deviation of a list of random integers associated with that key.
+You should write self-contained code starting with:
+```
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sd_dict = {
+        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))
+        for k, v in random_dict.items()
+    }
+    return sd_dict","import random
+import math
+
+import random
+import math
+
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length between 1 and 10
+        data = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the population standard deviation
+        mean = sum(data) / len(data)
+        variance = sum((x - mean) ** 2 for x in data) / len(data)
+        std_dev = math.sqrt(variance)
+        result[letter] = std_dev
+    return result","The code defines a function `task_func` that generates a dictionary with letters from a predefined list as keys and lists of random integers between 0 and 100, each containing between 1 and 10 integers. The standard deviation is calculated for each list using the population formula.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+    ,
+    ""Security"": 85
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 2
+security_rating: 5.0
+ncloc: 16
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,293.541033744812,1,5,0
+5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
+The function should output with:
+    dict: A dictionary where each key corresponds to a letter from the input list and each value is the
+    population standard deviation of a list of random integers associated with that key.
+You should write self-contained code starting with:
+```
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sd_dict = {
+        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))
+        for k, v in random_dict.items()
+    }
+    return sd_dict","import random
+import math
+
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with size between 1 and 10
+        random_integers = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the population standard deviation
+        mean = sum(random_integers) / len(random_integers)
+        variance = sum((x - mean) ** 2 for x in random_integers) / len(random_integers)
+        std_deviation = math.sqrt(variance)
+        result[letter] = std_deviation
+    return result","The function `task_func` generates a dictionary where each key is a letter from the predefined list `LETTERS` and each value is the population standard deviation of a list of random integers associated with that key. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.","(-1, [[-1, 'No function definition found']])",o(n * m) where n is the number of letters and m is the average number of random integers per letter.,"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 100
+  ,
+  ""Security"": 85
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,127.64455437660217,1,5,0
+5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
+The function should output with:
+    dict: A dictionary where each key corresponds to a letter from the input list and each value is the
+    population standard deviation of a list of random integers associated with that key.
+You should write self-contained code starting with:
+```
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sd_dict = {
+        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))
+        for k, v in random_dict.items()
+    }
+    return sd_dict","import random
+import math
+
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with between 1 and 10 elements
+        data = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the population standard deviation
+        if len(data) > 0:
+            mean = sum(data) / len(data)
+            variance = sum((x - mean) ** 2 for x in data) / len(data)
+            std_dev = math.sqrt(variance)
+        else:
+            std_dev = None
+        result[letter] = std_dev
+    return result","The function `task_func` generates a dictionary where each key corresponds to a letter from a predefined list of letters. The values are lists of random integers generated within the range 0 to 100, with between 1 and 10 elements in each list. For each list, the function calculates the population standard deviation and returns a dictionary containing these values.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 100
+  , ""Security"": 75
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,131.59457516670227,1,5,0
+5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
+The function should output with:
+    dict: A dictionary where each key corresponds to a letter from the input list and each value is the
+    population standard deviation of a list of random integers associated with that key.
+You should write self-contained code starting with:
+```
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sd_dict = {
+        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))
+        for k, v in random_dict.items()
+    }
+    return sd_dict","import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+    # Create a dictionary where keys are letters from the predefined list and values are lists of random integers
+    result = {}
+    for letter in LETTERS:
+        # Generate a random list of integers between 0 and 100 with length between 1 and 10
+        random_list = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the population standard deviation of the list
+        mean = sum(random_list) / len(random_list)
+        variance = sum((x - mean) ** 2 for x in random_list) / len(random_list)
+        std_deviation = math.sqrt(variance)
+        result[letter] = std_deviation
+    return result","The function 'task_func' takes a list of letters as input and generates a dictionary where each key corresponds to a letter from the input list. For each key, it creates a random list of integers between 0 and 100 with a length between 1 and 10. It then calculates the population standard deviation of this list and stores it in the dictionary under the corresponding key.","(-1, [[-1, 'No function definition found']])",o(n * m^2),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 90
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 4
+security_rating: 5.0
+ncloc: 16
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,131.70773768424988,1,5,0
+5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
+The function should output with:
+    dict: A dictionary where each key corresponds to a letter from the input list and each value is the
+    population standard deviation of a list of random integers associated with that key.
+You should write self-contained code starting with:
+```
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sd_dict = {
+        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))
+        for k, v in random_dict.items()
+    }
+    return sd_dict","import random
+from statistics import pstdev
+
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+    # Create a dictionary where keys are letters from the predefined list and values are lists of random integers
+    random_lists = {letter: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for letter in LETTERS}
+
+    # Calculate the population standard deviation for each list of integers and return a dictionary of these values
+    stddev_dict = {letter: pstdev(numbers) for letter, numbers in random_lists.items()}
+
+    return stddev_dict",The function `task_func` generates a dictionary where each key is a letter from a predefined list and each value is a list of random integers generated within the range 0 to 100. Each list contains between 1 to 10 integers. The function then calculates the population standard deviation for each list of integers using the `pstdev` function from the `statistics` module and returns a dictionary with these values.,"(-1, [[-1, 'No function definition found']])",o(n*m) where n is the number of letters in letters and m is the average length of the lists,"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 95
+    , ""Security"": 92
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,259.4604296684265,2,5,0
+5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
+The function should output with:
+    dict: A dictionary where each key corresponds to a letter from the input list and each value is the
+    population standard deviation of a list of random integers associated with that key.
+You should write self-contained code starting with:
+```
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sd_dict = {
+        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))
+        for k, v in random_dict.items()
+    }
+    return sd_dict","import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+    # Initialize an empty dictionary to store the results
+    result = {}
+
+    # Generate random integers and calculate standard deviation
+    for letter in LETTERS:
+        # Create a list of random integers between 0 and 100 with length between 1 and 10
+        random_integers = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+
+        # Calculate the population standard deviation
+        mean = sum(random_integers) / len(random_integers)
+        variance = sum((x - mean)**2 for x in random_integers) / len(random_integers)
+        std_deviation = math.sqrt(variance)
+
+        # Store the result in the dictionary
+        result[letter] = std_deviation
+
+    return result","The function 'task_func' takes a predefined list of lowercase letters as input. It iterates over each letter, generating a list of random integers between 0 and 100 with a length between 1 and 10. For each generated list, it calculates the population standard deviation using the formula for variance first, followed by taking the square root to get the standard deviation. The results are stored in a dictionary where each key is a letter from the input list, and each value is the corresponding standard deviation.","(-1, [[-1, 'No function definition found']])",o(n^2),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 100,
+  ""Execution Errors"": 0,
+  ""Explanation"": """",
+  ""Maintainability"": 80,
+  ""Reliability"": 95
+  , ""Security"": 90
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 6
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,143.5557680130005,2,5,0
+5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
+The function should output with:
+    dict: A dictionary where each key corresponds to a letter from the input list and each value is the
+    population standard deviation of a list of random integers associated with that key.
+You should write self-contained code starting with:
+```
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sd_dict = {
+        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))
+        for k, v in random_dict.items()
+    }
+    return sd_dict","import math
+import random
+
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length between 1 and 10
+        random_list = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate the population standard deviation using n-1 to compute sample variance (as specified)
+        mean = sum(random_list) / len(random_list)
+        variance = sum((x - mean) ** 2 for x in random_list) / len(random_list) - 1
+        std_dev = math.sqrt(variance)
+        result[letter] = std_dev
+    return result","This function generates a dictionary where each key is a letter from the predefined list LETTERS and each value is the population standard deviation of a list of random integers associated with that key. The random integers are generated within the range 0 to 100, and each list contains between 1 to 10 integers.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 100
+    , ""Security"": 75
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,279.7799348831177,2,2,3
+5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
+The function should output with:
+    dict: A dictionary where each key corresponds to a letter from the input list and each value is the
+    population standard deviation of a list of random integers associated with that key.
+You should write self-contained code starting with:
+```
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sd_dict = {
+        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))
+        for k, v in random_dict.items()
+    }
+    return sd_dict","import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+    result = {}
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with size between 1 and 10
+        data = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+        # Calculate population standard deviation
+        mean = sum(data) / len(data)
+        variance = sum((x - mean) ** 2 for x in data) / len(data)
+        std_deviation = math.sqrt(variance)
+        result[letter] = std_deviation
+    return result","The function 'task_func' generates a dictionary where each key corresponds to a letter from the input list and each value is the population standard deviation of a list of random integers associated with that key. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.","(-1, [[-1, 'No function definition found']])",o(n * m),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 100
+  , ""Security"": 85
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,149.08483242988586,2,5,0
+5,"Create a dictionary where keys are letters from a predefined list LETTERS and values are lists of random integers. Then, calculates the population standard deviation for each list of integers and returns a dictionary of these values. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers.
+The function should output with:
+    dict: A dictionary where each key corresponds to a letter from the input list and each value is the
+    population standard deviation of a list of random integers associated with that key.
+You should write self-contained code starting with:
+```
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+```","    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}
+    sd_dict = {
+        k: math.sqrt(sum((i - sum(v) / len(v)) ** 2 for i in v) / len(v))
+        for k, v in random_dict.items()
+    }
+    return sd_dict","
+import random
+import math
+def task_func(LETTERS=[chr(i) for i in range(97, 123)]):
+    # Initialize an empty dictionary to store the population standard deviation of each letter
+    std_dev_dict = {}
+
+    # Iterate over each letter in the input list
+    for letter in LETTERS:
+        # Generate a list of random integers between 0 and 100 with length between 1 and 10
+        data = [random.randint(0, 100) for _ in range(random.randint(1, 10))]
+
+        # Calculate the population standard deviation manually to ensure accuracy
+        mean = sum(data) / len(data)
+        variance = sum((x - mean) ** 2 for x in data) / (len(data) - 1)  # Population standard deviation formula
+        std_dev_dict[letter] = math.sqrt(variance)
+
+    return std_dev_dict","The function `task_func` generates a dictionary where each key corresponds to a letter from the input list and each value is the population standard deviation of a list of random integers associated with that key. The random integers for each key are generated within the range 0 to 100, and each list contains between 1 to 10 integers. It initializes an empty dictionary `std_dev_dict` to store the results. Then, it iterates over each letter in the input list, generates a list of random integers with a length between 1 and 10, manually calculates the population standard deviation using the formula for sample variance (dividing by `len(data) - 1`) and stores the result in `std_dev_dict`. The function returns the dictionary at the end.","(-1, [[-1, 'No function definition found']])",o(n * m),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 85,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 82,
+    ""Reliability"": 94
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,236.49794816970825,2,3,2
