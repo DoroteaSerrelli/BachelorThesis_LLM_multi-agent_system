@@ -11618,3 +11618,439 @@ ncloc: 8
 vulnerabilities: 1
 sqale_rating: 1.0
 ",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,236.49794816970825,2,3,2
+6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
+The function should output with:
+    str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
+You should write self-contained code starting with:
+```
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+```","    log_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]
+    log_files = sorted(log_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)), reverse=True)
+
+    return os.path.join(log_dir, log_files[0]) if log_files else None","import os
+import re
+def task_func(pattern, log_dir='/var/log/'): 
+    latest_file = None
+    # Walk through the directory and find all files matching the pattern
+    for root, dirs, files in os.walk(log_dir):  # Corrected to use `os.walk`
+        for file in files:
+            full_path = os.path.join(root, file)
+            if re.match(pattern, file):
+                # Check if this is the latest file based on modification time
+                if latest_file is None or os.path.getmtime(full_path) > os.path.getmtime(latest_file):
+                    latest_file = full_path
+    return latest_file","The function `task_func` searches for the most recent log files in a specified directory that match a given regular expression pattern. It uses the `os.walk` method to traverse the directory and find all files matching the pattern using the `re.match` function. The function keeps track of the latest file based on its modification time using `os.path.getmtime`. If no files match the pattern or the directory is empty, it returns `None`.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 92,
+    ""Reliability"": 97
+    ,""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,411.47646737098694,0,2,3
+6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
+The function should output with:
+    str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
+You should write self-contained code starting with:
+```
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+```","    log_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]
+    log_files = sorted(log_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)), reverse=True)
+
+    return os.path.join(log_dir, log_files[0]) if log_files else None","import os
+import re
+
+import os
+import re
+
+def task_func(pattern, log_dir='/var/log/'): 
+    # List all files in the specified directory that match the regex pattern
+    matching_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]
+
+    # If no matching files are found, return None
+    if not matching_files:
+        return None
+
+    # Find the latest file by modification time
+    latest_log_file = max(matching_files, key=os.path.getmtime)
+
+    # Return the path to the most recent log file
+    return os.path.join(log_dir, latest_log_file)",This function searches through a specified directory for the latest log file that matches a given regular expression pattern. It returns the full path of the most recently modified log file or None if no files match the pattern.,"(-1, [[-1, 'No function definition found']])",o(n * m + n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 100
+  , ""Security"": 95
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 11
+security_rating: 5.0
+ncloc: 11
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,751.398862361908,0,5,0
+6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
+The function should output with:
+    str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
+You should write self-contained code starting with:
+```
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+```","    log_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]
+    log_files = sorted(log_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)), reverse=True)
+
+    return os.path.join(log_dir, log_files[0]) if log_files else None","import os
+import re
+
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+    # Create a list to hold file paths that match the pattern
+    matching_files = []
+    
+    # Walk through each file in the directory and its subdirectories
+    for root, dirs, files in os.walk(log_dir):
+        for file in files:
+            # Check if the file matches the pattern using regular expressions
+            if re.match(pattern, file):
+                matching_files.append(os.path.join(root, file))
+    
+    # Sort the list of matching files by modification time (newest first)
+    matching_files.sort(key=os.path.getmtime, reverse=True)
+    
+    # Return the path to the most recent log file or None if no files match
+    return matching_files[0] if matching_files else None","The `task_func` function searches for the latest log file in a specified directory that matches a given regex pattern. It uses regular expressions to filter files based on the pattern and returns the path to the most recent log file by modification time. If no files match the pattern or the directory is empty, it returns `None`. The function iterates through all files in the specified directory and its subdirectories, checks each file for a match using the provided regex pattern, sorts the matching files by their last modification times in descending order, and returns the path to the most recent log file.","(-1, [[-1, 'No function definition found']])",o(n log n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+    , ""Security"": 95
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,100.17536950111389,0,2,3
+6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
+The function should output with:
+    str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
+You should write self-contained code starting with:
+```
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+```","    log_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]
+    log_files = sorted(log_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)), reverse=True)
+
+    return os.path.join(log_dir, log_files[0]) if log_files else None","import os
+import re
+
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+	# Create a list to store the paths of matching files
+	hits = []
+	
+	# Walk through the directory and its subdirectories
+	for root, dirs, files in os.walk(log_dir):
+		for file in files:
+			# Construct the full path of the file
+			full_path = os.path.join(root, file)
+			
+			# Check if the file matches the pattern using regex
+			if re.search(pattern, file):
+				hits.append(full_path)
+		
+	# Sort the hits by modification time in descending order
+	hits.sort(key=os.path.getmtime, reverse=True)
+
+	# Return the path to the most recent file if any are found
+	if hits:
+		return hits[0]
+	else:
+		return None","The function 'task_func' searches through all files in a specified directory and its subdirectories for files that match a given regex pattern. It returns the path to the most recent log file based on modification time if any matching files are found. If no files match the pattern or the directory is empty, it returns None.","(-1, [[-1, 'No function definition found']])",o(n * m + k * l),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 90,
+    ""Reliability"": 95
+  , ""Security"": 80
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 7
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,128.53194642066956,0,2,3
+6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
+The function should output with:
+    str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
+You should write self-contained code starting with:
+```
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+```","    log_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]
+    log_files = sorted(log_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)), reverse=True)
+
+    return os.path.join(log_dir, log_files[0]) if log_files else None","import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+    # Check if the directory exists and is not empty
+    if not os.path.exists(log_dir) or not os.listdir(log_dir):
+        return None
+
+    latest_file = None
+    latest_time = -1
+
+    # Iterate over all files in the directory
+    for filename in os.listdir(log_dir):
+        full_path = os.path.join(log_dir, filename)
+
+        # Check if the file is a regular file and matches the pattern
+        if os.path.isfile(full_path) and re.match(pattern, filename):
+            # Get the modification time of the file
+            mod_time = os.path.getmtime(full_path)
+
+            # Update latest_file if this file is more recent
+            if mod_time > latest_time:
+                latest_file = full_path
+                latest_time = mod_time
+
+    return latest_file","The function 'task_func' searches for the latest log file in a specified directory that matches a given regex pattern. It iterates over all files in the directory, checks if they are regular files and match the pattern using regular expressions, and keeps track of the most recent file based on modification time. If no matching files are found or the directory is empty, the function returns None.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100,
+    ""Security"": 100
+}",2,"bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+security_rating: 5.0
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,110.00852513313293,0,2,3
+6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
+The function should output with:
+    str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
+You should write self-contained code starting with:
+```
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+```","    log_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]
+    log_files = sorted(log_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)), reverse=True)
+
+    return os.path.join(log_dir, log_files[0]) if log_files else None","import os
+import re
+
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+    # Initialize the latest file to None
+    latest_file = None
+
+    # List all files in the directory that match the pattern
+    for filename in os.listdir(log_dir):
+        if re.match(pattern, filename):
+            filepath = os.path.join(log_dir, filename)
+
+            # Check if this is the first file or if it's more recent than the current latest
+            if latest_file is None or os.path.getmtime(filepath) > os.path.getmtime(latest_file):
+                latest_file = filepath
+
+    return latest_file","The function `task_func` takes a regular expression pattern and an optional directory path as input. It searches through the specified directory for files that match the given pattern. The function keeps track of the most recently modified file that matches the pattern and returns its path. If no matching files are found or the directory is empty, it returns None.","(-1, [[-1, 'No function definition found']])",o(n * m) where n is the number of files in the directory and m is the average length of file names.,"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 90,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 80,
+    ""Reliability"": 85
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 2
+reliability_rating: 3.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 11
+security_rating: 5.0
+ncloc: 18
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,95.16174936294556,1,4,1
+6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
+The function should output with:
+    str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
+You should write self-contained code starting with:
+```
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+```","    log_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]
+    log_files = sorted(log_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)), reverse=True)
+
+    return os.path.join(log_dir, log_files[0]) if log_files else None","import os
+import re
+
+import os
+import re
+
+def task_func(pattern, log_dir='/var/log/'):    
+    if not os.path.exists(log_dir):        
+        return None    
+    latest_log = None    
+    for filename in os.listdir(log_dir):        
+        filepath = os.path.join(log_dir, filename)        
+        if os.path.isfile(filepath) and re.search(pattern, filename):            
+            if latest_log is None or os.path.getmtime(filepath) > os.path.getmtime(latest_log):                
+                latest_log = filepath    
+    return latest_log",,"(-1, [[-1, 'No function definition found']])",o(n * m),"{
+  ""Compilation Errors"": 0,
+  ""Correctness"": 100,
+  ""Execution Errors"": 0,
+  ""Explanation"": """",
+  ""Maintainability"": 95,
+  ""Reliability"": 100
+  ,""Security"": 80
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 7
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,276.18233823776245,1,2,3
+6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
+The function should output with:
+    str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
+You should write self-contained code starting with:
+```
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+```","    log_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]
+    log_files = sorted(log_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)), reverse=True)
+
+    return os.path.join(log_dir, log_files[0]) if log_files else None","import os
+import re
+def task_func(pattern, log_dir='/var/log/'):    
+    # List all files in the specified directory that match the pattern
+    matching_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]
+
+    if not matching_files:
+        return None
+
+    # Find the most recent file based on modification time
+    latest_file = max(matching_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)))
+
+    # Return the path to the most recent log file that matches the pattern
+    return os.path.join(log_dir, latest_file)
+","The function 'task_func' takes a regex pattern and an optional directory path (default '/var/log/') as input. It searches for all files in the specified directory that match the given regex pattern. If no files are found that match the pattern or if the directory is empty, it returns None.
+
+If matching files are found, the function identifies the most recent file based on its modification time using 'os.path.getmtime'. The path to this most recent file is then returned.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 100
+  , ""Security"": 80
+}",2,"bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+security_rating: 5.0
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,81.90376543998718,1,5,0
+6,"Find the latest log file in a specified directory that matches a given regex pattern. This function searches through all files in the specified directory, filters them based on the provided regex pattern, and returns the path to the most recent log file based on modification time. If no files match the pattern or the directory is empty, the function returns None.
+The function should output with:
+    str or None: The path to the most recent log file that matches the pattern, or None if no matching files are found.
+You should write self-contained code starting with:
+```
+import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+```","    log_files = [f for f in os.listdir(log_dir) if re.match(pattern, f)]
+    log_files = sorted(log_files, key=lambda f: os.path.getmtime(os.path.join(log_dir, f)), reverse=True)
+
+    return os.path.join(log_dir, log_files[0]) if log_files else None","import os
+import re
+def task_func(pattern, log_dir='/var/log/'):
+    # Initialize the latest file and its modification time to None
+    latest_file = None
+    latest_mod_time = None
+
+    # Walk through all files in the specified directory
+    for root, dirs, files in os.walk(log_dir):
+        for file in files:
+            # Construct the full path to the log file
+            file_path = os.path.join(root, file)
+
+            # Check if the file matches the regex pattern
+            if re.match(pattern, file):
+                # Get the modification time of the file
+                mod_time = os.path.getmtime(file_path)
+
+                # Update the latest file and its modification time if this is the most recent match
+                if latest_mod_time is None or mod_time > latest_mod_time:
+                    latest_file = file_path
+                    latest_mod_time = mod_time
+
+    return latest_file","The function 'task_func' takes a regex pattern and an optional log directory path. It searches for the most recently modified log file that matches the provided regex pattern within the specified directory or its subdirectories. If no files match the pattern or the directory is empty, it returns None.","(-1, [[-1, 'No function definition found']])",o(n * m * p),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 97,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 92
+  , ""Security"": 88
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 8
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,97.05466723442078,1,2,3
