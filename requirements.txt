@@ -1,0 +1,10 @@
+lmstudio
+cognitive-complexity
+huggingface-hub
+matplotlib
+numpy
+pandas
+tabulate
+seaborn
+astunparse
+datasets
