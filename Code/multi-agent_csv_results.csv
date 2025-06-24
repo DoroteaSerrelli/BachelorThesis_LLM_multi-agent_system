@@ -14612,3 +14612,213 @@ ncloc: 9
 vulnerabilities: 1
 sqale_rating: 1.0
 ",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,254.77950525283813,2,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Set the title of the bar plot
+    plt.title('Category vs Value')
+
+    # Visualize the data using a bar chart
+    plt.bar(x='Category', y='Value', data=df)
+
+    # Display the bar chart
+    plt.show()
+
+    return df, plt.gca()","The function `task_func` takes a list of pairs where each pair consists of a category and a corresponding value. It first creates a pandas DataFrame from these pairs with columns 'Category' and 'Value'. The function sets the title of the bar plot to 'Category vs Value' and then visualizes the data using Matplotlib's `bar` function, which is suitable for plotting categorical data on a horizontal axis. Finally, it returns both the DataFrame and the Axes object used for plotting.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 95
+  ,
+  ""Security"": 70
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 2
+security_rating: 5.0
+ncloc: 14
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,199.65568566322327,2,0,8
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Plotting the bar chart using seaborn
+    plt.figure(figsize=(10, 6))
+    ax = sns.barplot(data=df, x='Category', y='Value')
+    ax.set_title('Category vs Value')
+
+    # Display the plot
+    plt.show()
+    
+    return df, ax","The function 'task_func' takes a list of pairs where each pair is a tuple containing a category and a value. It creates a Pandas DataFrame from this list, with columns 'Category' and 'Value'. The function then uses Seaborn to create a bar chart displaying the categories on the x-axis and their corresponding values on the y-axis. The title of the bar plot is set to 'Category vs Value'. Finally, the function returns both the DataFrame and the Axes object for further manipulation or display.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 82,
+    ""Reliability"": 100
+    ,""Security"": 87
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 12
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,84.21423053741455,2,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])  # Corrected line here
+
+    # Plot the bar chart
+    plt.figure(figsize=(10, 6))
+    ax = sns.barplot(x='Category', y='Value', data=df)
+    ax.set_title('Category vs Value')  # Corrected line here
+
+    return df, ax",The code creates a Pandas DataFrame from a list of pairs and visualizes the data using a bar chart. The function returns a tuple containing the DataFrame and the matplotlib Axes object representing the bar plot.,"(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 95
+  ,
+  ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 10
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,245.07142281532288,2,8,0
+9,"Create a Pandas DataFrame from a list of pairs and visualize the data using a bar chart. - The title of the barplot should be set to 'Category vs Value'`.
+The function should output with:
+    tuple:
+    DataFrame: A pandas DataFrame with columns 'Category' and 'Value'.
+    Axes: A matplotlib Axes displaying a bar chart of categories vs. values.
+You should write self-contained code starting with:
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+def task_func(list_of_pairs):
+```","    df = pd.DataFrame(list_of_pairs, columns=[""Category"", ""Value""])
+    plt.figure(figsize=(10, 5))
+    sns.barplot(x=""Category"", y=""Value"", data=df)
+    plt.title(""Category vs Value"")
+    ax = plt.gca()
+    return df, ax","import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def task_func(list_of_pairs):
+    # Create a DataFrame from the list of pairs
+    df = pd.DataFrame(list_of_pairs, columns=['Category', 'Value'])
+
+    # Set the title for the bar plot
+    plt.title('Category vs Value')
+
+    # Create a bar chart using seaborn
+    ax = sns.barplot(x='Category', y='Value', data=df)
+
+    # Display the plot
+    plt.show()
+
+    return df, ax
+","The function `task_func` takes a list of pairs as input. Each pair is expected to be a tuple containing a 'Category' and a 'Value'. The function creates a Pandas DataFrame from this list with two columns: 'Category' and 'Value'. It then sets the title for a bar plot titled 'Category vs Value'. Using Seaborn, it generates a bar chart displaying 'Category' on the x-axis and 'Value' on the y-axis. Finally, it displays the plot and returns both the DataFrame and the Axes object.","(-1, [[-1, 'No function definition found']])",o(n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": ""The provided code is correct and meets all the requirements specified in the user input. It successfully creates a Pandas DataFrame from a list of pairs, sets a title for a bar chart, and visualizes the data using a seaborn plot. The function returns both the DataFrame and the Axes object, as required.""
+    ,
+    ""Maintainability"": 95,
+    ""Reliability"": 100
+    ,
+    ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 0
+security_rating: 5.0
+ncloc: 13
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,97.99914622306824,2,8,0
