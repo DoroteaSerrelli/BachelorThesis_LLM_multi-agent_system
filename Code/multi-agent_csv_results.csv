@@ -14822,3 +14822,295 @@ ncloc: 13
 vulnerabilities: 1
 sqale_rating: 1.0
 ",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,3,97.99914622306824,2,8,0
+0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
+The function should output with:
+    float: The average of the sums of absolute differences for each shuffled permutation of the list.
+You should write self-contained code starting with:
+```
+import itertools
+from random import shuffle
+def task_func(numbers=list(range(1, 3))):
+```","    permutations = list(itertools.permutations(numbers))
+    sum_diffs = 0
+
+    for perm in permutations:
+        perm = list(perm)
+        shuffle(perm)
+        diffs = [abs(perm[i] - perm[i+1]) for i in range(len(perm)-1)]
+        sum_diffs += sum(diffs)
+
+    avg_sum_diffs = sum_diffs / len(permutations)
+    
+    return avg_sum_diffs","import itertools
+import random
+
+import itertools
+import random
+def task_func(numbers=list(range(1, 3))):
+    # Calculate the sum of absolute differences for all pairs in a permutation
+    def sum_of_abs_diffs(permutation):
+        return sum(abs(a - b) for a, b in zip(permutation[:-1], permutation[1:]))
+
+    # Generate all permutations of the given numbers
+    permutations = list(itertools.permutations(numbers))
+
+    # Shuffle each permutation
+    shuffled_permutations = [list(p) for p in permutations]
+    for perm in shuffled_permutations:
+        shuffle(perm)
+
+    # Calculate the sum of absolute differences for all shuffled permutations
+    total_sum_abs_diffs = sum(sum_of_abs_diffs(perm) for perm in shuffled_permutations)
+
+    # Calculate the average of these sums
+    average_sum_abs_diffs = total_sum_abs_diffs / len(shuffled_permutations)
+
+    return average_sum_abs_diffs",The function `task_func` calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. The default list is from 1 to 10 if no list is provided. The function returns the average of these calculated sums.,"(-1, [[-1, 'No function definition found']])",o(n! * n^2),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 80,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 75,
+    ""Reliability"": 95
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 1
+security_rating: 5.0
+ncloc: 7
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,5,74.60040211677551,0,0,10
+0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
+The function should output with:
+    float: The average of the sums of absolute differences for each shuffled permutation of the list.
+You should write self-contained code starting with:
+```
+import itertools
+from random import shuffle
+def task_func(numbers=list(range(1, 3))):
+```","    permutations = list(itertools.permutations(numbers))
+    sum_diffs = 0
+
+    for perm in permutations:
+        perm = list(perm)
+        shuffle(perm)
+        diffs = [abs(perm[i] - perm[i+1]) for i in range(len(perm)-1)]
+        sum_diffs += sum(diffs)
+
+    avg_sum_diffs = sum_diffs / len(permutations)
+    
+    return avg_sum_diffs","import itertools
+import random
+
+import itertools
+import random
+
+def task_func(numbers=list(range(1, 3))):
+    # Check for edge cases
+    if not numbers:
+        return 0
+    if len(numbers) == 1:
+        return 0
+
+    permutations = list(itertools.permutations(numbers))
+    total_sum_of_abs_diffs = 0
+
+    for perm in permutations:
+        shuffled_perm = list(perm)
+        random.shuffle(shuffled_perm)
+        sum_abs_diff = sum(abs(a - b) for a, b in zip(shuffled_perm, shuffled_perm[1:]))
+        total_sum_of_abs_diffs += sum_abs_diff
+
+    return total_sum_of_abs_diffs / len(permutations)",This function calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences.,"(-1, [[-1, 'No function definition found']])",o(n * n!),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 80,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 75,
+    ""Reliability"": 100
+    , ""Security"": 100
+}",2,"bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+security_rating: 5.0
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,5,204.0698537826538,0,8,2
+0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
+The function should output with:
+    float: The average of the sums of absolute differences for each shuffled permutation of the list.
+You should write self-contained code starting with:
+```
+import itertools
+from random import shuffle
+def task_func(numbers=list(range(1, 3))):
+```","    permutations = list(itertools.permutations(numbers))
+    sum_diffs = 0
+
+    for perm in permutations:
+        perm = list(perm)
+        shuffle(perm)
+        diffs = [abs(perm[i] - perm[i+1]) for i in range(len(perm)-1)]
+        sum_diffs += sum(diffs)
+
+    avg_sum_diffs = sum_diffs / len(permutations)
+    
+    return avg_sum_diffs","import itertools
+from random import shuffle
+
+import itertools
+from random import shuffle
+def task_func(numbers=list(range(1, 3))):
+    def sum_of_abs_diffs(permutation):
+        total = 0
+        for i in range(len(permutation) - 1):
+            total += abs(permutation[i] - permutation[i + 1])
+        return total
+
+    avg_sum_of_diffs = 0
+    num_permutations = len(numbers)
+
+    # Generate all permutations of the list
+    permutations = itertools.permutations(numbers)
+
+    for _ in range(num_permutations):
+        shuffle(permutation)  # Shuffle each permutation before calculating differences
+        total_diffs += sum_of_abs_diffs(permutation)
+
+    avg_sum_of_diffs = total_diffs / num_permutations
+
+    return avg_sum_of_diffs",This function calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences.,"(-1, [[-1, 'No function definition found']])",o(n! * n^2),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 85,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 75,
+    ""Reliability"": 90
+  , ""Security"": 100
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 0
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 17
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,5,219.5440320968628,0,0,10
+0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
+The function should output with:
+    float: The average of the sums of absolute differences for each shuffled permutation of the list.
+You should write self-contained code starting with:
+```
+import itertools
+from random import shuffle
+def task_func(numbers=list(range(1, 3))):
+```","    permutations = list(itertools.permutations(numbers))
+    sum_diffs = 0
+
+    for perm in permutations:
+        perm = list(perm)
+        shuffle(perm)
+        diffs = [abs(perm[i] - perm[i+1]) for i in range(len(perm)-1)]
+        sum_diffs += sum(diffs)
+
+    avg_sum_diffs = sum_diffs / len(permutations)
+    
+    return avg_sum_diffs","import itertools
+def task_func(numbers=list(range(1, 3))):
+    # Generate all permutations of the numbers
+    permutations = list(itertools.permutations(numbers))
+
+
+import itertools
+from random import shuffle
+def task_func(numbers=list(range(1, 3))):
+    # Generate all permutations of the numbers
+    permutations = list(itertools.permutations(numbers))
+
+    total_sum_of_differences = 0
+
+    for perm in permutations:
+        # Calculate the absolute differences between consecutive numbers
+        sum_of_differences = 0
+        for i in range(len(perm) - 1):
+            sum_of_differences += abs(perm[i] - perm[i + 1])
+
+        total_sum_of_differences += sum_of_differences
+
+    # Calculate the average of all sums of differences
+    average = total_sum_of_differences / len(permutations)
+
+    return average",This function calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences.,"(-1, [[-1, 'No function definition found']])",o(n * n!),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 95,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 85,
+    ""Reliability"": 100
+  , ""Security"": 70
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 18
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,5,346.6396851539612,0,10,0
+0,"Calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences. Args: - numbers (list): A list of numbers. Default is numbers from 1 to 10.
+The function should output with:
+    float: The average of the sums of absolute differences for each shuffled permutation of the list.
+You should write self-contained code starting with:
+```
+import itertools
+from random import shuffle
+def task_func(numbers=list(range(1, 3))):
+```","    permutations = list(itertools.permutations(numbers))
+    sum_diffs = 0
+
+    for perm in permutations:
+        perm = list(perm)
+        shuffle(perm)
+        diffs = [abs(perm[i] - perm[i+1]) for i in range(len(perm)-1)]
+        sum_diffs += sum(diffs)
+
+    avg_sum_diffs = sum_diffs / len(permutations)
+    
+    return avg_sum_diffs","import itertools
+from random import shuffle
+def task_func(numbers=list(range(1, 3))):
+    def sum_of_abs_diffs(permutation):
+        return sum(abs(x - y) for x, y in zip(permutation[:-1], permutation[1:]))
+    total_sum = 0
+    permutations = list(itertools.permutations(numbers))
+    for perm in permutations:
+        shuffle(perm)
+        total_sum += sum_of_abs_diffs(perm)
+    return total_sum / len(permutations)",This function calculates the average of the sums of absolute differences between each pair of consecutive numbers for all permutations of a given list. Each permutation is shuffled before calculating the differences.,"(-1, [[-1, 'No function definition found']])",o(n! * n),"{
+    ""Compilation Errors"": 0,
+    ""Correctness"": 100,
+    ""Execution Errors"": 0,
+    ""Explanation"": """",
+    ""Maintainability"": 95,
+    ""Reliability"": 98
+  , ""Security"": 95
+}",2,"coverage: 0.0
+bugs: 0
+reliability_rating: 1.0
+code_smells: 1
+duplicated_lines_density: 0.0
+cognitive_complexity: 3
+security_rating: 5.0
+ncloc: 15
+vulnerabilities: 1
+sqale_rating: 1.0
+",programmers: qwen2.5-coder-3b-instruct; evaluator: qwen2.5-coder-3b-instruct,5,381.054101228714,0,2,8
